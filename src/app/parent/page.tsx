@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
-import { collection, doc, getDoc, getDocs, query, updateDoc, arrayUnion, where } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs, query, setDoc, arrayUnion, where } from "firebase/firestore";
 import { db } from "@/lib/firebase/config";
 import { authErrorToMessage } from "@/lib/auth-errors";
 import type { ParentProfile, StudentProfile } from "@/types";
@@ -69,15 +69,16 @@ export default function ParentDashboard() {
       const studentDoc = snap.docs[0];
       const studentId = studentDoc.id;
 
-      // Add student to parent's list
-      await updateDoc(doc(db, "parents", user.uid), {
+      // Add student to parent's list (setDoc with merge handles missing parent doc)
+      await setDoc(doc(db, "parents", user.uid), {
+        userId: user.uid,
         studentIds: arrayUnion(studentId),
-      });
+      }, { merge: true });
 
-      // Add parent to student's list
-      await updateDoc(doc(db, "students", studentId), {
+      // Add parent to student's list (setDoc with merge handles missing student doc)
+      await setDoc(doc(db, "students", studentId), {
         parentIds: arrayUnion(user.uid),
-      });
+      }, { merge: true });
 
       setStudents((prev) => [...prev, studentDoc.data() as StudentProfile]);
       setLinkStatus("linked");
