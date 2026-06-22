@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Soma · Design System Preview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* ============================================================
+     SOMA · EDITORIAL DESIGN SYSTEM (V1 — LOCKED)
+     Warm cream foundation. Deep charcoal text (never pure black).
+     Earthy accents used sparingly to identify subjects.
+     ============================================================ */
+
+  :root {
+    /* Foundation */
+    --cream:        #FBF8F3;
+    --cream-deep:   #F4EEE3;
+    --charcoal:     #2B2926;
+    --ink-soft:     #57534B;
+    --ink-muted:    #8C857A;
+    --hairline:     #E6DFD2;
+    --white:        #FFFFFF;
+
+    /* Accents (used sparingly, double as subject identity) */
+    --terracotta:   #C06A4B;
+    --terracotta-dk:#A65638;
+    --sage:         #7E8E63;
+    --sage-dk:      #627049;
+    --blue:         #6E8AA6;
+    --blue-dk:      #536E89;
+
+    /* Tactile */
+    --marker:       #F2E0A0;
+
+    /* Type */
+    --serif: 'Fraunces', Georgia, 'Times New Roman', serif;
+    --sans:  'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+
+    /* Radii + shadow */
+    --r-lg: 22px;
+    --r-md: 16px;
+    --r-sm: 10px;
+    --shadow-soft: 0 1px 2px rgba(43,41,38,.04), 0 12px 32px -12px rgba(43,41,38,.12);
+    --shadow-float: 0 2px 4px rgba(43,41,38,.05), 0 22px 48px -18px rgba(43,41,38,.22);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--cream);
+    color: var(--charcoal);
+    font-family: var(--sans);
+    font-size: 17px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+  }
+  .serif { font-family: var(--serif); }
+  .wrap { max-width: 1160px; margin: 0 auto; padding: 0 28px; }
+  section { position: relative; }
+
+  .eyebrow {
+    font-family: var(--sans); font-size: 12px; font-weight: 600;
+    letter-spacing: .18em; text-transform: uppercase; color: var(--ink-muted);
+  }
+
+  .highlight {
+    background-image: linear-gradient(120deg, var(--marker), var(--marker));
+    background-repeat: no-repeat; background-size: 100% 42%; background-position: 0 86%;
+    padding: 0 3px; box-decoration-break: clone; -webkit-box-decoration-break: clone;
+  }
+
+  .btn {
+    display: inline-flex; align-items: center; gap: 9px;
+    font-family: var(--sans); font-weight: 600; font-size: 15.5px;
+    padding: 14px 26px; border-radius: 999px; border: none; cursor: pointer;
+    text-decoration: none; transition: transform .15s ease, box-shadow .2s ease, background .2s ease;
+  }
+  .btn:active { transform: scale(.97); }
+  .btn-primary { background: var(--terracotta); color: var(--white); box-shadow: 0 10px 22px -10px rgba(192,106,75,.7); }
+  .btn-primary:hover { background: var(--terracotta-dk); }
+  .btn-ghost { background: transparent; color: var(--charcoal); box-shadow: inset 0 0 0 1.5px var(--hairline); }
+  .btn-ghost:hover { background: var(--cream-deep); }
+
+  .blob {
+    position: absolute; border-radius: 50%; filter: blur(46px);
+    opacity: .55; z-index: 0; pointer-events: none;
+  }
+
+  /* NAV */
+  .nav {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(251,248,243,.82);
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--hairline);
+  }
+  .nav-inner { max-width: 1160px; margin: 0 auto; padding: 16px 28px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+  .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--charcoal); }
+  .brand-mark { width: 30px; height: 30px; }
+  .brand-name { font-family: var(--serif); font-weight: 600; font-size: 23px; letter-spacing: -.01em; }
+  .nav-links { display: flex; align-items: center; gap: 30px; }
+  .nav-links a { color: var(--ink-soft); text-decoration: none; font-size: 15px; font-weight: 500; }
+  .nav-links a:hover { color: var(--charcoal); }
+  .nav-cta { padding: 11px 22px; font-size: 14.5px; }
+  @media (max-width: 820px){ .nav-links { display:none; } }
+
+  /* HERO */
+  .hero { padding: 84px 0 96px; overflow: hidden; }
+  .hero-grid { position: relative; display: grid; grid-template-columns: 1.05fr .95fr; gap: 56px; align-items: center; }
+  @media (max-width: 900px){ .hero-grid { grid-template-columns: 1fr; gap: 44px; } }
+  .hero h1 {
+    font-family: var(--serif); font-weight: 500;
+    font-size: clamp(2.6rem, 5.4vw, 4.3rem); line-height: 1.04; letter-spacing: -.022em;
+    margin: 22px 0 26px; color: var(--charcoal);
+  }
+  .hero h1 em { font-style: italic; color: var(--terracotta); font-weight: 500; }
+  .hero p.lede { font-size: 19px; line-height: 1.6; color: var(--ink-soft); max-width: 520px; margin-bottom: 34px; }
+  .hero-actions { display: flex; gap: 14px; flex-wrap: wrap; }
+  .hero-trust { margin-top: 26px; font-size: 13.5px; color: var(--ink-muted); display: flex; align-items: center; gap: 8px; }
+
+  .hero-art { position: relative; min-height: 420px; display: flex; align-items: center; justify-content: center; }
+  .hero-art .blob-t { width: 360px; height: 360px; background: var(--terracotta); top: 10px; right: 0; opacity:.32; }
+  .hero-art .blob-s { width: 240px; height: 240px; background: var(--sage); bottom: 0; left: 10px; opacity:.30; }
+  .line-book { width: 330px; height: 330px; position: relative; z-index: 2; color: var(--charcoal); }
+  .line-book svg { width: 100%; height: 100%; }
+
+  .float-card { position: absolute; z-index: 4; background: var(--white); border-radius: var(--r-md); padding: 16px 20px; box-shadow: var(--shadow-float); }
+  .pred-chip { bottom: 6px; right: -6px; transform: rotate(3deg); display: flex; align-items: center; gap: 14px; }
+  .pred-chip .grade { font-family: var(--serif); font-weight: 600; font-size: 40px; line-height: 1; color: var(--terracotta); }
+  .pred-chip .meta { font-size: 12.5px; color: var(--ink-soft); line-height: 1.35; }
+  .pred-chip .meta strong { color: var(--charcoal); display:block; font-size:13px; }
+  .pred-chip .arrow-up { color: var(--sage); font-weight:700; }
+  @media (max-width: 540px){ .pred-chip{ right: 10px; } }
+
+  /* GUARANTEE */
+  .guarantee {
+    background: var(--cream-deep); padding: 92px 0; position: relative; overflow: hidden;
+    border-top: 1px solid var(--hairline); border-bottom: 1px solid var(--hairline);
+  }
+  .guarantee-inner { position: relative; z-index: 2; max-width: 880px; margin: 0 auto; text-align: center; }
+  .guarantee .eyebrow { color: var(--terracotta); margin-bottom: 22px; }
+  .guarantee h2 { font-family: var(--serif); font-weight: 500; font-size: clamp(2.1rem, 4.4vw, 3.4rem); line-height: 1.1; letter-spacing: -.02em; }
+  .guarantee h2 .low { color: var(--ink-muted); }
+  .guarantee h2 .high { color: var(--terracotta); }
+  .guarantee .g-sub { margin: 24px auto 0; max-width: 560px; color: var(--ink-soft); font-size: 18px; line-height: 1.6; }
+  .guarantee .g-seal { margin: 38px auto 0; width: 92px; height: 92px; }
+
+  /* SECTION HEAD */
+  .sec-head { text-align: center; max-width: 640px; margin: 0 auto 54px; }
+  .sec-head .eyebrow { color: var(--terracotta); }
+  .sec-head h2 { font-family: var(--serif); font-weight: 500; font-size: clamp(1.9rem, 3.8vw, 2.7rem); line-height: 1.12; letter-spacing: -.02em; margin: 16px 0 0; }
+  .sec-head p { color: var(--ink-soft); margin-top: 16px; font-size: 17px; }
+
+  /* SUBJECTS */
+  .subjects { padding: 96px 0 80px; }
+  .subj-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  @media (max-width: 860px){ .subj-grid { grid-template-columns: 1fr; } }
+  .subj-card {
+    background: var(--white); border: 1px solid var(--hairline); border-radius: var(--r-lg);
+    padding: 32px 28px; box-shadow: var(--shadow-soft); position: relative; overflow: hidden;
+    transition: transform .2s ease, box-shadow .25s ease;
+  }
+  .subj-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-float); }
+  .subj-icon { width: 52px; height: 52px; border-radius: 14px; display: flex; align-items: center; justify-content: center; margin-bottom: 22px; }
+  .subj-icon svg { width: 28px; height: 28px; }
+  .subj-card h3 { font-family: var(--serif); font-weight: 600; font-size: 24px; margin-bottom: 10px; }
+  .subj-card p { color: var(--ink-soft); font-size: 15.5px; line-height: 1.55; }
+  .subj-tag { margin-top: 20px; display: inline-block; font-size: 12px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; }
+  .c-math .subj-icon { background: rgba(192,106,75,.14); color: var(--terracotta); }
+  .c-math .subj-tag { color: var(--terracotta); }
+  .c-bio  .subj-icon { background: rgba(126,142,99,.16); color: var(--sage-dk); }
+  .c-bio  .subj-tag { color: var(--sage-dk); }
+  .c-chem .subj-icon { background: rgba(110,138,166,.16); color: var(--blue-dk); }
+  .c-chem .subj-tag { color: var(--blue-dk); }
+
+  /* APP MOCKUP */
+  .mockup-section { padding: 70px 0 96px; }
+  .app-frame {
+    background: var(--cream-deep); border: 1px solid var(--hairline); border-radius: 28px;
+    padding: 30px; box-shadow: var(--shadow-float); position: relative; overflow: hidden;
+  }
+  .app-frame .blob { opacity:.30; }
+
+  .dash-hello { font-family: var(--serif); font-weight: 500; font-size: clamp(1.8rem, 3.4vw, 2.4rem); letter-spacing: -.015em; margin-bottom: 4px; }
+  .dash-sub { color: var(--ink-muted); font-size: 15px; margin-bottom: 30px; }
+  .dash-grid { display: grid; grid-template-columns: 1.1fr 1.4fr; gap: 22px; }
+  @media (max-width: 860px){ .dash-grid { grid-template-columns: 1fr; } }
+  .card { background: var(--white); border: 1px solid var(--hairline); border-radius: var(--r-md); padding: 26px; box-shadow: var(--shadow-soft); }
+
+  .grade-card .eyebrow { font-size: 11px; }
+  .grade-big { display: flex; align-items: flex-end; gap: 14px; margin: 14px 0 6px; }
+  .grade-big .letter { font-family: var(--serif); font-weight: 600; font-size: 74px; line-height: .85; color: var(--terracotta); }
+  .grade-big .delta { color: var(--sage-dk); font-weight: 600; font-size: 14px; display:flex; align-items:center; gap:4px; padding-bottom: 6px; }
+  .grade-note { color: var(--ink-soft); font-size: 14.5px; }
+
+  .meter-card .meter-head { display:flex; justify-content: space-between; align-items: baseline; margin-bottom: 14px; }
+  .meter-card .meter-head .now { font-family: var(--serif); font-weight: 600; font-size: 26px; }
+  .meter-card .meter-head .tgt { font-size: 13px; color: var(--ink-muted); }
+  .meter { height: 10px; background: var(--cream-deep); border-radius: 999px; overflow: visible; position: relative; }
+  .meter > span { display: block; height: 100%; width: 68%; background: linear-gradient(90deg, var(--sage), var(--terracotta)); border-radius: 999px; }
+  .meter .target-mark { position: absolute; top: -6px; left: 80%; width: 2px; height: 22px; background: var(--charcoal); border-radius: 2px; }
+  .meter-labels { display:flex; justify-content: space-between; margin-top: 8px; font-size: 11.5px; color: var(--ink-muted); }
+
+  .continue { grid-column: 1 / -1; display: grid; grid-template-columns: .8fr 1.2fr; gap: 0; overflow: hidden; padding: 0; }
+  @media (max-width: 700px){ .continue { grid-template-columns: 1fr; } }
+  .continue .thumb { background: var(--terracotta); display:flex; align-items:center; justify-content:center; min-height: 170px; position: relative; }
+  .continue .thumb svg { width: 84px; height: 84px; color: rgba(255,255,255,.92); }
+  .continue .thumb .tag { position:absolute; top: 16px; left: 16px; font-size: 11px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color: rgba(255,255,255,.85); }
+  .continue .info { padding: 26px; }
+  .continue .info .eyebrow { font-size: 11px; color: var(--terracotta); }
+  .continue .info h4 { font-family: var(--serif); font-weight: 600; font-size: 22px; margin: 8px 0 6px; }
+  .continue .info p { color: var(--ink-soft); font-size: 14.5px; }
+  .progress-row { display:flex; align-items:center; gap:12px; margin-top: 18px; }
+  .progress-row .bar { flex:1; height:6px; background: var(--cream-deep); border-radius:999px; overflow:hidden; }
+  .progress-row .bar > span { display:block; height:100%; width:50%; background: var(--charcoal); }
+  .progress-row .pct { font-size: 13px; color: var(--ink-muted); font-weight: 600; }
+
+  /* LESSON */
+  .lesson-section { padding: 40px 0 96px; }
+  .lesson-grid { display: grid; grid-template-columns: 1fr 300px; gap: 40px; align-items: start; }
+  @media (max-width: 880px){ .lesson-grid { grid-template-columns: 1fr; } }
+  .crumb { font-size: 13px; color: var(--ink-muted); display:flex; align-items:center; gap:8px; margin-bottom: 18px; }
+  .crumb .sep { opacity:.5; }
+  .crumb strong { color: var(--terracotta); font-weight: 600; }
+  .lesson-title { font-family: var(--serif); font-weight: 500; font-size: clamp(2rem, 4vw, 2.9rem); line-height: 1.08; letter-spacing: -.02em; margin-bottom: 24px; }
+  .lesson-body p { color: var(--ink-soft); font-size: 18px; line-height: 1.75; margin-bottom: 20px; }
+  .worked { background: var(--cream-deep); border: 1px solid var(--hairline); border-left: 4px solid var(--terracotta); border-radius: var(--r-sm); padding: 24px 26px; margin: 28px 0; }
+  .worked .eyebrow { color: var(--terracotta); font-size:11px; margin-bottom: 10px; }
+  .worked .step { display:flex; gap:14px; margin-top: 12px; }
+  .worked .step .n { font-family: var(--serif); font-weight: 600; color: var(--terracotta); font-size: 18px; min-width: 22px; }
+  .worked .step .t { font-size: 16px; color: var(--charcoal); line-height: 1.55; }
+  .practice { margin-top: 36px; }
+  .practice .q-label { font-size:12px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color: var(--ink-muted); }
+  .practice .q-text { font-family: var(--serif); font-weight: 500; font-size: 21px; line-height: 1.4; margin: 10px 0 22px; }
+  .opts { display:flex; flex-direction: column; gap: 4px; }
+  .opt { display:flex; align-items:center; gap: 14px; padding: 16px 4px; border-bottom: 1px solid var(--hairline); cursor: pointer; font-size: 16px; color: var(--ink-soft); transition: color .15s ease; }
+  .opt:hover { color: var(--charcoal); }
+  .opt .dot { width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--hairline); flex-shrink:0; position: relative; transition: border-color .15s ease; }
+  .opt.selected { color: var(--charcoal); font-weight: 500; }
+  .opt.selected .dot { border-color: var(--terracotta); }
+  .opt.selected .dot::after { content:""; position:absolute; inset: 3px; border-radius: 50%; background: var(--terracotta); }
+  .lesson-side { position: sticky; top: 90px; }
+  .side-card { background: var(--white); border: 1px solid var(--hairline); border-radius: var(--r-md); padding: 24px; box-shadow: var(--shadow-soft); }
+  .side-card .eyebrow { font-size: 11px; }
+  .side-card h5 { font-family: var(--serif); font-weight: 600; font-size: 18px; margin: 8px 0 16px; }
+  .tutor-bubble { background: var(--cream-deep); border-radius: 14px; padding: 16px; font-size: 14.5px; color: var(--ink-soft); line-height: 1.55; }
+  .tutor-input { margin-top: 14px; display:flex; align-items:center; gap: 10px; border-bottom: 1.5px solid var(--charcoal); padding: 12px 2px; }
+  .tutor-input input { border:none; background: transparent; outline: none; flex:1; font-family: var(--sans); font-size: 15px; color: var(--charcoal); }
+  .tutor-input input::placeholder { color: var(--ink-muted); }
+  .tutor-send { width: 34px; height: 34px; border-radius: 50%; background: var(--terracotta); color:#fff; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+
+  /* PARENT */
+  .parent-section { padding: 60px 0 110px; background: var(--cream-deep); border-top:1px solid var(--hairline); }
+  .parent-head { display:flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 16px; margin-bottom: 38px; }
+  .parent-head h2 { font-family: var(--serif); font-weight: 500; font-size: clamp(1.9rem,3.6vw,2.6rem); letter-spacing:-.015em; }
+  .parent-head .week-pick { font-size: 13px; color: var(--ink-muted); border-bottom: 1.5px solid var(--charcoal); padding-bottom: 4px; cursor: pointer; }
+  .parent-grid { display: grid; grid-template-columns: 1.3fr 1fr; gap: 26px; align-items: start; position: relative; }
+  @media (max-width: 880px){ .parent-grid { grid-template-columns: 1fr; } }
+  .stat-card { background: var(--white); border-radius: var(--r-md); padding: 30px; box-shadow: var(--shadow-soft); border:1px solid var(--hairline); }
+  .stat-card .eyebrow { font-size: 11px; }
+  .stat-big { font-family: var(--serif); font-weight: 500; font-size: clamp(2.4rem,4.6vw,3.2rem); line-height: 1; margin: 12px 0 8px; letter-spacing: -.02em; }
+  .stat-big .unit { font-size: .4em; color: var(--ink-muted); font-family: var(--sans); font-weight: 500; }
+  .stat-sub { color: var(--ink-soft); font-size: 15px; }
+  .stat-row { display:flex; gap: 28px; margin-top: 26px; padding-top: 22px; border-top: 1px solid var(--hairline); }
+  .stat-row .item .num { font-family: var(--serif); font-weight: 600; font-size: 24px; }
+  .stat-row .item .lbl { font-size: 12.5px; color: var(--ink-muted); }
+  .on-track { margin-top: 22px; display:flex; align-items:center; gap: 12px; background: rgba(126,142,99,.12); border-radius: 12px; padding: 14px 18px; color: var(--sage-dk); font-weight: 600; font-size: 14.5px; }
+  .alert-card { background: var(--white); border-radius: var(--r-md); padding: 24px; box-shadow: var(--shadow-float); border:1px solid var(--hairline); transform: rotate(-1.6deg); position: relative; }
+  .alert-card .pin { position:absolute; top: -10px; left: 24px; background: var(--terracotta); color:#fff; font-size: 11px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; padding: 5px 12px; border-radius: 999px; }
+  .alert-card .eyebrow { color: var(--terracotta); font-size: 11px; margin-top: 8px; }
+  .alert-card h4 { font-family: var(--serif); font-weight: 600; font-size: 19px; margin: 10px 0 8px; line-height: 1.3; }
+  .alert-card p { font-size: 14.5px; color: var(--ink-soft); line-height: 1.55; }
+  .alert-card .fix { margin-top: 16px; display:inline-block; font-size: 14px; font-weight:600; color: var(--terracotta); border-bottom: 1.5px solid var(--terracotta); padding-bottom: 2px; }
+
+  /* FOOTER */
+  footer { border-top: 1px solid var(--hairline); padding: 44px 0 50px; }
+  .foot-inner { display:flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; }
+  .foot-left { display:flex; align-items:center; gap: 10px; }
+  .foot-tag { font-size: 14px; color: var(--ink-muted); }
+  .foot-links { display:flex; gap: 26px; }
+  .foot-links a { color: var(--ink-soft); text-decoration:none; font-size: 14.5px; }
+  .foot-copy { font-size: 12.5px; color: var(--ink-muted); margin-top: 18px; }
+  .tokens { display:flex; gap: 12px; flex-wrap: wrap; margin-top: 40px; padding-top: 28px; border-top: 1px dashed var(--hairline); }
+  .swatch { display:flex; align-items:center; gap: 8px; font-size: 12px; color: var(--ink-muted); }
+  .swatch .chip { width: 22px; height: 22px; border-radius: 7px; border: 1px solid rgba(0,0,0,.06); }
+  .section-rule { text-align:center; font-family: var(--sans); font-size: 11px; letter-spacing:.2em; text-transform: uppercase; color: var(--ink-muted); margin: 0 0 8px; }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="#" class="brand">
+      <svg class="brand-mark" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M20 11 C15 9 8 10 5 12 L5 30 C8 28 15 27 20 29 C25 27 32 28 35 30 L35 12 C32 10 25 9 20 11 Z"/>
+        <path d="M20 11 L20 29"/>
+        <path d="M9 16 L15 15.4 M9 20 L15 19.5 M25 15.4 L31 16 M25 19.5 L31 20"/>
+      </svg>
+      <span class="brand-name">Soma</span>
+    </a>
+    <div class="nav-links">
+      <a href="#subjects">Subjects</a>
+      <a href="#student">For students</a>
+      <a href="#parent">For parents</a>
+      <a href="#guarantee">The guarantee</a>
+    </div>
+    <a href="#" class="btn btn-primary nav-cta">Start free trial</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="wrap">
+    <div class="hero-grid">
+      <div>
+        <div class="eyebrow">Uganda's lower secondary curriculum</div>
+        <h1>Study the way UNEB <em>actually marks you.</em></h1>
+        <p class="lede">Soma teaches the new competency-based curriculum the way examiners grade it. Learn interactively, get feedback on every answer, and watch your <span class="highlight">predicted grade climb.</span> Built for S3 and S4 students.</p>
+        <div class="hero-actions">
+          <a href="#" class="btn btn-primary">Start free trial</a>
+          <a href="#student" class="btn btn-ghost">See how it works</a>
+        </div>
+        <div class="hero-trust">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg>
+          7 days free. No card needed. Maths, Biology, Chemistry.
+        </div>
+      </div>
+      <div class="hero-art">
+        <div class="blob blob-t"></div>
+        <div class="blob blob-s"></div>
+        <div class="line-book">
+          <svg viewBox="0 0 340 340" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M170 92 C128 76 60 80 36 92 L36 244 C60 232 128 228 170 244 C212 228 280 232 304 244 L304 92 C280 80 212 76 170 92 Z"/>
+            <path d="M170 92 L170 244"/>
+            <path d="M62 124 L150 132"/>
+            <path d="M62 146 L150 154"/>
+            <path d="M62 168 L130 175"/>
+            <path d="M190 132 L278 124"/>
+            <path d="M190 154 L278 146"/>
+            <path d="M190 175 L230 168"/>
+            <path d="M170 92 C170 70 162 52 150 44"/>
+            <path d="M150 44 C156 50 164 50 170 44"/>
+            <path d="M170 70 C180 64 188 52 188 40"/>
+            <path d="M188 40 C182 46 176 46 170 42"/>
+          </svg>
+        </div>
+        <div class="float-card pred-chip">
+          <div class="grade">B</div>
+          <div class="meta">
+            <strong>Predicted · Maths</strong>
+            <span class="arrow-up">up from C</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="guarantee" id="guarantee">
+  <div class="blob" style="width:300px;height:300px;background:var(--terracotta);top:-60px;left:-40px;opacity:.18;"></div>
+  <div class="blob" style="width:260px;height:260px;background:var(--sage);bottom:-80px;right:-30px;opacity:.20;"></div>
+  <div class="wrap">
+    <div class="guarantee-inner">
+      <div class="eyebrow">The promise</div>
+      <h2>
+        <span class="low">Your child is at 40%.</span><br>
+        <span class="high">We get them to 80%, or your subscription is refunded.</span>
+      </h2>
+      <p class="g-sub">The guarantee is tracked on your parent dashboard, in plain numbers. It depends on your child staying engaged. If they put in the work and we don't deliver, you don't pay.</p>
+      <svg class="g-seal" viewBox="0 0 92 92" fill="none" stroke="var(--terracotta)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="46" cy="46" r="42"/>
+        <path d="M28 47 L41 60 L64 33"/>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<section class="subjects" id="subjects">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">Three subjects, for starters</div>
+      <h2>Colour is identity, not decoration.</h2>
+      <p>Each subject owns one earthy tone. So a glance tells a student and a parent what's being learned, without a single word.</p>
+    </div>
+    <div class="subj-grid">
+      <div class="subj-card c-math">
+        <div class="subj-icon">
+          <svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 24 L24 24 L24 6 Z"/><path d="M4 24 L24 6"/><path d="M18 24 A6 6 0 0 0 12 18"/>
+          </svg>
+        </div>
+        <h3>Mathematics</h3>
+        <p>Algebra, geometry, and the problem-solving style UNEB now rewards. Show your working. Earn method marks.</p>
+        <span class="subj-tag">Terracotta</span>
+      </div>
+      <div class="subj-card c-bio">
+        <div class="subj-icon">
+          <svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M24 4 C24 18 14 24 4 24 C4 12 14 4 24 4 Z"/><path d="M4 24 L18 10"/>
+          </svg>
+        </div>
+        <h3>Biology</h3>
+        <p>Cells, systems, and how to answer "describe" and "explain" for full marks. The keywords examiners listen for.</p>
+        <span class="subj-tag">Sage green</span>
+      </div>
+      <div class="subj-card c-chem">
+        <div class="subj-icon">
+          <svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M11 4 L17 4"/><path d="M12 4 L12 12 L5 23 C4 24.5 5 25 6 25 L22 25 C23 25 24 24.5 23 23 L16 12 L16 4"/><path d="M8 19 L20 19"/>
+          </svg>
+        </div>
+        <h3>Chemistry</h3>
+        <p>Bonding, reactions, and the structured-answer format examiners expect. Plain steps, real feedback, full marks.</p>
+        <span class="subj-tag">Dusty blue</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="mockup-section" id="student">
+  <div class="wrap">
+    <div class="section-rule">Product surface · Student dashboard</div>
+    <div class="app-frame">
+      <div class="blob" style="width:260px;height:260px;background:var(--terracotta);top:-40px;right:-30px;"></div>
+      <div class="blob" style="width:200px;height:200px;background:var(--sage);bottom:-50px;left:-20px;opacity:.25;"></div>
+      <div style="position:relative; z-index:2;">
+        <div class="dash-hello">Good afternoon, Aisha.</div>
+        <div class="dash-sub">You're on a 6-day streak. Two lessons away from your next mastery gate.</div>
+        <div class="dash-grid">
+          <div style="display:flex; flex-direction:column; gap:22px;">
+            <div class="card grade-card">
+              <div class="eyebrow">Predicted · Mathematics</div>
+              <div class="grade-big"><span class="letter">B</span><span class="delta">up from C</span></div>
+              <div class="grade-note">On track for your target. Keep the weekly hours up and you'll hold it.</div>
+            </div>
+            <div class="card meter-card">
+              <div class="meter-head"><span class="now">68%</span><span class="tgt">Target 80% · guarantee</span></div>
+              <div class="meter"><span></span><div class="target-mark"></div></div>
+              <div class="meter-labels"><span>Start</span><span>80% target</span><span>100%</span></div>
+            </div>
+          </div>
+          <div class="card continue">
+            <div class="thumb">
+              <span class="tag">Continue learning</span>
+              <svg viewBox="0 0 84 84" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M42 18 C30 14 12 16 6 20 L6 64 C12 60 30 58 42 62 C54 58 72 60 78 64 L78 20 C72 16 54 14 42 18 Z"/>
+                <path d="M42 18 L42 62"/><path d="M16 30 L36 33 M16 40 L36 43 M48 33 L68 30"/>
+              </svg>
+            </div>
+            <div class="info">
+              <div class="eyebrow">Mathematics · Algebra</div>
+              <h4>Solving simultaneous equations</h4>
+              <p>The elimination method UNEB examiners look for, with worked steps.</p>
+              <div class="progress-row"><div class="bar"><span></span></div><span class="pct">3 of 6</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="lesson-section">
+  <div class="wrap">
+    <div class="section-rule">Product surface · A lesson</div>
+    <div class="lesson-grid">
+      <div class="lesson-body">
+        <div class="crumb"><strong>Mathematics</strong><span class="sep">·</span><span>Algebra</span><span class="sep">·</span><span>Lesson 3</span></div>
+        <h2 class="lesson-title">Solving simultaneous equations.</h2>
+        <p>When you see two equations with two unknowns, UNEB wants you to eliminate one variable first. The marking scheme awards <span class="highlight">method marks even if your final answer slips</span>, so always show your working, step by step.</p>
+        <div class="worked">
+          <div class="eyebrow">Worked example</div>
+          <div class="step"><span class="n">1</span><span class="t">Label the equations. Make the coefficients of one variable equal in both.</span></div>
+          <div class="step"><span class="n">2</span><span class="t">Add or subtract the equations to eliminate that variable.</span></div>
+          <div class="step"><span class="n">3</span><span class="t">Solve for the remaining unknown, then substitute back to find the other.</span></div>
+        </div>
+        <div class="practice">
+          <div class="q-label">Check your understanding</div>
+          <div class="q-text">Which step comes first when solving by elimination?</div>
+          <div class="opts">
+            <div class="opt selected"><span class="dot"></span> Make the coefficients of one variable equal</div>
+            <div class="opt"><span class="dot"></span> Add the two equations together</div>
+            <div class="opt"><span class="dot"></span> Solve for the final unknown</div>
+            <div class="opt"><span class="dot"></span> Substitute one value back in</div>
+          </div>
+        </div>
+      </div>
+      <aside class="lesson-side">
+        <div class="side-card">
+          <div class="eyebrow">Ask the tutor</div>
+          <h5>Stuck on a step?</h5>
+          <div class="tutor-bubble">A method mark is given for the correct elimination step, even if your final value is wrong. Want me to show what counts as a full method?</div>
+          <div class="tutor-input">
+            <input type="text" placeholder="Ask about this lesson…" />
+            <button class="tutor-send" aria-label="Send"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<section class="parent-section" id="parent">
+  <div class="wrap">
+    <div class="section-rule">Product surface · Parent dashboard</div>
+    <div class="parent-head">
+      <h2>Aisha's week.</h2>
+      <span class="week-pick">Week of 16 June ▾</span>
+    </div>
+    <div class="parent-grid">
+      <div>
+        <div class="stat-card">
+          <div class="eyebrow">Study time this week</div>
+          <div class="stat-big">3<span class="unit">h</span> 20<span class="unit">m</span></div>
+          <div class="stat-sub">Across Maths, Biology and Chemistry. Up 45 minutes on last week.</div>
+          <div class="stat-row">
+            <div class="item"><div class="num">8</div><div class="lbl">Lessons completed</div></div>
+            <div class="item"><div class="num">B</div><div class="lbl">Predicted · Maths</div></div>
+            <div class="item"><div class="num">6</div><div class="lbl">Day streak</div></div>
+          </div>
+          <div class="on-track">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+            On track for the 80% guarantee this term.
+          </div>
+        </div>
+      </div>
+      <div class="alert-card">
+        <span class="pin">Needs attention</span>
+        <div class="eyebrow">Biology · Cell division</div>
+        <h4>Aisha's score dipped to 58% here.</h4>
+        <p>The topic covers mitosis keywords she's missing in her answers. A short refresher is ready and waiting for her.</p>
+        <span class="fix">Send her the refresher →</span>
+      </div>
+    </div>
+    <div class="tokens">
+      <div class="swatch"><span class="chip" style="background:#FBF8F3"></span> Cream #FBF8F3</div>
+      <div class="swatch"><span class="chip" style="background:#2B2926"></span> Charcoal #2B2926</div>
+      <div class="swatch"><span class="chip" style="background:#C06A4B"></span> Terracotta / Maths</div>
+      <div class="swatch"><span class="chip" style="background:#7E8E63"></span> Sage / Biology</div>
+      <div class="swatch"><span class="chip" style="background:#6E8AA6"></span> Dusty blue / Chem</div>
+      <div class="swatch"><span class="chip" style="background:#F2E0A0"></span> Marker highlight</div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-inner">
+      <div class="foot-left">
+        <svg width="26" height="26" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 11 C15 9 8 10 5 12 L5 30 C8 28 15 27 20 29 C25 27 32 28 35 30 L35 12 C32 10 25 9 20 11 Z"/><path d="M20 11 L20 29"/>
+        </svg>
+        <span class="foot-tag">Soma · made for Ugandan students.</span>
+      </div>
+      <div class="foot-links">
+        <a href="#">Subjects</a><a href="#">Pricing</a><a href="#">For parents</a><a href="#">Sign in</a>
+      </div>
+    </div>
+    <div class="foot-copy">© 2026 Soma. Built for the new lower secondary curriculum. Design preview.</div>
+  </div>
+</footer>
+
+<script>
+  document.querySelectorAll('.opts .opt').forEach(opt => {
+    opt.addEventListener('click', () => {
+      document.querySelectorAll('.opts .opt').forEach(o => o.classList.remove('selected'));
+      opt.classList.add('selected');
+    });
+  });
+</script>
+
+</body>
+</html>
