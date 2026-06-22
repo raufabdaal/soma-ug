@@ -4,6 +4,9 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
+import { authErrorToMessage } from "@/lib/auth-errors";
+import { GoogleButton } from "@/components/GoogleButton";
+import { AuthShell, Field, Divider, ErrorBox, SetupWarning } from "@/components/AuthUI";
 import type { UserRole } from "@/types";
 
 export default function SignupPage() {
@@ -30,21 +33,14 @@ export default function SignupPage() {
       await signup(email, password, name, role);
       router.push("/dashboard");
     } catch (err) {
-      const message = err instanceof Error ? err.message : "Something went wrong.";
-      if (message.includes("email-already-in-use")) {
-        setError("An account with that email already exists. Try signing in instead.");
-      } else if (message.includes("weak-password")) {
-        setError("Password is too weak. Use at least 6 characters.");
-      } else {
-        setError("Something went wrong. Please try again.");
-      }
+      setError(authErrorToMessage(err));
     } finally {
       setLoading(false);
     }
   }
 
   return (
-    <SignupShell>
+    <AuthShell>
       <h1 className="font-serif-display" style={{ fontSize: 32, fontWeight: 500, letterSpacing: "-0.02em", marginBottom: 8 }}>
         Start learning today.
       </h1>
@@ -54,11 +50,7 @@ export default function SignupPage() {
 
       {!configured && <SetupWarning />}
 
-      {error && (
-        <div style={{ background: "rgba(192,106,75,0.1)", borderLeft: "3px solid var(--terracotta)", borderRadius: "var(--r-sm)", padding: "14px 18px", marginBottom: 20, fontSize: 14.5, color: "var(--terracotta-dk)" }}>
-          {error}
-        </div>
-      )}
+      {error && <ErrorBox message={error} />}
 
       {/* Role selector */}
       <div style={{ marginBottom: 28 }}>
@@ -72,10 +64,7 @@ export default function SignupPage() {
       </div>
 
       <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 24 }}>
-        <div>
-          <label htmlFor="name" style={{ display: "block", fontSize: 12, fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--ink-muted)", marginBottom: 8 }}>
-            Full name
-          </label>
+        <Field label="Full name" htmlFor="name">
           <input
             id="name"
             type="text"
@@ -86,12 +75,9 @@ export default function SignupPage() {
             className="input-clean"
             autoComplete="name"
           />
-        </div>
+        </Field>
 
-        <div>
-          <label htmlFor="email" style={{ display: "block", fontSize: 12, fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--ink-muted)", marginBottom: 8 }}>
-            Email
-          </label>
+        <Field label="Email" htmlFor="email">
           <input
             id="email"
             type="email"
@@ -102,12 +88,9 @@ export default function SignupPage() {
             className="input-clean"
             autoComplete="email"
           />
-        </div>
+        </Field>
 
-        <div>
-          <label htmlFor="password" style={{ display: "block", fontSize: 12, fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--ink-muted)", marginBottom: 8 }}>
-            Password
-          </label>
+        <Field label="Password" htmlFor="password">
           <input
             id="password"
             type="password"
@@ -118,12 +101,21 @@ export default function SignupPage() {
             className="input-clean"
             autoComplete="new-password"
           />
-        </div>
+        </Field>
 
         <button type="submit" disabled={loading || !configured} className="btn btn-primary" style={{ width: "100%", marginTop: 8 }}>
           {loading ? "Creating account..." : "Start free trial"}
         </button>
       </form>
+
+      <Divider />
+
+      <GoogleButton
+        role={role}
+        label={`Sign up as ${role} with Google`}
+        onSuccess={() => router.push("/dashboard")}
+        onError={setError}
+      />
 
       <p style={{ textAlign: "center", marginTop: 28, fontSize: 15, color: "var(--ink-soft)" }}>
         Already have an account?{" "}
@@ -131,7 +123,7 @@ export default function SignupPage() {
           Sign in
         </Link>
       </p>
-    </SignupShell>
+    </AuthShell>
   );
 }
 
@@ -153,39 +145,5 @@ function RoleButton({ active, onClick, label, desc }: { active: boolean; onClick
       <div style={{ fontWeight: 600, fontSize: 15.5, color: active ? "var(--terracotta)" : "var(--charcoal)" }}>{label}</div>
       <div style={{ fontSize: 12.5, color: "var(--ink-muted)", marginTop: 2 }}>{desc}</div>
     </button>
-  );
-}
-
-function SignupShell({ children }: { children: React.ReactNode }) {
-  return (
-    <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "40px 28px", position: "relative", overflow: "hidden" }}>
-      <div className="blob" style={{ width: 320, height: 320, background: "var(--terracotta)", top: -40, right: -60, opacity: 0.14 }} />
-      <div className="blob" style={{ width: 260, height: 260, background: "var(--sage)", bottom: -40, left: -40, opacity: 0.14 }} />
-
-      <div className="animate-fade" style={{ width: "100%", maxWidth: 400, position: "relative", zIndex: 2 }}>
-        <Link href="/" style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none", color: "var(--charcoal)", marginBottom: 40, justifyContent: "center" }}>
-          <svg width="30" height="30" viewBox="0 0 40 40" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M20 11 C15 9 8 10 5 12 L5 30 C8 28 15 27 20 29 C25 27 32 28 35 30 L35 12 C32 10 25 9 20 11 Z" />
-            <path d="M20 11 L20 29" />
-          </svg>
-          <span className="font-serif-display" style={{ fontWeight: 600, fontSize: 23 }}>Soma</span>
-        </Link>
-
-        <div className="card" style={{ padding: 32 }}>
-          {children}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function SetupWarning() {
-  return (
-    <div style={{ background: "var(--cream-deep)", borderRadius: "var(--r-sm)", padding: "14px 18px", marginBottom: 20, fontSize: 13.5, color: "var(--ink-soft)", lineHeight: 1.5 }}>
-      <strong style={{ color: "var(--charcoal)" }}>Setup needed:</strong> Firebase keys are missing.
-      Create <code style={{ background: "rgba(0,0,0,0.05)", padding: "2px 6px", borderRadius: 4 }}>.env.local</code> from{" "}
-      <code style={{ background: "rgba(0,0,0,0.05)", padding: "2px 6px", borderRadius: 4 }}>.env.example</code> and add your keys.
-      See <code style={{ background: "rgba(0,0,0,0.05)", padding: "2px 6px", borderRadius: 4 }}>MANUAL_TASKS.md</code> MT-001.
-    </div>
   );
 }

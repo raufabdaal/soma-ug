@@ -11,8 +11,11 @@ import {
   onAuthStateChanged,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
+  signInWithPopup,
+  GoogleAuthProvider,
   signOut,
   updateProfile,
+  getAdditionalUserInfo,
   type User as FirebaseUser,
 } from "firebase/auth";
 import {
@@ -32,6 +35,7 @@ interface AuthContextValue {
   configured: boolean;
   signup: (email: string, password: string, displayName: string, role: UserRole) => Promise<void>;
   login: (email: string, password: string) => Promise<void>;
+  signInWithGoogle: (role: UserRole) => Promise<void>;
   logout: () => Promise<void>;
 }
 
@@ -52,7 +56,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setUser(firebaseUser);
 
       if (firebaseUser) {
-        // Fetch the user's profile from Firestore
         try {
           const profileDoc = await getDoc(doc(db, "users", firebaseUser.uid));
           if (profileDoc.exists()) {
@@ -71,25 +74,29 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return () => unsubscribe();
   }, []);
 
-  async function signup(email: string, password: string, displayName: string, role: UserRole) {
-    const credential = await createUserWithEmailAndPassword(auth, email, password);
-    await updateProfile(credential.user, { displayName });
-
-    // Create the user document in Firestore
-    const newUser: Omit<AppUser, "createdAt"> & { createdAt: ReturnType<typeof serverTimestamp> } = {
-      uid: credential.user.uid,
+  /**
+   * Create a user document + student/parent profile in Firestore.
+   * Shared between email signup and Google signup.
+   */
+  async function createUserProfile(
+    uid: string,
+    email: string,
+    displayName: string,
+    role: UserRole
+  ) {
+    const newUser = {
+      uid,
       email,
       displayName,
       role,
       createdAt: serverTimestamp(),
     };
 
-    await setDoc(doc(db, "users", credential.user.uid), newUser);
+    await setDoc(doc(db, "users", uid), newUser);
 
-    // If student, create a student profile with a study code
     if (role === "student") {
-      await setDoc(doc(db, "students", credential.user.uid), {
-        userId: credential.user.uid,
+      await setDoc(doc(db, "students", uid), {
+        userId: uid,
         parentIds: [],
         level: "S3",
         enrolledSubjects: [],
@@ -103,19 +110,58 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       });
     }
 
-    // If parent, create a parent profile
     if (role === "parent") {
-      await setDoc(doc(db, "parents", credential.user.uid), {
-        userId: credential.user.uid,
+      await setDoc(doc(db, "parents", uid), {
+        userId: uid,
         studentIds: [],
       });
     }
 
-    setProfile({ ...newUser, createdAt: { seconds: 0, nanoseconds: 0 } as unknown as AppUser["createdAt"] });
+    setProfile({
+      uid,
+      email,
+      displayName,
+      role,
+      createdAt: { seconds: 0, nanoseconds: 0 } as unknown as AppUser["createdAt"],
+    });
+  }
+
+  async function signup(email: string, password: string, displayName: string, role: UserRole) {
+    const credential = await createUserWithEmailAndPassword(auth, email, password);
+    await updateProfile(credential.user, { displayName });
+    await createUserProfile(credential.user.uid, email, displayName, role);
   }
 
   async function login(email: string, password: string) {
     await signInWithEmailAndPassword(auth, email, password);
+  }
+
+  /**
+   * Google sign-in. Works for both login and signup:
+   * - If the user already exists in Firestore, just signs them in.
+   * - If they are new, creates their profile with the given role.
+   */
+  async function signInWithGoogle(role: UserRole) {
+    const provider = new GoogleAuthProvider();
+    const credential = await signInWithPopup(auth, provider);
+    const uid = credential.user.uid;
+
+    // Check if the user already has a profile
+    const existingDoc = await getDoc(doc(db, "users", uid));
+
+    if (existingDoc.exists()) {
+      setProfile(existingDoc.data() as AppUser);
+      return;
+    }
+
+    // New user: create profile
+    const additionalInfo = getAdditionalUserInfo(credential);
+    const displayName = credential.user.displayName || "Student";
+    const email = credential.user.email || "";
+
+    // For Google signup, skip the email step (Google handles it)
+    void additionalInfo;
+    await createUserProfile(uid, email, displayName, role);
   }
 
   async function logout() {
@@ -132,6 +178,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         configured: firebaseConfigured,
         signup,
         login,
+        signInWithGoogle,
         logout,
       }}
     >
