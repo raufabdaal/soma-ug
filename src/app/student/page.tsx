@@ -63,7 +63,7 @@ export default function StudentDashboard() {
       </p>
 
       {/* Stats grid */}
-      <div style={{ display: "grid", gridTemplateColumns: "1.1fr 1.4fr", gap: 22 }}>
+      <div className="grid-collapse" style={{ display: "grid", gridTemplateColumns: "1.1fr 1.4fr", gap: 22 }}>
         {/* Left column: predicted grade + guarantee meter */}
         <div style={{ display: "flex", flexDirection: "column", gap: 22 }}>
           <div className="card">
@@ -111,7 +111,7 @@ export default function StudentDashboard() {
         </div>
 
         {/* Right column: continue learning */}
-        <div className="card" style={{ padding: 0, overflow: "hidden", display: "grid", gridTemplateColumns: "0.85fr 1.15fr" }}>
+        <div className="card grid-continue" style={{ padding: 0, overflow: "hidden", display: "grid", gridTemplateColumns: "0.85fr 1.15fr" }}>
           <div style={{ background: "var(--terracotta)", display: "flex", alignItems: "center", justifyContent: "center", minHeight: 180, position: "relative" }}>
             <span style={{ position: "absolute", top: 18, left: 22, fontSize: 11, fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase", color: "rgba(255,255,255,0.85)" }}>
               Continue learning
@@ -146,7 +146,7 @@ export default function StudentDashboard() {
       <h2 className="font-serif-display" style={{ fontWeight: 600, fontSize: 20, margin: "48px 0 20px" }}>
         Your subjects
       </h2>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 22 }}>
+      <div className="grid-collapse-3" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 22 }}>
         <SubjectTile name="Mathematics" topics="12 topics" color="var(--terracotta)" progress={68} href="/student/learn" />
         <SubjectTile name="Biology" topics="8 topics" color="var(--sage-dk)" progress={0} href="/student/learn" />
         <SubjectTile name="Chemistry" topics="10 topics" color="var(--blue-dk)" progress={0} href="/student/learn" />

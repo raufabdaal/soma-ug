@@ -47,22 +47,21 @@ The app needs real API keys to function. Without these, login fails, AI marking 
 
 ---
 
-## MT-002 · Apply Firestore security rules (after Firebase project is set up)
+## MT-002 · Apply Firestore security rules (UPDATED - fixes parent signup and student linking)
 
-**Status:** 🔴 Not started (blocks data reads/writes)
+**Status:** 🔴 Action required (replace the old rules with these)
 **Estimated time:** 5 minutes
 **Cost:** Free
 
 ### Why
 
-Firebase refuses to read or write data until you publish security rules. Without this, every data operation throws "Missing or insufficient permissions."
+The previous rules were missing the `parents/` collection entirely (which broke parent signup) and blocked parents from looking up students by study code (which broke linking). These updated rules fix both issues.
 
 ### Steps
 
-1. Go to Firebase Console then Firestore Database
-2. If you haven't created a database yet, click "Create database" and choose "Start in production mode"
-3. Go to the "Rules" tab
-4. We will provide the rules file. For now, paste this starter set:
+1. Go to Firebase Console then Firestore Database then Rules tab
+2. **Delete everything** there
+3. Paste these rules:
 
 ```
 rules_version = '2';
@@ -72,11 +71,23 @@ service cloud.firestore {
     match /users/{userId} {
       allow read, write: if request.auth != null && request.auth.uid == userId;
     }
-    // Students can read/write their own profile
+
+    // Students
+    // NOTE: authenticated users can read students (needed for study code linking).
+    // TODO Phase 2: tighten with Cloud Functions.
     match /students/{studentId} {
-      allow read, write: if request.auth != null && request.auth.uid == studentId;
+      allow read: if request.auth != null;
+      allow create: if request.auth != null && request.auth.uid == studentId;
+      allow delete: if request.auth != null && request.auth.uid == studentId;
+      allow update: if request.auth != null;
     }
-    // Public curriculum content (readable by anyone signed in)
+
+    // Parents can read and write their own profile
+    match /parents/{parentId} {
+      allow read, write: if request.auth != null && request.auth.uid == parentId;
+    }
+
+    // Curriculum content (readable by anyone signed in)
     match /subjects/{document=**} {
       allow read: if request.auth != null;
       allow write: if false;
@@ -93,11 +104,35 @@ service cloud.firestore {
 }
 ```
 
-5. Click "Publish"
+4. Click **Publish**
 
-### Note
+---
 
-These are starter rules. We will tighten them as the app grows.
+## MT-004 · Enable sign-in methods in Firebase Auth
+
+**Status:** 🔴 Not started (blocks ALL signups and logins)
+**Estimated time:** 3 minutes
+**Cost:** Free
+
+### Why
+
+New Firebase projects ship with ZERO sign-in methods enabled. Until you turn them on, every signup and login fails. This is the most common reason for "Something went wrong" errors.
+
+### Steps
+
+1. Go to https://console.firebase.google.com
+2. Open your project (soma or soma-ug)
+3. In the left sidebar, click **Authentication**
+4. Click the **Sign-in method** tab at the top
+5. Click **Email/Password**
+6. Toggle the **Enable** switch to ON
+7. Click **Save**
+8. Go back and click **Google**
+9. Toggle the **Enable** switch to ON
+10. You will be asked for a "project support email". Select your email from the dropdown.
+11. Click **Save**
+
+After this, both email/password signups AND Google sign-in will work.
 
 ---
 

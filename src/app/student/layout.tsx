@@ -76,7 +76,7 @@ export default function StudentLayout({ children }: { children: React.ReactNode 
                     }}
                   >
                     <item.icon />
-                    {item.label}
+                    <span className="nav-text-hide">{item.label}</span>
                   </Link>
                 );
               })}

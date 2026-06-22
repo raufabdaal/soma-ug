@@ -33,13 +33,14 @@
 
 ## What is blocked
 
-- **MT-001**: `.env.local` needs real Firebase + Groq keys. Without these, login and AI will not work.
-- **MT-002**: Firestore security rules need to be applied.
-- **MT-003**: Domain needs to be authorized in Firebase Auth (after first deploy).
+- **MT-002 (CRITICAL)**: Replace old Firestore rules with the updated ones. Fixes parent signup AND student code linking. The founder needs to paste the new rules into Firebase Console.
+- **MT-004**: Enable Email/Password AND Google in Firebase Auth (likely done).
+- **MT-001**: `.env.local` keys (done, site is live).
+- **MT-003**: Vercel domain authorized in Firebase Auth (likely done).
 
 ## What is next
 
-1. Deploy to Vercel (get a live URL).
-2. Founder completes MT-001, MT-002, MT-003.
-3. Build the first complete learning loop (Mathematics lesson + AI marking).
-4. Populate curriculum content.
+1. Founder replaces Firestore rules (MT-002).
+2. Push new code to GitHub (onboarding, mobile fixes, favicon).
+3. Test the full flow on mobile and desktop.
+4. Build the Mathematics lesson player + AI marking.

@@ -200,3 +200,86 @@
     transform: translateY(0);
   }
 }
+
+/* ============================================================
+   RESPONSIVE OVERRIDES
+   These use !important to override inline styles on small screens.
+   ============================================================ */
+
+@media (max-width: 860px) {
+  /* Collapse multi-column grids to single column */
+  .grid-collapse {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Collapse 3-column grids (subject tiles) */
+  .grid-collapse-3 {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Collapse 4-column grids (level picker) to 2 columns */
+  .grid-collapse-4 {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  /* Continue learning card: stack vertically */
+  .grid-continue {
+    grid-template-columns: 1fr !important;
+  }
+
+  .grid-continue .thumb {
+    min-height: 120px !important;
+  }
+
+  /* Reduce dashboard padding on mobile */
+  .dash-padding {
+    padding: 24px 16px 60px !important;
+  }
+
+  /* Reduce card padding on mobile */
+  .card-mobile {
+    padding: 20px 18px !important;
+  }
+
+  /* Nav links: hide text, show icons only */
+  .nav-text-hide {
+    display: none !important;
+  }
+
+  /* Reduce hero font on mobile */
+  .hero-mobile {
+    font-size: 2.2rem !important;
+  }
+
+  /* Full width buttons on mobile */
+  .btn-mobile-full {
+    width: 100% !important;
+  }
+
+  /* Reduce stat sizes on mobile */
+  .stat-mobile {
+    font-size: 2rem !important;
+  }
+
+  .grade-mobile {
+    font-size: 56px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Stack stat rows on very small screens */
+  .stat-row-mobile {
+    flex-direction: column !important;
+    gap: 16px !important;
+  }
+
+  /* Smaller padding on auth cards */
+  .auth-card-mobile {
+    padding: 24px 20px !important;
+  }
+
+  /* Reduce wrap padding */
+  .wrap {
+    padding: 0 16px !important;
+  }
+}

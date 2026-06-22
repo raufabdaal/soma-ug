@@ -2,36 +2,44 @@
 
 All notable changes to this project. Newest first.
 
+## [0.4.0] - 2026-06-22
+
+### Added
+- Multi-step onboarding flow (`/onboarding`): role selection, auth (Google or email), details (level + subjects for students, study code for parents), welcome screen.
+- Favicon (SVG book mark in Soma brand colors).
+- Responsive CSS overrides in globals.css for all screen sizes.
+- Updated Firestore rules (MT-002) that fix parent signup and student code linking.
+
+### Changed
+- Root URL (`/`) now redirects to `/login` instead of showing the landing page.
+- Login page links to `/onboarding` instead of `/signup`.
+- Student nav shows icons on mobile (text hidden on small screens).
+- Parent dashboard study code linking now uses proper Firestore imports and readable error messages.
+
+### Fixed
+- Parent signup: was failing because Firestore rules had no rule for the `parents/` collection. Fixed in MT-002.
+- Student code linking: was failing because rules blocked parents from reading student documents. Fixed in MT-002.
+- Mobile responsiveness: grid layouts now collapse to single column on mobile, padding reduced, stat rows stack vertically.
+
+## [0.3.0] - 2026-06-22
+
+### Added
+- Google sign-in / sign-up on both login and signup pages.
+- Shared auth UI components (AuthShell, Field, Divider, ErrorBox, SetupWarning).
+- `GoogleButton` component with proper Google branding.
+- `authErrorToMessage()` translator that surfaces readable error messages for all known Firebase errors.
+- MT-004: manual task for enabling Email/Password and Google sign-in methods in Firebase Console.
+
+### Fixed
+- Signup/login errors now show the actual cause (was hidden behind "Something went wrong").
+
 ## [0.2.0] - 2026-06-22
 
 ### Added
-- Landing page with hero, guarantee band, and subject identity cards.
-- Login page with clean underline-style inputs and error handling.
-- Signup page with student/parent role selector.
-- Role-based dashboard redirect (`/dashboard`).
-- Student dashboard: predicted grade, guarantee meter (with 80% target), continue learning card, subject tiles, and study code display for parent linking.
-- Student learn page (subject list) and practice page (placeholder).
-- Parent dashboard: study code linking interface, weekly stats card, needs-attention alert.
-- Firebase config (env-based, with graceful fallback when keys are missing).
-- Auth context (signup creates user + student/parent profiles, login, logout).
-- Parent-student linking via 6-character study codes.
-- Groq AI library (pluggable, with marking response parser).
-- AI prompt templates (tutor + marking).
-- Utility functions (study code generation, time formatting, grade conversion).
-- TypeScript type definitions for all data models.
-
-### Changed
-- Design system ported from `preview.html` to production Tailwind/CSS (`globals.css`).
+- Landing page, login, signup, dashboard redirect, student dashboard, parent dashboard, learn page, practice page.
+- Firebase config (env-based), auth context, Groq AI library, prompt templates.
 
 ## [0.1.0] - 2026-06-22
 
 ### Added
-- Project structure created (Next.js 14 + TypeScript + Tailwind).
-- Design system locked at V1 (editorial minimalist: warm cream, charcoal, earthy accents).
-- Config files: package.json, tailwind.config.ts, tsconfig.json, next.config.mjs, postcss.
-- Living docs: START_HERE.md, STATUS.md, HANDOFF.md, CHANGELOG.md, DECISIONS.md, MANUAL_TASKS.md.
-- `.env.example` template (Firebase, Groq, Resend, internal secrets).
-- `preview.html` - self-contained design preview (double-click to view).
-
-### Context
-This is a fresh start, replacing the earlier `soma-edu` repo which had a broken AI integration, generic design, and unseeded content. We kept the data model concept and Firebase project but started over for a clean, intentional build.
+- Project structure, design system, config files, living docs.

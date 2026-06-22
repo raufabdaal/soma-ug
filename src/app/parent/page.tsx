@@ -3,8 +3,9 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
-import { doc, getDoc, updateDoc, arrayUnion } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs, query, updateDoc, arrayUnion, where } from "firebase/firestore";
 import { db } from "@/lib/firebase/config";
+import { authErrorToMessage } from "@/lib/auth-errors";
 import type { ParentProfile, StudentProfile } from "@/types";
 
 export default function ParentDashboard() {
@@ -56,8 +57,6 @@ export default function ParentDashboard() {
 
     try {
       // Find the student by study code
-      // Note: this requires a query. For simplicity, we search the students collection.
-      const { collection, query, where, getDocs } = await import("firebase/firestore");
       const q = query(collection(db, "students"), where("studyCode", "==", linkCode.trim().toUpperCase()));
       const snap = await getDocs(q);
 
@@ -86,7 +85,7 @@ export default function ParentDashboard() {
     } catch (err) {
       console.error("Link failed:", err);
       setLinkStatus("error");
-      setLinkError("Something went wrong linking this student. Please try again.");
+      setLinkError(authErrorToMessage(err));
     }
   }
 
@@ -160,7 +159,7 @@ export default function ParentDashboard() {
         </span>
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "1.3fr 1fr", gap: 26, alignItems: "start" }}>
+      <div className="grid-collapse" style={{ display: "grid", gridTemplateColumns: "1.3fr 1fr", gap: 26, alignItems: "start" }}>
         {/* Stats card */}
         <div className="card" style={{ position: "relative", overflow: "hidden" }}>
           <div className="blob" style={{ width: 160, height: 160, background: "var(--sage)", top: -40, right: -30, opacity: 0.14 }} />
@@ -172,7 +171,7 @@ export default function ParentDashboard() {
             Across Maths, Biology and Chemistry. Up 45 minutes on last week.
           </p>
 
-          <div style={{ display: "flex", gap: 28, marginTop: 26, paddingTop: 22, borderTop: "1px solid var(--hairline)" }}>
+          <div className="stat-row-mobile" style={{ display: "flex", gap: 28, marginTop: 26, paddingTop: 22, borderTop: "1px solid var(--hairline)" }}>
             <StatItem num="8" label="Lessons completed" />
             <StatItem num="B" label="Predicted - Maths" />
             <StatItem num="6" label="Day streak" />

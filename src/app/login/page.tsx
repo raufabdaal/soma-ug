@@ -86,7 +86,7 @@ export default function LoginPage() {
 
       <p style={{ textAlign: "center", marginTop: 28, fontSize: 15, color: "var(--ink-soft)" }}>
         Don&apos;t have an account?{" "}
-        <Link href="/signup" style={{ color: "var(--terracotta)", fontWeight: 600 }}>
+        <Link href="/onboarding" style={{ color: "var(--terracotta)", fontWeight: 600 }}>
           Start free trial
         </Link>
       </p>
