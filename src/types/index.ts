@@ -27,6 +27,10 @@ export interface StudentProfile {
   totalStudySeconds?: number;
   guaranteeProgress?: number;
   lastActiveAt?: Timestamp | null;
+  totalXP?: number;
+  questionsAnswered?: number;
+  practiceStreak?: number;
+  lastPracticeDate?: string;
 }
 
 export interface ParentProfile {

@@ -1,58 +1,44 @@
 # Changelog
 
-All notable changes to this project. Newest first.
+All notable changes. Newest first.
 
-## [0.8.0] - 2026-06-23
+## [0.9.0] - 2026-06-23
 
 ### Added
-- COMPLETE S1 Mathematics curriculum: all 14 topics across 3 terms, built from the NCDC syllabus.
-- New competency-based lesson block types: competency statement, learning outcomes (with k/u/s tags), real-world context, exam-style questions, marking guides (method/accuracy/communication marks), and activities of integration (NCDC assessment format).
-- Every lesson now teaches to the competency, not just the knowledge:
-  - States the NCDC competency statement
-  - Maps to specific learning outcomes
-  - Uses real Ugandan contexts
-  - Shows worked examples WITH reasoning (why each step works)
-  - Demonstrates exam-style questions with full marking guides
-  - Includes activities of integration (actual NCDC sample questions)
-- Learn page organized by term, with theme colors per term.
-- Curriculum mapping banner on each lesson showing subject, level, term, topic number, theme.
+- **Lesson stepper**: paginated one-block-at-a-time navigation with progress bar, step dots, and Next/Back buttons. Kills the PDF scroll feel. Questions must be answered before advancing.
+- **Practice engine**: dedicated practice mode with topic grid, pre-written question banks (MCQ + AI-marked short answers), endless AI question generation when bank is exhausted, XP tracking, streak tracking, per-topic accuracy, and mastery levels.
+- **XP system**: 10 XP (easy), 15 XP (medium), 20 XP (hard) per correct answer. Tracked in Firestore.
+- **Practice streaks**: daily consecutive practice tracking with streak display.
+- **Mastery levels**: Not Started, Beginner, Developing, Proficient, Mastered based on practice accuracy.
+- **AI practice generator** (`/api/ai/practice`): generates fresh practice questions per topic when the pre-written bank is exhausted.
+- **Grade prediction from practice**: `predictGradeFromPractice()` calculates weighted accuracy across all practiced topics. This replaces lesson-completion-based prediction and is more robust for the guarantee.
+- Practice question banks for 5 topics (Number Bases, Integers, Fractions, Algebra 1, Business Arithmetic).
 
 ### Changed
-- Lesson block types expanded from 5 to 11 (added competency, outcome, context, exam_style, marking_guide, activity_of_integration).
-- Worked examples now include "Why this works" reasoning sections.
-- Activities of integration are actual NCDC sample assessment questions from the syllabus.
+- LessonPlayer completely rewritten as a stepper (was a long scroll).
+- Practice page completely rebuilt (was a placeholder).
+- StudentProfile type extended with totalXP, questionsAnswered, practiceStreak.
+
+## [0.8.0] - 2026-06-23
+- Complete S1 Mathematics curriculum (14 topics). Competency-based lesson blocks.
 
 ## [0.7.0] - 2026-06-23
-
-### Added
-- Left sidebar navigation, diagnostic test, progress tracking to Firestore, audio narration, real metrics.
+- Left sidebar nav, diagnostic test, progress tracking, audio narration, real metrics.
 
 ## [0.6.0] - 2026-06-23
-
-### Added
 - Parent reports, settings pages, student settings.
 
 ## [0.5.0] - 2026-06-22
-
-### Added
-- Lesson player, AI marking, AI tutor, mastery gate, mobile bottom nav.
+- Lesson player, AI marking, AI tutor, mastery gate, mobile nav.
 
 ## [0.4.0] - 2026-06-22
-
-### Added
-- Multi-step onboarding, favicon, responsive CSS, updated Firestore rules.
+- Multi-step onboarding, favicon, responsive CSS, Firestore rules.
 
 ## [0.3.0] - 2026-06-22
-
-### Added
 - Google sign-in, shared auth UI, error translator.
 
 ## [0.2.0] - 2026-06-22
-
-### Added
-- All core pages, Firebase auth, Groq AI library.
+- Core pages, Firebase auth, Groq AI library.
 
 ## [0.1.0] - 2026-06-22
-
-### Added
 - Project structure, design system, config files, living docs.

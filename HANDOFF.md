@@ -4,25 +4,38 @@
 
 ## Where we are
 
-The COMPLETE S1 Mathematics curriculum is built: all 14 topics across 3 terms, directly from the NCDC syllabus. Every lesson now teaches to the competency with NCDC competency statements, tagged learning outcomes, real-world contexts, worked examples with reasoning, exam-style questions with marking guides, and activities of integration (actual NCDC sample questions).
+The lesson experience is now paginated (stepper, not scroll). The practice engine is fully built: topic grid with mastery levels, pre-written question banks for 5 topics, AI question generation for endless practice, MCQ + AI-marked short answers, XP tracking, streaks, and per-topic accuracy. Grade prediction has shifted to be practice-based.
 
 ## What changed this session
 
-- Rebuilt the entire lesson system with 11 competency-based block types.
-- Built all 14 S1 Mathematics topics from the NCDC syllabus.
-- Each lesson includes: competency statement, learning outcomes, context, worked examples with reasoning, exam questions, marking guides, activities of integration, practice questions.
-- Learn page organized by term with theme colors.
-- Curriculum mapping banner on each lesson.
+- Rewrote LessonPlayer as a paginated stepper (kills PDF feel).
+- Built complete practice engine: topic grid, question flow, XP, streaks, mastery.
+- Created pre-written practice banks (40+ questions across 5 topics).
+- Built AI practice question generator (`/api/ai/practice`).
+- Built practice tracking library (XP, streaks, accuracy in Firestore).
+- Built grade prediction from practice accuracy (weighted, replaces lesson-based prediction).
 
 ## What the founder needs to do
 
 1. Download workspace, replace `src/` + root `.md` files, push to GitHub.
-2. Test: open a lesson, check the new block types (competency, marking guide, activity of integration).
-3. Try the Listen button on a lesson with the new blocks.
+2. Update Firestore rules to allow `practiceStats` subcollection writes (same as lessonProgress).
+3. Test: lesson stepper navigation, practice mode, XP earning, short-answer AI marking.
+
+## The Firestore rules need this addition
+
+The `practiceStats` subcollection needs the same rule as `lessonProgress`. In the rules under `students/{studentId}`:
+
+```
+match /practiceStats/{statId} {
+  allow read: if request.auth != null;
+  allow write: if request.auth != null && request.auth.uid == studentId;
+}
+```
 
 ## Immediate next steps
 
-1. Build the Practice/Sandbox mode (deeper AI-marked practice with competency-based questions).
-2. Pull Biology, Chemistry, English syllabi from NCDC and build S1 content.
-3. Build the curriculum feed.
-4. Landing page for public launch.
+1. Connect practice accuracy to the dashboard predicted grade (replace lesson-based prediction).
+2. Add remaining 9 topics to practice banks.
+3. Daily practice goal + streak freeze.
+4. End-of-topic full assessment.
+5. Biology, Chemistry, English content.

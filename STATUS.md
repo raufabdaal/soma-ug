@@ -2,35 +2,45 @@
 
 ## Current phase
 
-**Phase 2: Real curriculum content built. Testing + expanding.**
+**Phase 3: Practice engine built. Testing + gamification refinement.**
 
 ## What is done
 
-### S1 Mathematics (COMPLETE - all 14 topics from NCDC syllabus)
-- [x] Term 1: Number Bases, Integers, Fractions/Percentages/Decimals, Cartesian Coordinates
-- [x] Term 2: Geometric Construction, Sequences & Patterns, Bearings, Angle Properties, Data Collection
-- [x] Term 3: Reflection, Equations of Lines, Algebra 1, Business Arithmetic, Time & Timetables
+### Lesson experience
+- [x] Lesson stepper (paginated, one step at a time, progress bar, step dots)
+- [x] Complete S1 Mathematics curriculum (14 topics, NCDC mapped)
+- [x] Competency-based blocks (competency, outcomes, context, worked examples with reasoning, exam questions, marking guides, activities of integration)
+- [x] Audio narration
 
-### Each lesson includes
-- [x] NCDC competency statement
-- [x] Learning outcomes mapped with k/u/s tags
-- [x] Real-world Ugandan contexts
-- [x] Worked examples with reasoning (why each step works)
-- [x] Exam-style questions with mark values
-- [x] Full marking guides (method/accuracy/communication marks)
-- [x] Activities of integration (actual NCDC sample questions)
-- [x] Practice MCQs with explanations
-- [x] Audio narration (Listen button)
+### Practice engine
+- [x] Topic grid with mastery levels and accuracy bars
+- [x] Pre-written question banks (MCQ + short answer) for 5 topics
+- [x] AI question generation when bank exhausted (endless practice)
+- [x] XP tracking (Firestore)
+- [x] Daily practice streaks (Firestore)
+- [x] Per-topic accuracy tracking
+- [x] AI marking for short-answer questions
 
-### Features
-- [x] Left sidebar (desktop), bottom bar (mobile)
-- [x] Diagnostic test, progress tracking, real metrics
-- [x] Parent dashboard with real student data, reports, settings
+### Gamification
+- [x] XP awarded per question (10/15/20 by difficulty)
+- [x] Streak counter (daily)
+- [x] Mastery levels per topic (Not Started through Mastered)
+- [x] Session stats (correct/total, XP earned, streak)
+
+### Grade prediction
+- [x] Practice-based prediction function (`predictGradeFromPractice`)
+- [x] Weighted by number of attempts (more data = more confidence)
+
+### Parent experience
+- [x] Dashboard with real data
+- [x] Reports (weekly card, download, share)
+- [x] Settings (profile, linked students)
 
 ## What is next
 
-1. Push and test the full curriculum on the live site.
-2. Build the Practice/Sandbox mode (deeper AI-marked practice).
-3. Pull Biology, Chemistry, English syllabi from NCDC and build content.
-4. Build the curriculum feed (updates on NCDC changes).
-5. Landing page for public launch.
+1. Push and test: lesson stepper + practice engine.
+2. Connect practice accuracy to dashboard predicted grade.
+3. Add remaining topics to practice banks.
+4. Daily practice goal + notifications.
+5. End-of-topic full assessment (all question types).
+6. Biology, Chemistry, English content.
