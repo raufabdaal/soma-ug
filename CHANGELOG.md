@@ -2,42 +2,42 @@
 
 All notable changes to this project. Newest first.
 
+## [0.6.0] - 2026-06-23
+
+### Added
+- Parent bottom navigation (Dashboard, Reports, Settings) with desktop top bar.
+- Parent reports page: beautiful weekly report card with study time, predicted grades per subject, guarantee status, needs-attention alerts, download (print) and share buttons.
+- Parent settings page: profile info, linked students list, link-another-student shortcut, sign out.
+- Student profile/settings page: profile info, study code with copy-to-clipboard, sign out.
+- Student dashboard: quick stats row (streak, weekly time, gates passed).
+
+### Changed
+- Student nav: removed signout button, replaced with Profile tab. Cleaner nav with more room on home.
+- Study code moved from student dashboard to student settings page.
+- Parent nav: removed inline user info, moved to settings.
+- Parent layout uses new ParentNav component.
+
+## [0.5.0] - 2026-06-22
+
+### Added
+- Lesson player with interactive blocks, AI marking, AI tutor, mastery gate.
+- 2 Mathematics lessons.
+- Mobile bottom nav for students.
+
 ## [0.4.0] - 2026-06-22
 
 ### Added
-- Multi-step onboarding flow (`/onboarding`): role selection, auth (Google or email), details (level + subjects for students, study code for parents), welcome screen.
-- Favicon (SVG book mark in Soma brand colors).
-- Responsive CSS overrides in globals.css for all screen sizes.
-- Updated Firestore rules (MT-002) that fix parent signup and student code linking.
-
-### Changed
-- Root URL (`/`) now redirects to `/login` instead of showing the landing page.
-- Login page links to `/onboarding` instead of `/signup`.
-- Student nav shows icons on mobile (text hidden on small screens).
-- Parent dashboard study code linking now uses proper Firestore imports and readable error messages.
-
-### Fixed
-- Parent signup: was failing because Firestore rules had no rule for the `parents/` collection. Fixed in MT-002.
-- Student code linking: was failing because rules blocked parents from reading student documents. Fixed in MT-002.
-- Mobile responsiveness: grid layouts now collapse to single column on mobile, padding reduced, stat rows stack vertically.
+- Multi-step onboarding, favicon, responsive CSS, updated Firestore rules.
 
 ## [0.3.0] - 2026-06-22
 
 ### Added
-- Google sign-in / sign-up on both login and signup pages.
-- Shared auth UI components (AuthShell, Field, Divider, ErrorBox, SetupWarning).
-- `GoogleButton` component with proper Google branding.
-- `authErrorToMessage()` translator that surfaces readable error messages for all known Firebase errors.
-- MT-004: manual task for enabling Email/Password and Google sign-in methods in Firebase Console.
-
-### Fixed
-- Signup/login errors now show the actual cause (was hidden behind "Something went wrong").
+- Google sign-in, shared auth UI, error translator.
 
 ## [0.2.0] - 2026-06-22
 
 ### Added
-- Landing page, login, signup, dashboard redirect, student dashboard, parent dashboard, learn page, practice page.
-- Firebase config (env-based), auth context, Groq AI library, prompt templates.
+- All core pages, Firebase auth, Groq AI library.
 
 ## [0.1.0] - 2026-06-22
 

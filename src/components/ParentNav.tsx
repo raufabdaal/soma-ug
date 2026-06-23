@@ -5,24 +5,20 @@ import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 
 const navItems = [
-  { href: "/student", label: "Home", icon: HomeIcon },
-  { href: "/student/learn", label: "Learn", icon: BookIcon },
-  { href: "/student/practice", label: "Practice", icon: PencilIcon },
-  { href: "/student/settings", label: "Profile", icon: SettingsIcon },
+  { href: "/parent", label: "Home", icon: HomeIcon },
+  { href: "/parent/reports", label: "Reports", icon: ReportIcon },
+  { href: "/parent/settings", label: "Settings", icon: SettingsIcon },
 ];
 
-export function StudentNav() {
+export function ParentNav() {
   const pathname = usePathname();
   const router = useRouter();
-  const { user, profile, logout } = useAuth();
+  const { logout } = useAuth();
 
   async function handleLogout() {
     await logout();
     router.push("/login");
   }
-
-  // Don't show on settings page desktop logout (it's in the page itself)
-  const displayName = profile?.displayName || user?.email?.split("@")[0] || "Student";
 
   return (
     <>
@@ -30,7 +26,7 @@ export function StudentNav() {
       <nav className="nav-desktop">
         <div className="nav-desktop-inner">
           <div style={{ display: "flex", alignItems: "center", gap: 32 }}>
-            <Link href="/student" style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none", color: "var(--charcoal)" }}>
+            <Link href="/parent" style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none", color: "var(--charcoal)" }}>
               <BrandMark />
               <span className="font-serif-display" style={{ fontWeight: 600, fontSize: 21 }}>Soma</span>
             </Link>
@@ -46,7 +42,7 @@ export function StudentNav() {
               })}
             </div>
           </div>
-          <span style={{ fontSize: 14, color: "var(--ink-muted)" }}>{displayName}</span>
+          <button onClick={handleLogout} className="nav-logout-btn">Sign out</button>
         </div>
       </nav>
 
@@ -61,6 +57,10 @@ export function StudentNav() {
             </Link>
           );
         })}
+        <button onClick={handleLogout} className="nav-mobile-item">
+          <LogoutIcon />
+          <span>Sign out</span>
+        </button>
       </nav>
     </>
   );
@@ -82,24 +82,27 @@ function HomeIcon() {
     </svg>
   );
 }
-function BookIcon() {
+
+function ReportIcon() {
   return (
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20" />
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><path d="M14 2v6h6" /><path d="M8 13h2M8 17h2M8 9h2M14 17h4M14 13h4" />
     </svg>
   );
 }
-function PencilIcon() {
-  return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5z" />
-    </svg>
-  );
-}
+
 function SettingsIcon() {
   return (
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <circle cx="12" cy="8" r="4" /><path d="M6 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2" />
+      <circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+    </svg>
+  );
+}
+
+function LogoutIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" /><path d="m16 17 5-5-5-5" /><path d="M21 12H9" />
     </svg>
   );
 }

@@ -4,27 +4,27 @@
 
 ## Where we are
 
-The foundation is built and the production build passes. We have 9 routes that all compile and prerender: landing, login, signup, dashboard redirect, student dashboard, student learn, student practice, and parent dashboard. Firebase auth is wired (env-based). Groq AI lib is ready. The app cannot function yet because it needs real API keys in `.env.local`.
+Both student and parent experiences have full navigation (bottom nav on mobile, top bar on desktop), settings pages, and a beautiful weekly report card for parents. The lesson player works with 2 Mathematics lessons. The app is live at https://soma-ug.vercel.app.
+
+## What changed this session
+
+- Added parent bottom nav (Dashboard, Reports, Settings).
+- Added parent reports page (weekly report card with download/share).
+- Added parent settings page (profile, linked students, signout).
+- Added student profile/settings page (study code with copy, signout).
+- Cleaned student dashboard (moved study code to settings, added quick stats).
+- Updated student nav (Profile tab instead of signout button).
+
+## What the founder needs to do
+
+1. Download workspace, replace `src/` + root `.md` files on their machine.
+2. Push to GitHub so Vercel deploys.
+3. Test on mobile (nav at bottom, reports page, settings).
 
 ## Immediate next steps
 
-1. **Deploy to Vercel** to get a live URL (the founder needs to create a GitHub repo and push).
-2. **Founder completes MANUAL_TASKS.md**: MT-001 (env keys), MT-002 (Firestore rules), MT-003 (authorized domain).
-3. **Build the first complete loop**: a Mathematics lesson with the lesson player, a practice question, and the AI marking endpoint wired to Groq.
-4. **Populate curriculum content** in Firestore (subjects, topics, lessons, questions).
-
-## How to run locally
-
-```bash
-npm install
-npm run dev    # opens at http://localhost:3000
-```
-
-Or double-click `preview.html` to see the design system without installing anything.
-
-## Key decisions to respect
-
-- Design is V1 (warm cream, charcoal text, terracotta/sage/blue subject colors, Fraunces serif + Inter sans). See DECISIONS.md.
-- Firebase config reads from env vars, never hardcoded. See DEC-004.
-- AI provider is Groq, pluggable via env var. See DEC-003.
-- No em dashes in user-facing copy. See DEC-005.
+1. Add more Mathematics lessons (factorisation, linear equations, inequalities).
+2. Build diagnostic test (sets baseline grade).
+3. Wire lesson completion to Firestore (persist progress so parent sees real data).
+4. Add Biology and Chemistry content.
+5. Connect parent reports + dashboard to real student data.
