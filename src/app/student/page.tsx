@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, collection, getDocs } from "firebase/firestore";
 import { db } from "@/lib/firebase/config";
+import { sampleLessons, getLessonById } from "@/lib/lessons";
 import type { StudentProfile } from "@/types";
 import { formatStudyTime } from "@/lib/utils";
 
@@ -13,6 +14,7 @@ export default function StudentDashboard() {
   const router = useRouter();
   const { user, loading } = useAuth();
   const [studentData, setStudentData] = useState<StudentProfile | null>(null);
+  const [completedLessons, setCompletedLessons] = useState<Record<string, { score: number; completed: boolean }>>({});
   const [dataLoading, setDataLoading] = useState(true);
 
   useEffect(() => {
@@ -21,22 +23,32 @@ export default function StudentDashboard() {
     }
   }, [user, loading, router]);
 
-  useEffect(() => {
-    async function fetchStudent() {
-      if (!user) return;
-      try {
-        const snap = await getDoc(doc(db, "students", user.uid));
-        if (snap.exists()) {
-          setStudentData(snap.data() as StudentProfile);
-        }
-      } catch (err) {
-        console.error("Failed to fetch student data:", err);
-      } finally {
-        setDataLoading(false);
+  const fetchData = useCallback(async () => {
+    if (!user) return;
+    try {
+      const [studentSnap, progressSnap] = await Promise.all([
+        getDoc(doc(db, "students", user.uid)),
+        getDocs(collection(db, "students", user.uid, "lessonProgress")),
+      ]);
+      if (studentSnap.exists()) {
+        setStudentData(studentSnap.data() as StudentProfile);
       }
+      const progress: Record<string, { score: number; completed: boolean }> = {};
+      progressSnap.forEach((doc) => {
+        const data = doc.data();
+        progress[doc.id] = { score: data.score || 0, completed: data.completed || false };
+      });
+      setCompletedLessons(progress);
+    } catch (err) {
+      console.error("Failed to fetch student data:", err);
+    } finally {
+      setDataLoading(false);
     }
-    if (user) fetchStudent();
   }, [user]);
+
+  useEffect(() => {
+    if (user) fetchData();
+  }, [user, fetchData]);
 
   if (loading || dataLoading) {
     return (
@@ -53,6 +65,13 @@ export default function StudentDashboard() {
   const lessonsCompleted = studentData?.lessonsCompleted || 0;
   const guaranteeProgress = studentData?.guaranteeProgress || 0;
   const totalStudySeconds = studentData?.totalStudySeconds || 0;
+  const totalXP = studentData?.totalXP || 0;
+
+  // Find the next lesson to continue (first uncompleted lesson)
+  const nextLesson = sampleLessons.find((l) => !completedLessons[l.id]?.completed);
+  const mathLessonsTotal = sampleLessons.filter((l) => l.subjectId === "mathematics").length;
+  const mathLessonsDone = sampleLessons.filter((l) => l.subjectId === "mathematics" && completedLessons[l.id]?.completed).length;
+  const mathProgress = mathLessonsTotal > 0 ? Math.round((mathLessonsDone / mathLessonsTotal) * 100) : 0;
 
   return (
     <div className="animate-fade">
@@ -92,12 +111,12 @@ export default function StudentDashboard() {
                 {predictedMaths}
               </span>
               <span style={{ color: "var(--sage-dk)", fontWeight: 600, fontSize: 14, paddingBottom: 6 }}>
-                your baseline
+                {studentData?.diagnosticCompleted ? "current level" : "not set"}
               </span>
             </div>
             <p style={{ color: "var(--ink-soft)", fontSize: "14.5px" }}>
               {studentData?.diagnosticCompleted
-                ? "On track. Keep the weekly hours up and this will climb."
+                ? "Keep practicing to push this grade higher."
                 : "Complete the diagnostic to set your starting point."}
             </p>
           </div>
@@ -129,11 +148,11 @@ export default function StudentDashboard() {
           </div>
         </div>
 
-        {/* Right column: continue learning */}
+        {/* Right column: continue learning (now pulls real data) */}
         <div className="card grid-continue" style={{ padding: 0, overflow: "hidden", display: "grid", gridTemplateColumns: "0.85fr 1.15fr" }}>
           <div style={{ background: "var(--terracotta)", display: "flex", alignItems: "center", justifyContent: "center", minHeight: 180, position: "relative" }}>
             <span style={{ position: "absolute", top: 18, left: 22, fontSize: 11, fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase", color: "rgba(255,255,255,0.85)" }}>
-              Continue learning
+              {nextLesson ? "Continue learning" : "All caught up"}
             </span>
             <svg width="84" height="84" viewBox="0 0 84 84" fill="none" stroke="rgba(255,255,255,0.92)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
               <path d="M42 18 C30 14 12 16 6 20 L6 64 C12 60 30 58 42 62 C54 58 72 60 78 64 L78 20 C72 16 54 14 42 18 Z" />
@@ -141,41 +160,58 @@ export default function StudentDashboard() {
             </svg>
           </div>
           <div style={{ padding: 28, display: "flex", flexDirection: "column", justifyContent: "center" }}>
-            <div className="eyebrow" style={{ fontSize: 11, color: "var(--terracotta)" }}>Mathematics - Algebra</div>
-            <h3 className="font-serif-display" style={{ fontWeight: 600, fontSize: 22, margin: "8px 0 6px" }}>
-              Solving simultaneous equations
-            </h3>
-            <p style={{ color: "var(--ink-soft)", fontSize: "14.5px" }}>
-              The elimination method UNEB examiners look for, with worked steps.
-            </p>
-            <div style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 18 }}>
-              <div style={{ flex: 1, height: 6, background: "var(--cream-deep)", borderRadius: 999, overflow: "hidden" }}>
-                <div style={{ height: "100%", width: "50%", background: "var(--charcoal)" }} />
-              </div>
-              <span style={{ fontSize: 13, color: "var(--ink-muted)", fontWeight: 600 }}>3 of 6</span>
-            </div>
-            <Link href="/student/learn" className="btn btn-primary" style={{ marginTop: 20, alignSelf: "flex-start" }}>
-              Resume lesson
-            </Link>
+            {nextLesson ? (
+              <>
+                <div className="eyebrow" style={{ fontSize: 11, color: "var(--terracotta)" }}>Mathematics</div>
+                <h3 className="font-serif-display" style={{ fontWeight: 600, fontSize: 22, margin: "8px 0 6px" }}>
+                  {nextLesson.title}
+                </h3>
+                <p style={{ color: "var(--ink-soft)", fontSize: "14.5px" }}>
+                  {nextLesson.estimatedMinutes} min - {nextLesson.blocks.filter(b => b.type === "question").length} practice questions
+                </p>
+                <div style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 18 }}>
+                  <div style={{ flex: 1, height: 6, background: "var(--cream-deep)", borderRadius: 999, overflow: "hidden" }}>
+                    <div style={{ height: "100%", width: `${mathProgress}%`, background: "var(--charcoal)" }} />
+                  </div>
+                  <span style={{ fontSize: 13, color: "var(--ink-muted)", fontWeight: 600 }}>{mathLessonsDone} of {mathLessonsTotal} done</span>
+                </div>
+                <Link href={`/student/learn/${nextLesson.id}`} className="btn btn-primary" style={{ marginTop: 20, alignSelf: "flex-start" }}>
+                  {mathLessonsDone > 0 ? "Continue" : "Start lesson"}
+                </Link>
+              </>
+            ) : (
+              <>
+                <div className="eyebrow" style={{ fontSize: 11, color: "var(--sage-dk)" }}>Complete</div>
+                <h3 className="font-serif-display" style={{ fontWeight: 600, fontSize: 22, margin: "8px 0 6px" }}>
+                  You have finished all S1 Mathematics lessons.
+                </h3>
+                <p style={{ color: "var(--ink-soft)", fontSize: "14.5px" }}>
+                  Head to Practice mode to keep sharpening your skills.
+                </p>
+                <Link href="/student/practice" className="btn btn-primary" style={{ marginTop: 20, alignSelf: "flex-start" }}>
+                  Go to practice
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </div>
 
-      {/* Subjects */}
+      {/* Subjects - real progress based on completed lessons */}
       <h2 className="font-serif-display" style={{ fontWeight: 600, fontSize: 20, margin: "48px 0 20px" }}>
         Your subjects
       </h2>
       <div className="grid-collapse-3" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 22 }}>
-        <SubjectTile name="Mathematics" topics="12 topics" color="var(--terracotta)" progress={68} href="/student/learn" />
-        <SubjectTile name="Biology" topics="8 topics" color="var(--sage-dk)" progress={0} href="/student/learn" />
-        <SubjectTile name="Chemistry" topics="10 topics" color="var(--blue-dk)" progress={0} href="/student/learn" />
+        <SubjectTile name="Mathematics" topics={`${mathLessonsTotal} lessons`} color="var(--terracotta)" progress={mathProgress} href="/student/learn" />
+        <SubjectTile name="Biology" topics="Coming soon" color="var(--sage-dk)" progress={0} href="/student/learn" />
+        <SubjectTile name="Chemistry" topics="Coming soon" color="var(--blue-dk)" progress={0} href="/student/learn" />
       </div>
 
-      {/* Quick stats row */}
+      {/* Quick stats row - all real data */}
       <div className="grid-collapse-3" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16, marginTop: 32 }}>
         <QuickStat icon="time" value={formatStudyTime(totalStudySeconds)} label="Study time" color="var(--sage-dk)" />
         <QuickStat icon="trophy" value={String(lessonsCompleted)} label="Lessons done" color="var(--terracotta)" />
-        <QuickStat icon="target" value={`${guaranteeProgress}%`} label="Guarantee" color="var(--blue-dk)" />
+        <QuickStat icon="bolt" value={String(totalXP)} label="Total XP" color="var(--blue-dk)" />
       </div>
     </div>
   );
@@ -195,9 +231,9 @@ function QuickStat({ icon, value, label, color }: { icon: string; value: string;
             <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6M18 9h1.5a2.5 2.5 0 0 0 0-5H18M4 22h16M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22M18 2H6v7a6 6 0 0 0 12 0V2z" />
           </svg>
         )}
-        {icon === "target" && (
+        {icon === "bolt" && (
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <circle cx="12" cy="12" r="10" /><circle cx="12" cy="12" r="6" /><circle cx="12" cy="12" r="2" />
+            <path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z" />
           </svg>
         )}
       </div>

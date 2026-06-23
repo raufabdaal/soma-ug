@@ -3,9 +3,17 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, collection, getDocs } from "firebase/firestore";
 import { db } from "@/lib/firebase/config";
 import type { ParentProfile, StudentProfile } from "@/types";
+import { formatStudyTime } from "@/lib/utils";
+
+interface SubjectGrade {
+  name: string;
+  grade: string;
+  score: number;
+  color: string;
+}
 
 export default function ParentReportsPage() {
   const router = useRouter();
@@ -62,9 +70,40 @@ export default function ParentReportsPage() {
     );
   }
 
+  // Pull real data from the student document
   const student = students[selectedStudent];
-  const studentName = student?.userId ? `Student ${selectedStudent + 1}` : "Your child";
-  const weekRange = "Week of 16 June";
+  const studyTime = formatStudyTime(student?.totalStudySeconds || 0);
+  const lessonsDone = student?.lessonsCompleted || 0;
+  const dayStreak = student?.practiceStreak || 0;
+  const guaranteeProgress = student?.guaranteeProgress || 0;
+  const level = student?.level || "S1";
+
+  // Build subject grades from real diagnostic/practice scores
+  const subjectGrades: SubjectGrade[] = [];
+  const scores = student?.diagnosticScores || {};
+  const grades = student?.predictedGrades || {};
+
+  if (scores["mathematics"] !== undefined) {
+    subjectGrades.push({ name: "Mathematics", grade: grades["mathematics"] || "-", score: scores["mathematics"], color: "var(--terracotta)" });
+  }
+  if (scores["biology"] !== undefined) {
+    subjectGrades.push({ name: "Biology", grade: grades["biology"] || "-", score: scores["biology"], color: "var(--sage-dk)" });
+  }
+  if (scores["chemistry"] !== undefined) {
+    subjectGrades.push({ name: "Chemistry", grade: grades["chemistry"] || "-", score: scores["chemistry"], color: "var(--blue-dk)" });
+  }
+
+  // Find weakest subject for "needs attention" (only if any data exists)
+  const weakestSubject = subjectGrades.length > 0
+    ? subjectGrades.reduce((min, curr) => curr.score < min.score ? curr : min)
+    : null;
+
+  // Calculate current date range
+  const today = new Date();
+  const weekStart = new Date(today);
+  weekStart.setDate(today.getDate() - today.getDay());
+  const formatDate = (d: Date) => d.toLocaleDateString("en-GB", { day: "numeric", month: "long" });
+  const weekRange = `Week of ${formatDate(weekStart)}`;
 
   return (
     <div className="animate-fade">
@@ -90,6 +129,7 @@ export default function ParentReportsPage() {
               fontWeight: 600,
               color: "var(--charcoal)",
               cursor: "pointer",
+              fontFamily: "inherit",
             }}
           >
             {students.map((s, i) => (
@@ -102,16 +142,7 @@ export default function ParentReportsPage() {
       {/* Report Card */}
       <div className="report-card card" id="report-card" style={{ padding: 0, overflow: "hidden" }}>
         {/* Header strip */}
-        <div style={{
-          background: "var(--cream-deep)",
-          padding: "28px 32px",
-          borderBottom: "1px solid var(--hairline)",
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          flexWrap: "wrap",
-          gap: 16,
-        }}>
+        <div style={{ background: "var(--cream-deep)", padding: "28px 32px", borderBottom: "1px solid var(--hairline)", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 16 }}>
           <div>
             <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 6 }}>
               <svg width="24" height="24" viewBox="0 0 40 40" fill="none" stroke="var(--terracotta)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
@@ -124,73 +155,85 @@ export default function ParentReportsPage() {
           </div>
           <div style={{ textAlign: "right" }}>
             <div className="eyebrow" style={{ fontSize: 11 }}>{weekRange}</div>
-            <p style={{ fontSize: 14, color: "var(--ink-soft)", marginTop: 4 }}>S3 · Lower Secondary</p>
+            <p style={{ fontSize: 14, color: "var(--ink-soft)", marginTop: 4 }}>{level} - Lower Secondary</p>
           </div>
         </div>
 
-        {/* Study summary */}
+        {/* Study summary - all real data */}
         <div style={{ padding: "32px" }}>
           <div className="grid-collapse" style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 24, marginBottom: 32 }}>
-            <ReportStat big="3h 20m" label="Study time" sub="Up 45m on last week" />
-            <ReportStat big="8" label="Lessons done" sub="2 mastery gates passed" />
-            <ReportStat big="6" label="Day streak" sub="Consistent this week" />
+            <ReportStat big={studyTime} label="Study time" sub={studyTime === "0m" ? "Not started yet" : "Total time on Soma"} />
+            <ReportStat big={String(lessonsDone)} label="Lessons done" sub={lessonsDone === 0 ? "No lessons yet" : "Lessons completed"} />
+            <ReportStat big={String(dayStreak)} label="Day streak" sub={dayStreak === 0 ? "Practice today to start" : "Days of practice"} />
           </div>
 
-          {/* Subject grades */}
+          {/* Subject grades - real data */}
           <div className="eyebrow" style={{ fontSize: 11, marginBottom: 16 }}>Predicted grades</div>
-          <div style={{ display: "flex", flexDirection: "column", gap: 14, marginBottom: 32 }}>
-            <SubjectGradeRow name="Mathematics" grade="B" color="var(--terracotta)" change="up from C" progress={68} />
-            <SubjectGradeRow name="Biology" grade="C" color="var(--sage-dk)" change="steady" progress={52} />
-            <SubjectGradeRow name="Chemistry" grade="D" color="var(--blue-dk)" change="needs work" progress={44} />
-          </div>
+          {subjectGrades.length > 0 ? (
+            <div style={{ display: "flex", flexDirection: "column", gap: 14, marginBottom: 32 }}>
+              {subjectGrades.map((s) => (
+                <SubjectGradeRow key={s.name} name={s.name} grade={s.grade} color={s.color} score={s.score} />
+              ))}
+            </div>
+          ) : (
+            <div style={{ padding: "20px", background: "var(--cream-deep)", borderRadius: "var(--r-sm)", marginBottom: 32, textAlign: "center" }}>
+              <p style={{ color: "var(--ink-muted)", fontSize: 14 }}>No grades yet. Ask your child to take the diagnostic test.</p>
+            </div>
+          )}
 
-          {/* Guarantee status */}
+          {/* Guarantee status - real data */}
           <div style={{
-            background: "rgba(126,142,99,0.12)",
+            background: guaranteeProgress >= 50 ? "rgba(126,142,99,0.12)" : "var(--cream-deep)",
             borderRadius: "var(--r-md)",
             padding: "20px 24px",
             marginBottom: 32,
           }}>
             <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8 }}>
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--sage-dk)" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={guaranteeProgress >= 50 ? "var(--sage-dk)" : "var(--ink-muted)"} strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M20 6 9 17l-5-5" />
               </svg>
-              <span className="font-serif-display" style={{ fontWeight: 600, fontSize: 17, color: "var(--sage-dk)" }}>
-                On track for the 80% guarantee
+              <span className="font-serif-display" style={{ fontWeight: 600, fontSize: 17, color: guaranteeProgress >= 50 ? "var(--sage-dk)" : "var(--ink-soft)" }}>
+                {student?.diagnosticCompleted
+                  ? guaranteeProgress >= 50
+                    ? "On track for the 80% guarantee"
+                    : `${guaranteeProgress}% toward the 80% target`
+                  : "Diagnostic test not yet taken"}
               </span>
             </div>
             <p style={{ fontSize: 14, color: "var(--ink-soft)", lineHeight: 1.5 }}>
-              Your child is meeting the engagement required for the grade guarantee. Overall progress is at 68% toward the 80% target.
+              {student?.diagnosticCompleted
+                ? `Overall progress is at ${guaranteeProgress}% toward the 80% target. Encourage daily practice to keep climbing.`
+                : "Once your child takes the diagnostic test, progress toward the guarantee will appear here."}
             </p>
           </div>
 
-          {/* Needs attention */}
-          <div className="eyebrow" style={{ fontSize: 11, color: "var(--terracotta)", marginBottom: 16 }}>Needs attention</div>
-          <div style={{
-            border: "1px solid var(--hairline)",
-            borderLeft: "4px solid var(--terracotta)",
-            borderRadius: "var(--r-sm)",
-            padding: "18px 22px",
-            marginBottom: 24,
-          }}>
-            <h4 className="font-serif-display" style={{ fontWeight: 600, fontSize: 16, marginBottom: 4 }}>
-              Chemistry · Bonding
-            </h4>
-            <p style={{ fontSize: 14, color: "var(--ink-soft)", lineHeight: 1.5 }}>
-              Score dipped to 44%. A refresher on ionic and covalent bonds is ready. Encouraging a 15-minute review this week would help.
-            </p>
-          </div>
+          {/* Needs attention - real data from weakest subject */}
+          {weakestSubject && weakestSubject.score < 70 ? (
+            <>
+              <div className="eyebrow" style={{ fontSize: 11, color: "var(--terracotta)", marginBottom: 16 }}>Needs attention</div>
+              <div style={{ border: "1px solid var(--hairline)", borderLeft: "4px solid var(--terracotta)", borderRadius: "var(--r-sm)", padding: "18px 22px", marginBottom: 24 }}>
+                <h4 className="font-serif-display" style={{ fontWeight: 600, fontSize: 16, marginBottom: 4 }}>
+                  {weakestSubject.name} - Current score: {weakestSubject.score}%
+                </h4>
+                <p style={{ fontSize: 14, color: "var(--ink-soft)", lineHeight: 1.5 }}>
+                  This is the weakest subject. Extra practice here will lift the overall grade. Encourage your child to use Practice mode for {weakestSubject.name.toLowerCase()}.
+                </p>
+              </div>
+            </>
+          ) : student?.diagnosticCompleted ? (
+            <div style={{ padding: "18px 22px", background: "rgba(126,142,99,0.08)", borderRadius: "var(--r-sm)", marginBottom: 24 }}>
+              <div className="eyebrow" style={{ fontSize: 11, color: "var(--sage-dk)", marginBottom: 8 }}>All good</div>
+              <p style={{ fontSize: 14, color: "var(--ink-soft)", lineHeight: 1.5 }}>
+                All subjects are above 70%. Encourage your child to keep the momentum going.
+              </p>
+            </div>
+          ) : null}
         </div>
 
         {/* Footer */}
-        <div style={{
-          background: "var(--cream-deep)",
-          padding: "16px 32px",
-          borderTop: "1px solid var(--hairline)",
-          textAlign: "center",
-        }}>
+        <div style={{ background: "var(--cream-deep)", padding: "16px 32px", borderTop: "1px solid var(--hairline)", textAlign: "center" }}>
           <p style={{ fontSize: 12, color: "var(--ink-muted)" }}>
-            Generated by Soma · Uganda&apos;s lower secondary curriculum platform
+            Generated by Soma - Uganda&apos;s lower secondary curriculum platform
           </p>
         </div>
       </div>
@@ -248,16 +291,16 @@ function ReportStat({ big, label, sub }: { big: string; label: string; sub: stri
   );
 }
 
-function SubjectGradeRow({ name, grade, color, change, progress }: { name: string; grade: string; color: string; change: string; progress: number }) {
+function SubjectGradeRow({ name, grade, color, score }: { name: string; grade: string; color: string; score: number }) {
   return (
     <div style={{ display: "flex", alignItems: "center", gap: 16, flexWrap: "wrap" }}>
       <span style={{ width: 10, height: 10, borderRadius: "50%", background: color, flexShrink: 0 }} />
       <span style={{ fontWeight: 600, fontSize: 15, color: "var(--charcoal)", minWidth: 120 }}>{name}</span>
       <div style={{ flex: 1, minWidth: 100, height: 6, background: "var(--cream-deep)", borderRadius: 999, overflow: "hidden" }}>
-        <div style={{ height: "100%", width: `${progress}%`, background: color }} />
+        <div style={{ height: "100%", width: `${score}%`, background: color }} />
       </div>
       <span className="font-serif-display" style={{ fontWeight: 600, fontSize: 22, color, minWidth: 28, textAlign: "center" }}>{grade}</span>
-      <span style={{ fontSize: 12, color: "var(--ink-muted)", minWidth: 80 }}>{change}</span>
+      <span style={{ fontSize: 12, color: "var(--ink-muted)", minWidth: 50 }}>{score}%</span>
     </div>
   );
 }
