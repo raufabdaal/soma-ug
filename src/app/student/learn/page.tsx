@@ -1,77 +1,83 @@
 "use client";
 
 import Link from "next/link";
-import { sampleLessons } from "@/lib/lessons";
+import { getLessonsByTopic, curriculumMeta } from "@/lib/lessons";
 
 export default function LearnPage() {
-  const subjects = [
-    { id: "mathematics", name: "Mathematics", color: "var(--terracotta)", bg: "rgba(192,106,75,0.14)", desc: "Algebra, geometry, and problem-solving for UNEB." },
-    { id: "biology", name: "Biology", color: "var(--sage-dk)", bg: "rgba(126,142,99,0.16)", desc: "Cells, systems, and answering for full marks." },
-    { id: "chemistry", name: "Chemistry", color: "var(--blue-dk)", bg: "rgba(110,138,166,0.16)", desc: "Bonding, reactions, and structured answers." },
-  ];
-
-  // Group lessons by subject
-  const mathLessons = sampleLessons.filter((l) => l.subjectId === "mathematics");
+  const topics = getLessonsByTopic();
 
   return (
     <div className="animate-fade">
+      <div className="eyebrow" style={{ fontSize: 11, color: "var(--terracotta)", marginBottom: 8 }}>
+        {curriculumMeta.subject} · {curriculumMeta.level} · Term 1
+      </div>
       <h1 className="font-serif-display" style={{ fontSize: "clamp(1.8rem, 3.6vw, 2.4rem)", fontWeight: 500, letterSpacing: "-0.015em", marginBottom: 8 }}>
-        What are we learning today?
+        Numbers.
       </h1>
       <p style={{ color: "var(--ink-muted)", fontSize: 15, marginBottom: 36 }}>
-        Pick a lesson to start. Each one takes about 10 to 15 minutes.
+        The first theme of S1 Mathematics. Master these foundations and the rest becomes easier.
       </p>
 
-      {/* Mathematics lessons (available now) */}
-      <div style={{ marginBottom: 40 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20 }}>
-          <span style={{ width: 10, height: 10, borderRadius: "50%", background: "var(--terracotta)" }} />
-          <h2 className="font-serif-display" style={{ fontWeight: 600, fontSize: 20, color: "var(--charcoal)" }}>
-            Mathematics - Algebra
-          </h2>
-        </div>
+      {/* Topics */}
+      {topics.map((topic, topicIdx) => (
+        <div key={topic.topicId} style={{ marginBottom: 36 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
+            <span style={{
+              width: 28, height: 28, borderRadius: "50%",
+              background: "rgba(192,106,75,0.12)",
+              color: "var(--terracotta)",
+              display: "flex", alignItems: "center", justifyContent: "center",
+              fontSize: 13, fontWeight: 700,
+              fontFamily: "var(--font-fraunces), serif",
+              flexShrink: 0,
+            }}>
+              {topicIdx + 1}
+            </span>
+            <div>
+              <h2 className="font-serif-display" style={{ fontWeight: 600, fontSize: 19, color: "var(--charcoal)" }}>
+                {topic.title}
+              </h2>
+              <span style={{ fontSize: 12, color: "var(--ink-muted)" }}>{topic.theme}</span>
+            </div>
+          </div>
 
-        <div className="grid-collapse" style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 16 }}>
-          {mathLessons.map((lesson, i) => (
-            <Link key={lesson.id} href={`/student/learn/${lesson.id}`} style={{ textDecoration: "none" }}>
-              <div className="card" style={{ position: "relative", overflow: "hidden", height: "100%" }}>
-                <div style={{ position: "absolute", top: 0, left: 0, width: 3, height: 40, background: "var(--terracotta)", borderRadius: "0 0 3px 0" }} />
-                <div className="eyebrow" style={{ fontSize: 11, color: "var(--terracotta)" }}>
-                  Lesson {i + 1}
+          <div className="grid-collapse" style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 14 }}>
+            {topic.lessons.map((lesson, lessonIdx) => (
+              <Link key={lesson.id} href={`/student/learn/${lesson.id}`} style={{ textDecoration: "none" }}>
+                <div className="card" style={{ position: "relative", overflow: "hidden", height: "100%" }}>
+                  <div style={{ position: "absolute", top: 0, left: 0, width: 3, height: 36, background: "var(--terracotta)", borderRadius: "0 0 3px 0" }} />
+                  <div className="eyebrow" style={{ fontSize: 10, color: "var(--terracotta)" }}>
+                    Lesson {topicIdx + 1}.{lessonIdx + 1}
+                  </div>
+                  <h3 className="font-serif-display" style={{ fontWeight: 600, fontSize: 17, margin: "6px 0 6px", color: "var(--charcoal)" }}>
+                    {lesson.title}
+                  </h3>
+                  <p style={{ color: "var(--ink-muted)", fontSize: 13 }}>
+                    {lesson.estimatedMinutes} min · {lesson.blocks.filter(b => b.type === "question").length} questions
+                  </p>
+                  <div style={{ marginTop: 12, display: "flex", alignItems: "center", gap: 6, fontSize: 13, fontWeight: 600, color: "var(--terracotta)" }}>
+                    Start lesson
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M5 12h14M13 6l6 6-6 6" />
+                    </svg>
+                  </div>
                 </div>
-                <h3 className="font-serif-display" style={{ fontWeight: 600, fontSize: 18, margin: "8px 0 6px", color: "var(--charcoal)" }}>
-                  {lesson.title}
-                </h3>
-                <p style={{ color: "var(--ink-muted)", fontSize: 13 }}>
-                  {lesson.estimatedMinutes} min
-                </p>
-                <div style={{ marginTop: 14, display: "flex", alignItems: "center", gap: 6, fontSize: 13, fontWeight: 600, color: "var(--terracotta)" }}>
-                  Start lesson
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M5 12h14M13 6l6 6-6 6" />
-                  </svg>
-                </div>
-              </div>
-            </Link>
+              </Link>
+            ))}
+          </div>
+        </div>
+      ))}
+
+      {/* More subjects coming */}
+      <div style={{ marginTop: 40, paddingTop: 32, borderTop: "1px solid var(--hairline)" }}>
+        <div className="eyebrow" style={{ fontSize: 11, marginBottom: 12 }}>More subjects coming</div>
+        <div className="grid-collapse-3" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 14 }}>
+          {["Biology", "Chemistry", "English", "Physics", "Geography", "History"].map((s) => (
+            <div key={s} className="card" style={{ opacity: 0.5, padding: "16px 14px" }}>
+              <h3 className="font-serif-display" style={{ fontWeight: 600, fontSize: 15 }}>{s}</h3>
+              <p style={{ fontSize: 12, color: "var(--ink-muted)" }}>S1 content coming soon</p>
+            </div>
           ))}
-        </div>
-      </div>
-
-      {/* Other subjects (coming soon) */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 16 }} className="grid-collapse">
-        <div className="card" style={{ opacity: 0.6 }}>
-          <div style={{ width: 44, height: 44, borderRadius: 12, background: "rgba(126,142,99,0.16)", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 14 }}>
-            <span className="font-serif-display" style={{ fontSize: 20, fontWeight: 700, color: "var(--sage-dk)" }}>B</span>
-          </div>
-          <h3 className="font-serif-display" style={{ fontWeight: 600, fontSize: 18, marginBottom: 4 }}>Biology</h3>
-          <p style={{ fontSize: 13, color: "var(--ink-muted)" }}>Lessons coming soon</p>
-        </div>
-        <div className="card" style={{ opacity: 0.6 }}>
-          <div style={{ width: 44, height: 44, borderRadius: 12, background: "rgba(110,138,166,0.16)", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 14 }}>
-            <span className="font-serif-display" style={{ fontSize: 20, fontWeight: 700, color: "var(--blue-dk)" }}>C</span>
-          </div>
-          <h3 className="font-serif-display" style={{ fontWeight: 600, fontSize: 18, marginBottom: 4 }}>Chemistry</h3>
-          <p style={{ fontSize: 13, color: "var(--ink-muted)" }}>Lessons coming soon</p>
         </div>
       </div>
     </div>

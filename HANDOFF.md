@@ -4,34 +4,36 @@
 
 ## Where we are
 
-The full learning loop now works end to end: student takes diagnostic (sets baseline), completes lessons (saves progress to Firestore, updates predicted grade), and parent sees real data on their dashboard. Navigation is a left sidebar on desktop and bottom bar on mobile.
+The app is functionally complete for testing: real metrics (no fakes), audio narration in lessons, study time tracking, diagnostic test, parent dashboard reads real student data. The next phase is building REAL curriculum content for S1, mapped to the actual NCDC syllabus.
 
 ## What changed this session
 
-- Rebuilt navigation: left sidebar (desktop) + bottom bar (mobile) for both student and parent.
-- Built diagnostic test (5 questions, sets baseline grade, saves to Firestore).
-- Wired lesson completion to Firestore (progress persists, predicted grades auto-update).
-- Student dashboard now shows real data (lessons completed, guarantee progress, predicted grade).
-- Parent dashboard now shows real student data.
-- Added 2 more Mathematics lessons (4 total: linear equations, expanding, factorising, simultaneous).
-- Updated Firestore rules for lesson progress subcollection.
+- Removed ALL fake/placeholder numbers from student and parent dashboards.
+- Added study time tracking: lesson player records actual time spent, stored in Firestore.
+- Added audio narration: "Listen" button in lesson player reads content aloud (Web Speech API, free).
+- Parent dashboard status card now data-driven (shows weakest subject from real scores, or prompts diagnostic).
+- Researched and documented the content strategy (docs/spec/content-strategy.md).
+- Extracted the complete S1 Mathematics curriculum structure from the NCDC syllabus.
 
-## What the founder needs to do
+## The content strategy (the big picture)
 
-1. **Update Firestore rules (MT-002)**: the new rules include the lessonProgress subcollection. Paste the updated rules from MANUAL_TASKS.md.
-2. Download workspace, replace `src/` + root `.md` files.
-3. Push to GitHub.
+NCDC publishes free, official syllabus PDFs at ncdc.go.ug/resource/. The pipeline:
+1. Download the syllabus for a subject
+2. Extract topic structure, learning outcomes, assessment criteria
+3. Draft lessons mapped to specific competencies (AI-assisted, human-reviewed)
+4. Publish with curriculum traceability (subject, level, term, topic, learning outcome)
+5. Build a curriculum feed that tracks NCDC updates
 
-## How to test after pushing
+S1 Mathematics has 14 topics across 3 terms. We should rebuild the lessons from the actual syllabus, starting with Term 1.
 
-1. Sign in as student. Take the diagnostic test. See your baseline grades.
-2. Complete a lesson. Check that your predicted grade updates.
-3. Sign in as parent (different account). Link the student's code.
-4. Check the parent dashboard shows real data (lessons done, maths grade, guarantee %).
+## What the founder needs to decide
 
-## Immediate next steps
+1. Which subject to build first (Mathematics recommended since we have the syllabus structure)
+2. Whether to involve a teacher/tutor for content review, or self-review
+3. Whether to start the curriculum feed now or after more content exists
 
-1. Add Biology and Chemistry lessons.
-2. Connect parent reports to real data (currently uses sample data for the report card).
-3. Add more Mathematics topics.
-4. Build the landing page for public launch.
+## What the founder needs to do (code)
+
+1. Download workspace, replace `src/` + root `.md` files.
+2. Push to GitHub.
+3. Test: audio narration, real metrics on both dashboards.

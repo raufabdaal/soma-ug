@@ -1,147 +1,185 @@
 import type { Lesson } from "@/types";
 
 /**
- * Lesson content for Mathematics.
+ * Soma Curriculum Content - S1 Mathematics
  *
- * This is embedded directly in the code so the lesson player works
- * immediately without any database seeding. Later we can move this
- * to Firestore.
+ * Built from the official NCDC Lower Secondary Mathematics Syllabus.
+ * Each lesson is mapped to a specific topic, term, and learning outcome.
  *
- * See DEC-006 in DECISIONS.md.
+ * Source: NCDC Mathematics Syllabus (ncdc.go.ug)
+ * Level: Senior 1
+ *
+ * See docs/spec/content-strategy.md for the full content pipeline.
  */
 
+export const curriculumMeta = {
+  subject: "Mathematics",
+  level: "S1",
+  source: "NCDC Lower Secondary Mathematics Syllabus",
+  themes: ["Numbers", "Geometry and Measures", "Patterns and Algebra", "Data and Probability"],
+};
+
 export const sampleLessons: Lesson[] = [
+  // ================================================================
+  // TERM 1, TOPIC 1: NUMBER BASES (15 periods)
+  // Theme: Numbers
+  // ================================================================
   {
-    id: "math-algebra-linear-1",
-    topicId: "algebra",
+    id: "s1-math-t1-numbers-bases-intro",
+    topicId: "number-bases",
     subjectId: "mathematics",
-    title: "Linear equations",
+    title: "Understanding number bases",
     order: 1,
-    estimatedMinutes: 13,
-    passingScore: 70,
-    isActive: true,
-    blocks: [
-      {
-        type: "text",
-        heading: "What is a linear equation?",
-        content:
-          "A linear equation has one unknown (usually x) and no powers higher than 1. Solving it means finding the value of x that makes the equation true. The rule is simple: whatever you do to one side, do to the other.",
-      },
-      {
-        type: "key_point",
-        title: "The balance method",
-        content:
-          "Think of an equation like a balance scale. To keep it balanced, whatever you do to one side you must do to the other. Add, subtract, multiply, or divide. The goal is to get x by itself on one side.",
-      },
-      {
-        type: "worked_example",
-        problem: "Solve: 3x + 7 = 22",
-        steps: [
-          "Subtract 7 from both sides: 3x = 22 - 7 = 15",
-          "Divide both sides by 3: x = 15 / 3 = 5",
-          "Answer: x = 5",
-          "Check: 3(5) + 7 = 15 + 7 = 22. Correct!",
-        ],
-        answer: "x = 5",
-      },
-      {
-        type: "worked_example",
-        problem: "Solve: 2(x - 3) = 10",
-        steps: [
-          "First expand the bracket: 2x - 6 = 10",
-          "Add 6 to both sides: 2x = 16",
-          "Divide both sides by 2: x = 8",
-          "Check: 2(8 - 3) = 2(5) = 10. Correct!",
-        ],
-        answer: "x = 8",
-      },
-      {
-        type: "question",
-        question: "Solve for x: x + 9 = 15",
-        options: ["x = 4", "x = 5", "x = 6", "x = 7"],
-        correctIndex: 2,
-        explanation: "Subtract 9 from both sides: x = 15 - 9 = 6.",
-      },
-      {
-        type: "question",
-        question: "Solve for x: 4x = 24",
-        options: ["x = 4", "x = 6", "x = 8", "x = 12"],
-        correctIndex: 1,
-        explanation: "Divide both sides by 4: x = 24 / 4 = 6.",
-      },
-      {
-        type: "question",
-        question: "Solve for x: 2x + 3 = 11",
-        options: ["x = 3", "x = 4", "x = 5", "x = 7"],
-        correctIndex: 1,
-        explanation: "Subtract 3: 2x = 8. Divide by 2: x = 4.",
-      },
-      {
-        type: "question",
-        question: "Solve for x: 3(x + 2) = 18",
-        options: ["x = 2", "x = 3", "x = 4", "x = 6"],
-        correctIndex: 2,
-        explanation: "Expand: 3x + 6 = 18. Subtract 6: 3x = 12. Divide by 3: x = 4.",
-      },
-    ],
-  },
-  {
-    id: "math-algebra-expanding-1",
-    topicId: "algebra",
-    subjectId: "mathematics",
-    title: "Expanding brackets",
-    order: 2,
     estimatedMinutes: 12,
     passingScore: 70,
     isActive: true,
     blocks: [
       {
         type: "text",
-        heading: "What does expanding mean?",
+        heading: "What is a number base?",
         content:
-          "Expanding brackets means multiplying the term outside the bracket by every term inside. For example, 3(x + 4) becomes 3x + 12. UNEB tests this in nearly every algebra paper, often as the first step of a larger problem.",
+          "A number base (or radix) is the number of unique digits used to represent numbers. We normally count in base ten because we have ten digits: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9. But other bases exist. Computers use base two (binary), which only has digits 0 and 1. Some cultures historically used base five, base twelve, or base twenty. In this topic, you will learn to work confidently with numbers in different bases.",
+      },
+      {
+        type: "key_point",
+        title: "The base tells you the digits",
+        content:
+          "Base 10 uses digits 0 to 9. Base 2 (binary) uses digits 0 and 1. Base 5 uses digits 0, 1, 2, 3, 4. Base 8 (octal) uses digits 0 to 7. The highest digit in any base is always one less than the base. So in base 5, the highest digit is 4.",
       },
       {
         type: "worked_example",
-        problem: "Expand: 2(3x + 5)",
+        problem: "What does 243 in base 5 actually mean?",
         steps: [
-          "Multiply 2 by 3x: you get 6x",
-          "Multiply 2 by 5: you get 10",
-          "Combine: 6x + 10",
+          "The number 243 base 5 has three digits: 2, 4, and 3.",
+          "Each position has a value based on powers of 5 (from right to left): 5^0, 5^1, 5^2.",
+          "So 243 base 5 = 2 x 5^2 + 4 x 5^1 + 3 x 5^0.",
+          "Calculate: 2 x 25 + 4 x 5 + 3 x 1 = 50 + 20 + 3.",
+          "Answer: 243 base 5 = 73 in base 10.",
         ],
-        answer: "6x + 10",
+        answer: "73 (base 10)",
       },
       {
         type: "worked_example",
-        problem: "Expand: 4(2x - 3)",
+        problem: "Convert 1011 base 2 to base 10",
         steps: [
-          "Multiply 4 by 2x: you get 8x",
-          "Multiply 4 by -3: you get -12 (mind the negative sign)",
-          "Combine: 8x - 12",
+          "Positions from right to left are powers of 2: 2^0, 2^1, 2^2, 2^3.",
+          "1011 base 2 = 1 x 2^3 + 0 x 2^2 + 1 x 2^1 + 1 x 2^0.",
+          "Calculate: 1 x 8 + 0 x 4 + 1 x 2 + 1 x 1 = 8 + 0 + 2 + 1.",
+          "Answer: 1011 base 2 = 11 in base 10.",
         ],
-        answer: "8x - 12",
+        answer: "11 (base 10)",
       },
       {
         type: "question",
-        question: "Expand: 5(x + 7)",
-        options: ["5x + 7", "5x + 35", "x + 35", "5x + 12"],
-        correctIndex: 1,
-        explanation: "5 times x is 5x. 5 times 7 is 35. So the answer is 5x + 35.",
+        question: "Which digits are valid in base 8?",
+        options: ["0 to 7", "0 to 8", "1 to 8", "0 to 9"],
+        correctIndex: 0,
+        explanation: "Base 8 uses digits 0 to 7. The highest digit is always one less than the base.",
       },
       {
         type: "question",
-        question: "Expand: 3(2x - 4)",
-        options: ["6x - 4", "6x - 12", "5x - 12", "6x + 12"],
-        correctIndex: 1,
-        explanation: "3 times 2x is 6x. 3 times -4 is -12. So the answer is 6x - 12.",
+        question: "Convert 34 base 5 to base 10.",
+        options: ["19", "34", "17", "24"],
+        correctIndex: 0,
+        explanation: "34 base 5 = 3 x 5^1 + 4 x 5^0 = 3 x 5 + 4 x 1 = 15 + 4 = 19.",
+      },
+      {
+        type: "question",
+        question: "Convert 110 base 2 to base 10.",
+        options: ["3", "4", "5", "6"],
+        correctIndex: 3,
+        explanation: "110 base 2 = 1 x 2^2 + 1 x 2^1 + 0 x 2^0 = 4 + 2 + 0 = 6.",
+      },
+      {
+        type: "key_point",
+        title: "Real world: why this matters",
+        content:
+          "Number bases are the foundation of all computing. Every phone, computer, and digital device processes information in binary (base 2). Understanding different bases builds the logical thinking that UNEB's competency-based curriculum rewards. It also helps with coding and digital literacy.",
       },
     ],
   },
   {
-    id: "math-algebra-factorising-1",
-    topicId: "algebra",
+    id: "s1-math-t1-numbers-bases-convert-to",
+    topicId: "number-bases",
     subjectId: "mathematics",
-    title: "Factorising expressions",
+    title: "Converting base 10 to other bases",
+    order: 2,
+    estimatedMinutes: 13,
+    passingScore: 70,
+    isActive: true,
+    blocks: [
+      {
+        type: "text",
+        heading: "Converting from base 10 to any base",
+        content:
+          "To convert a base 10 number to another base, you repeatedly divide by the target base and collect the remainders. Read the remainders from bottom to top. This is one of the most common exam questions in UNEB, so mastering the method earns easy marks.",
+      },
+      {
+        type: "key_point",
+        title: "The division method",
+        content:
+          "Step 1: Divide the number by the target base. Step 2: Write down the remainder. Step 3: Divide the result again. Step 4: Repeat until the result is 0. Step 5: Read the remainders from bottom to top. That is your answer.",
+      },
+      {
+        type: "worked_example",
+        problem: "Convert 47 (base 10) to base 5",
+        steps: [
+          "47 / 5 = 9 remainder 2",
+          "9 / 5 = 1 remainder 4",
+          "1 / 5 = 0 remainder 1",
+          "Read remainders from bottom to top: 1, 4, 2.",
+          "Answer: 47 (base 10) = 142 (base 5).",
+        ],
+        answer: "142 (base 5)",
+      },
+      {
+        type: "worked_example",
+        problem: "Convert 23 (base 10) to base 2",
+        steps: [
+          "23 / 2 = 11 remainder 1",
+          "11 / 2 = 5 remainder 1",
+          "5 / 2 = 2 remainder 1",
+          "2 / 2 = 1 remainder 0",
+          "1 / 2 = 0 remainder 1",
+          "Read remainders from bottom to top: 1, 0, 1, 1, 1.",
+          "Answer: 23 (base 10) = 10111 (base 2).",
+        ],
+        answer: "10111 (base 2)",
+      },
+      {
+        type: "question",
+        question: "Convert 13 (base 10) to base 2.",
+        options: ["1011", "1101", "1110", "1010"],
+        correctIndex: 1,
+        explanation: "13/2=6 r1, 6/2=3 r0, 3/2=1 r1, 1/2=0 r1. Read bottom up: 1101.",
+      },
+      {
+        type: "question",
+        question: "Convert 28 (base 10) to base 5.",
+        options: ["103", "104", "102", "113"],
+        correctIndex: 0,
+        explanation: "28/5=5 r3, 5/5=1 r0, 1/5=0 r1. Read bottom up: 103.",
+      },
+      {
+        type: "question",
+        question: "Convert 19 (base 10) to base 2.",
+        options: ["10010", "10011", "11001", "10101"],
+        correctIndex: 1,
+        explanation: "19/2=9 r1, 9/2=4 r1, 4/2=2 r0, 2/2=1 r0, 1/2=0 r1. Read bottom up: 10011.",
+      },
+      {
+        type: "key_point",
+        title: "Exam tip",
+        content:
+          "Always check your answer by converting back to base 10. For example, 142 base 5 = 1x25 + 4x5 + 2x1 = 25 + 20 + 2 = 47. Matches! This double-check earns you the verification mark that many students miss.",
+      },
+    ],
+  },
+  {
+    id: "s1-math-t1-numbers-bases-arithmetic",
+    topicId: "number-bases",
+    subjectId: "mathematics",
+    title: "Addition in different bases",
     order: 3,
     estimatedMinutes: 14,
     passingScore: 70,
@@ -149,129 +187,246 @@ export const sampleLessons: Lesson[] = [
     blocks: [
       {
         type: "text",
-        heading: "What is factorising?",
+        heading: "Adding numbers in other bases",
         content:
-          "Factorising is the reverse of expanding brackets. You take an expression like 6x + 12 and rewrite it as 6(x + 2). The goal is to find the highest common factor (HCF) of all the terms and pull it outside the bracket.",
+          "Adding numbers in any base follows the same rules as base 10, but you carry over when the sum reaches the base (not 10). For example, in base 5, you carry when a column reaches 5 or more. The key skill is knowing when to carry and what to carry.",
       },
       {
         type: "key_point",
-        title: "How to find the HCF",
+        title: "The carrying rule",
         content:
-          "Look at the numbers and the letters separately. For 6x + 12: the HCF of 6 and 12 is 6. There is only one x, so the HCF is 6. Pull out 6: 6(x + 2). Always check by expanding back: 6 times x is 6x, 6 times 2 is 12. Correct.",
+          "When adding in base N: if a column sums to N or more, subtract N and carry 1 to the next column. In base 5: if a column sums to 5, write 0 and carry 1. If it sums to 7, write 2 (that is 7 minus 5) and carry 1. The carry is always 1 unless the sum reaches 2N or more.",
       },
       {
         type: "worked_example",
-        problem: "Factorise: 4x + 8",
+        problem: "Add 23 base 5 + 14 base 5",
         steps: [
-          "Find the HCF of 4 and 8: it is 4",
-          "Write 4 outside the bracket: 4(? + ?)",
-          "Divide each term by 4: 4x / 4 = x, 8 / 4 = 2",
-          "Result: 4(x + 2)",
-          "Check by expanding: 4 times x = 4x, 4 times 2 = 8. Correct!",
+          "Add the units column: 3 + 4 = 7. Since 7 is 5 or more, subtract 5: 7 - 5 = 2. Carry 1.",
+          "Add the fives column plus carry: 2 + 1 + 1 (carry) = 4.",
+          "Answer: 23 base 5 + 14 base 5 = 42 base 5.",
+          "Check in base 10: 23 base 5 = 13, 14 base 5 = 9, 13 + 9 = 22. And 42 base 5 = 4x5 + 2 = 22. Correct!",
         ],
-        answer: "4(x + 2)",
+        answer: "42 (base 5)",
       },
       {
         type: "worked_example",
-        problem: "Factorise: 3x^2 + 6x",
+        problem: "Add 1011 base 2 + 110 base 2",
         steps: [
-          "Find the HCF of 3, x^2, and 6x. Numbers: HCF of 3 and 6 is 3. Letters: both have at least one x.",
-          "The HCF is 3x",
-          "Divide each term by 3x: 3x^2 / 3x = x, 6x / 3x = 2",
-          "Result: 3x(x + 2)",
-          "Check: 3x times x = 3x^2, 3x times 2 = 6x. Correct!",
+          "Column 1 (rightmost): 1 + 0 = 1. Write 1.",
+          "Column 2: 1 + 1 = 2. Since we are in base 2, 2 means carry. Write 0, carry 1.",
+          "Column 3: 0 + 1 + 1 (carry) = 2. Again carry. Write 0, carry 1.",
+          "Column 4: 1 + 0 + 1 (carry) = 2. Carry. Write 0, carry 1.",
+          "Column 5: carry 1 comes down.",
+          "Answer: 1011 base 2 + 110 base 2 = 10001 base 2.",
+          "Check: 1011 base 2 = 11, 110 base 2 = 6, 11 + 6 = 17. And 10001 base 2 = 16 + 1 = 17. Correct!",
         ],
-        answer: "3x(x + 2)",
+        answer: "10001 (base 2)",
       },
       {
         type: "question",
-        question: "Factorise: 5x + 15",
-        options: ["5(x + 3)", "5(x + 15)", "x(5 + 15)", "5(x + 10)"],
-        correctIndex: 0,
-        explanation: "The HCF of 5x and 15 is 5. Divide each term by 5: 5x / 5 = x, 15 / 5 = 3. So 5(x + 3).",
-      },
-      {
-        type: "question",
-        question: "Factorise: 2x^2 + 4x",
-        options: ["2(x^2 + 2x)", "2x(x + 2)", "x(2x + 4)", "2x(x + 4)"],
+        question: "Add 12 base 5 + 13 base 5.",
+        options: ["25 base 5", "30 base 5", "20 base 5", "31 base 5"],
         correctIndex: 1,
-        explanation: "The HCF is 2x. Divide each term: 2x^2 / 2x = x, 4x / 2x = 2. So 2x(x + 2).",
+        explanation: "Units: 2 + 3 = 5. In base 5, that is 0 with carry 1. Fives: 1 + 1 + 1 (carry) = 3. Answer: 30 base 5. Check: 12 base 5 = 7, 13 base 5 = 8, 7 + 8 = 15. And 30 base 5 = 15. Correct!",
       },
       {
         type: "question",
-        question: "Factorise: 6a + 9",
-        options: ["3(2a + 3)", "2(3a + 4)", "6(a + 9)", "3(2a + 9)"],
-        correctIndex: 0,
-        explanation: "The HCF of 6 and 9 is 3. Divide each: 6a / 3 = 2a, 9 / 3 = 3. So 3(2a + 3).",
+        question: "Add 11 base 2 + 11 base 2.",
+        options: ["22 base 2", "100 base 2", "110 base 2", "101 base 2"],
+        correctIndex: 2,
+        explanation: "Column 1: 1 + 1 = 2, write 0 carry 1. Column 2: 1 + 1 + 1 (carry) = 3, write 1 carry 1. Column 3: carry 1. Answer: 110 base 2. Check: 11 base 2 = 3, 3 + 3 = 6. And 110 base 2 = 6. Correct!",
       },
       {
         type: "key_point",
-        title: "Exam tip",
+        title: "Competency check",
         content:
-          "Factorising is worth easy marks in UNEB papers. Always look for the highest common factor first. A common mistake is pulling out a factor that is not the highest (like pulling 2 out of 4x + 8 instead of 4). Always check your answer by expanding back.",
+          "UNEB doesn't just want the right answer. They want to see your method clearly. Always show each column addition, state your carries, and verify by converting to base 10. This is what the competency-based curriculum means by applying knowledge.",
       },
     ],
   },
+  // ================================================================
+  // TERM 1, TOPIC 2: WORKING WITH INTEGERS (15 periods)
+  // Theme: Numbers
+  // ================================================================
   {
-    id: "math-algebra-simultaneous-1",
-    topicId: "algebra",
+    id: "s1-math-t1-integers-intro",
+    topicId: "integers",
     subjectId: "mathematics",
-    title: "Solving simultaneous equations",
+    title: "Working with integers",
     order: 4,
-    estimatedMinutes: 15,
+    estimatedMinutes: 13,
     passingScore: 70,
     isActive: true,
     blocks: [
       {
         type: "text",
-        heading: "What are simultaneous equations?",
+        heading: "What are integers?",
         content:
-          "Simultaneous equations are two equations with two unknowns (usually x and y) that are both true at the same time. Your job is to find the values of x and y that satisfy both equations. UNEB awards method marks for showing your working clearly, even if your final answer is wrong.",
+          "Integers are whole numbers that include positive numbers, negative numbers, and zero. Examples: -5, -3, 0, 4, 12. You use integers every day: temperatures below zero, bank account overdrafts, floors below ground level in a building. Understanding how to add, subtract, multiply, and divide with negative numbers is essential for the rest of Mathematics.",
       },
       {
         type: "key_point",
-        title: "The two methods",
+        title: "The number line",
         content:
-          "There are two ways to solve simultaneous equations: ELIMINATION (make the coefficients of one variable equal, then add or subtract to cancel it out) and SUBSTITUTION (rearrange one equation to express one variable in terms of the other, then substitute). Elimination is usually faster for UNEB exam questions.",
+          "Picture a number line with zero in the middle. Positive numbers go right, negative numbers go left. Moving right means adding. Moving left means subtracting. This visual helps you get the sign right every time.",
       },
       {
         type: "worked_example",
-        problem: "Solve: 3x + 2y = 12 and 2x + 3y = 13",
+        problem: "Calculate: -7 + 3",
         steps: [
-          "Label: (1) 3x + 2y = 12, (2) 2x + 3y = 13",
-          "Eliminate y: multiply (1) by 3 and (2) by 2. You get 9x + 6y = 36 and 4x + 6y = 26",
-          "Subtract: (9x + 6y) - (4x + 6y) = 36 - 26. This gives 5x = 10, so x = 2",
-          "Substitute x = 2 into equation (1): 3(2) + 2y = 12, so 6 + 2y = 12, so 2y = 6, so y = 3",
-          "Answer: x = 2, y = 3. Always check by substituting into equation (2): 2(2) + 3(3) = 4 + 9 = 13. Correct!",
+          "Start at -7 on the number line.",
+          "Adding 3 means moving 3 steps to the right.",
+          "-7 + 3 = -4.",
         ],
-        answer: "x = 2, y = 3",
+        answer: "-4",
+      },
+      {
+        type: "worked_example",
+        problem: "Calculate: -5 x -4",
+        steps: [
+          "Two negative numbers multiplied give a positive result.",
+          "Multiply the values: 5 x 4 = 20.",
+          "Answer: -5 x -4 = +20.",
+          "Memory rule: same signs give positive, different signs give negative.",
+        ],
+        answer: "+20",
+      },
+      {
+        type: "worked_example",
+        problem: "Calculate: -12 / 3",
+        steps: [
+          "Different signs (one negative, one positive) give a negative result.",
+          "Divide the values: 12 / 3 = 4.",
+          "Answer: -12 / 3 = -4.",
+        ],
+        answer: "-4",
       },
       {
         type: "question",
-        question: "When using elimination, what is the first step?",
-        options: [
-          "Make the coefficients of one variable equal in both equations",
-          "Add the two equations together as they are",
-          "Solve for the final unknown immediately",
-          "Substitute one value back into the other equation",
-        ],
+        question: "Calculate: -8 + 5",
+        options: ["-3", "-13", "3", "13"],
         correctIndex: 0,
-        explanation:
-          "Correct. You must equalise the coefficients of one variable first, so that when you add or subtract, that variable cancels out entirely.",
+        explanation: "Start at -8, move 5 steps right: -8 + 5 = -3.",
       },
       {
         type: "question",
-        question: "Given 3x + 2y = 12 and 2x + 3y = 13, if you find x = 2, what is y?",
-        options: ["y = 2", "y = 3", "y = 4", "y = 5"],
+        question: "Calculate: -6 x -7",
+        options: ["-42", "42", "-13", "13"],
         correctIndex: 1,
-        explanation:
-          "Substitute x = 2 into 3x + 2y = 12: 3(2) + 2y = 12, so 6 + 2y = 12, so 2y = 6, so y = 3.",
+        explanation: "Same signs (both negative) give positive. 6 x 7 = 42. So -6 x -7 = 42.",
+      },
+      {
+        type: "question",
+        question: "Calculate: -20 / -4",
+        options: ["-5", "5", "-16", "16"],
+        correctIndex: 1,
+        explanation: "Same signs give positive. 20 / 4 = 5. So -20 / -4 = 5.",
+      },
+      {
+        type: "question",
+        question: "Calculate: 4 - 9",
+        options: ["5", "-5", "13", "-13"],
+        correctIndex: 1,
+        explanation: "Start at 4, subtract 9 (move 9 steps left): 4 - 9 = -5.",
       },
       {
         type: "key_point",
-        title: "Exam tip",
+        title: "The sign rules",
         content:
-          "UNEB awards method marks for each correct step. Even if your final answer is wrong, you can earn up to 3 out of 4 marks by showing the elimination and substitution steps clearly. Always label your equations (1) and (2), and always check your answer by substituting back.",
+          "Addition and subtraction: use the number line. Multiplication and division: same signs give positive (+), different signs give negative (-). Positive x Positive = Positive. Negative x Negative = Positive. Positive x Negative = Negative. Negative x Positive = Negative.",
+      },
+    ],
+  },
+  // ================================================================
+  // TERM 1, TOPIC 3: FRACTIONS, PERCENTAGES AND DECIMALS (15 periods)
+  // Theme: Numbers
+  // ================================================================
+  {
+    id: "s1-math-t1-fractions-intro",
+    topicId: "fractions-percentages-decimals",
+    subjectId: "mathematics",
+    title: "Fractions: the basics",
+    order: 5,
+    estimatedMinutes: 14,
+    passingScore: 70,
+    isActive: true,
+    blocks: [
+      {
+        type: "text",
+        heading: "What is a fraction?",
+        content:
+          "A fraction represents part of a whole. It has two parts: the numerator (top number, how many parts you have) and the denominator (bottom number, how many equal parts the whole is divided into). For example, 3/4 means three out of four equal parts. Fractions appear everywhere: sharing food, discounts, test scores, and probability.",
+      },
+      {
+        type: "key_point",
+        title: "Equivalent fractions",
+        content:
+          "Fractions that represent the same amount are called equivalent. 1/2 = 2/4 = 3/6 = 50/100. You create equivalent fractions by multiplying or dividing both the numerator and denominator by the same number. Simplifying a fraction means dividing both by their highest common factor (HCF).",
+      },
+      {
+        type: "worked_example",
+        problem: "Simplify 12/18",
+        steps: [
+          "Find the HCF of 12 and 18. The factors of 12 are 1,2,3,4,6,12. The factors of 18 are 1,2,3,6,9,18. The HCF is 6.",
+          "Divide both by 6: 12 / 6 = 2, 18 / 6 = 3.",
+          "Simplified: 12/18 = 2/3.",
+        ],
+        answer: "2/3",
+      },
+      {
+        type: "worked_example",
+        problem: "Add 1/4 + 2/3",
+        steps: [
+          "Find a common denominator. The LCM of 4 and 3 is 12.",
+          "Convert: 1/4 = 3/12, and 2/3 = 8/12.",
+          "Add: 3/12 + 8/12 = 11/12.",
+          "11 and 12 share no common factors, so this is already simplified.",
+        ],
+        answer: "11/12",
+      },
+      {
+        type: "worked_example",
+        problem: "Convert 3/5 to a decimal and percentage",
+        steps: [
+          "To convert to decimal: divide 3 by 5. 3 / 5 = 0.6.",
+          "To convert to percentage: multiply the decimal by 100. 0.6 x 100 = 60%.",
+          "So 3/5 = 0.6 = 60%.",
+        ],
+        answer: "0.6 and 60%",
+      },
+      {
+        type: "question",
+        question: "Simplify 8/12.",
+        options: ["2/3", "3/4", "4/6", "1/2"],
+        correctIndex: 0,
+        explanation: "HCF of 8 and 12 is 4. 8/4 = 2, 12/4 = 3. So 8/12 = 2/3.",
+      },
+      {
+        type: "question",
+        question: "Add 1/3 + 1/6.",
+        options: ["2/9", "1/2", "2/6", "3/6"],
+        correctIndex: 1,
+        explanation: "Common denominator is 6. 1/3 = 2/6. 2/6 + 1/6 = 3/6 = 1/2.",
+      },
+      {
+        type: "question",
+        question: "Convert 7/10 to a percentage.",
+        options: ["7%", "70%", "0.7%", "14%"],
+        correctIndex: 1,
+        explanation: "7/10 = 0.7. Multiply by 100: 0.7 x 100 = 70%.",
+      },
+      {
+        type: "question",
+        question: "A shop gives a discount of 1/4 off a 40,000 UGX item. How much is the discount?",
+        options: ["8,000 UGX", "10,000 UGX", "12,000 UGX", "4,000 UGX"],
+        correctIndex: 1,
+        explanation: "1/4 of 40,000 = 40,000 / 4 = 10,000 UGX. The discount is 10,000 UGX.",
+      },
+      {
+        type: "key_point",
+        title: "Why this matters",
+        content:
+          "Fractions, decimals, and percentages are the same idea in three forms. Being able to switch between them quickly is essential for business math, data interpretation, and everyday decisions. UNEB tests this in nearly every paper. Master it now and it pays off for four years.",
       },
     ],
   },
@@ -279,4 +434,28 @@ export const sampleLessons: Lesson[] = [
 
 export function getLessonById(id: string): Lesson | undefined {
   return sampleLessons.find((l) => l.id === id);
+}
+
+/** Get lessons grouped by topic (for the learn page). */
+export function getLessonsByTopic() {
+  const topics: Record<string, { topicId: string; title: string; theme: string; lessons: Lesson[] }> = {};
+
+  for (const lesson of sampleLessons) {
+    if (!topics[lesson.topicId]) {
+      const topicTitles: Record<string, { title: string; theme: string }> = {
+        "number-bases": { title: "Number Bases", theme: "Numbers" },
+        "integers": { title: "Working with Integers", theme: "Numbers" },
+        "fractions-percentages-decimals": { title: "Fractions, Percentages and Decimals", theme: "Numbers" },
+      };
+      topics[lesson.topicId] = {
+        topicId: lesson.topicId,
+        title: topicTitles[lesson.topicId]?.title || lesson.topicId,
+        theme: topicTitles[lesson.topicId]?.theme || "Numbers",
+        lessons: [],
+      };
+    }
+    topics[lesson.topicId].lessons.push(lesson);
+  }
+
+  return Object.values(topics);
 }

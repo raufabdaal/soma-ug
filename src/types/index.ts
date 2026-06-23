@@ -24,6 +24,7 @@ export interface StudentProfile {
   diagnosticScores: Record<string, number>;
   predictedGrades: Record<string, string>;
   lessonsCompleted?: number;
+  totalStudySeconds?: number;
   guaranteeProgress?: number;
   lastActiveAt?: Timestamp | null;
 }

@@ -2,11 +2,13 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
 import { collection, doc, getDoc, getDocs, query, setDoc, arrayUnion, where } from "firebase/firestore";
 import { db } from "@/lib/firebase/config";
 import { authErrorToMessage } from "@/lib/auth-errors";
 import type { ParentProfile, StudentProfile } from "@/types";
+import { formatStudyTime } from "@/lib/utils";
 
 export default function ParentDashboard() {
   const router = useRouter();
@@ -164,12 +166,14 @@ export default function ParentDashboard() {
         {/* Stats card */}
         <div className="card" style={{ position: "relative", overflow: "hidden" }}>
           <div className="blob" style={{ width: 160, height: 160, background: "var(--sage)", top: -40, right: -30, opacity: 0.14 }} />
-          <div className="eyebrow" style={{ fontSize: 11 }}>Study time this week</div>
-          <div className="font-serif-display" style={{ fontWeight: 500, fontSize: "clamp(2.4rem, 4.6vw, 3.2rem)", lineHeight: 1, margin: "12px 0 8px", letterSpacing: "-0.02em" }}>
-            3<span style={{ fontSize: "0.4em", color: "var(--ink-muted)", fontFamily: "var(--font-inter), sans-serif", fontWeight: 500 }}>h</span> 20<span style={{ fontSize: "0.4em", color: "var(--ink-muted)", fontFamily: "var(--font-inter), sans-serif", fontWeight: 500 }}>m</span>
+          <div className="eyebrow" style={{ fontSize: 11 }}>Total study time</div>
+          <div className="font-serif-display" style={{ fontWeight: 500, fontSize: "clamp(2rem, 4.6vw, 3rem)", lineHeight: 1, margin: "12px 0 8px", letterSpacing: "-0.02em" }}>
+            {formatStudyTime(students[0]?.totalStudySeconds || 0)}
           </div>
           <p style={{ color: "var(--ink-soft)", fontSize: 15 }}>
-            Across Maths, Biology and Chemistry. Up 45 minutes on last week.
+            {students[0]?.diagnosticCompleted
+              ? "Time spent learning on Soma."
+              : "Your child hasn't started learning yet."}
           </p>
 
           <div className="stat-row-mobile" style={{ display: "flex", gap: 28, marginTop: 26, paddingTop: 22, borderTop: "1px solid var(--hairline)" }}>
@@ -178,29 +182,71 @@ export default function ParentDashboard() {
             <StatItem num={String(students[0]?.guaranteeProgress || 0) + "%"} label="Guarantee" />
           </div>
 
-          <div style={{ marginTop: 22, display: "flex", alignItems: "center", gap: 12, background: "rgba(126,142,99,0.12)", borderRadius: 12, padding: "14px 18px", color: "var(--sage-dk)", fontWeight: 600, fontSize: "14.5px" }}>
+          <div style={{ marginTop: 22, display: "flex", alignItems: "center", gap: 12, background: (students[0]?.guaranteeProgress || 0) >= 50 ? "rgba(126,142,99,0.12)" : "var(--cream-deep)", borderRadius: 12, padding: "14px 18px", color: (students[0]?.guaranteeProgress || 0) >= 50 ? "var(--sage-dk)" : "var(--ink-muted)", fontWeight: 600, fontSize: "14.5px" }}>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6 9 17l-5-5" /></svg>
-            On track for the 80% guarantee this term.
+            {students[0]?.diagnosticCompleted
+              ? (students[0]?.guaranteeProgress || 0) >= 50
+                ? "On track for the 80% guarantee."
+                : `${students[0]?.guaranteeProgress || 0}% toward the 80% target. Keep going.`
+              : "Diagnostic test not yet taken."}
           </div>
         </div>
 
-        {/* Needs attention alert */}
-        <div className="card" style={{ boxShadow: "var(--shadow-float)", transform: "rotate(-1.6deg)", position: "relative" }}>
-          <span style={{ position: "absolute", top: -10, left: 24, background: "var(--terracotta)", color: "#fff", fontSize: 11, fontWeight: 600, letterSpacing: "0.06em", textTransform: "uppercase", padding: "5px 12px", borderRadius: 999 }}>
-            Needs attention
-          </span>
-          <div className="eyebrow" style={{ color: "var(--terracotta)", fontSize: 11, marginTop: 8 }}>Biology - Cell division</div>
-          <h3 className="font-serif-display" style={{ fontWeight: 600, fontSize: 19, margin: "10px 0 8px", lineHeight: 1.3 }}>
-            Score dipped to 58% here.
-          </h3>
-          <p style={{ fontSize: "14.5px", color: "var(--ink-soft)", lineHeight: 1.55 }}>
-            The topic covers mitosis keywords that are being missed in answers. A short refresher is
-            ready and waiting.
-          </p>
-          <span style={{ marginTop: 16, display: "inline-block", fontSize: 14, fontWeight: 600, color: "var(--terracotta)", borderBottom: "1.5px solid var(--terracotta)", paddingBottom: 2, cursor: "pointer" }}>
-            Send the refresher
-          </span>
-        </div>
+        {/* Data-driven status card */}
+        {(() => {
+          const scores = students[0]?.diagnosticScores || {};
+          const subjects = Object.entries(scores);
+
+          if (!students[0]?.diagnosticCompleted) {
+            return (
+              <div className="card" style={{ boxShadow: "var(--shadow-float)", position: "relative" }}>
+                <div className="eyebrow" style={{ color: "var(--terracotta)", fontSize: 11, marginBottom: 12 }}>Next step</div>
+                <h3 className="font-serif-display" style={{ fontWeight: 600, fontSize: 19, marginBottom: 8, lineHeight: 1.3 }}>
+                  Diagnostic test not taken yet.
+                </h3>
+                <p style={{ fontSize: "14.5px", color: "var(--ink-soft)", lineHeight: 1.55 }}>
+                  Your child needs to take the diagnostic test to set their baseline. Ask them to open Soma and complete it.
+                </p>
+              </div>
+            );
+          }
+
+          if (subjects.length === 0 || subjects.every(([, s]) => s >= 70)) {
+            return (
+              <div className="card" style={{ boxShadow: "var(--shadow-float)", position: "relative" }}>
+                <div className="eyebrow" style={{ color: "var(--sage-dk)", fontSize: 11 }}>Looking good</div>
+                <h3 className="font-serif-display" style={{ fontWeight: 600, fontSize: 19, marginBottom: 8 }}>
+                  No weak areas right now.
+                </h3>
+                <p style={{ fontSize: "14.5px", color: "var(--ink-soft)" }}>
+                  {subjects.length === 0
+                    ? "As your child completes more lessons, weak areas will appear here."
+                    : "All subjects are above 70%. Keep the momentum going."}
+                </p>
+              </div>
+            );
+          }
+
+          const weakest = subjects.reduce((min, curr) => curr[1] < min[1] ? curr : min);
+          const weakestName = weakest[0].charAt(0).toUpperCase() + weakest[0].slice(1);
+          return (
+            <div className="card" style={{ boxShadow: "var(--shadow-float)", transform: "rotate(-1.6deg)", position: "relative" }}>
+              <span style={{ position: "absolute", top: -10, left: 24, background: "var(--terracotta)", color: "#fff", fontSize: 11, fontWeight: 600, letterSpacing: "0.06em", textTransform: "uppercase", padding: "5px 12px", borderRadius: 999 }}>
+                Needs attention
+              </span>
+              <div className="eyebrow" style={{ color: "var(--terracotta)", fontSize: 11, marginTop: 8 }}>{weakestName}</div>
+              <h3 className="font-serif-display" style={{ fontWeight: 600, fontSize: 19, margin: "10px 0 8px", lineHeight: 1.3 }}>
+                Current score: {weakest[1]}%
+              </h3>
+              <p style={{ fontSize: "14.5px", color: "var(--ink-soft)", lineHeight: 1.55 }}>
+                This is {weakestName}&apos;s weakest area. Extra practice here will lift the overall grade.
+              </p>
+              <Link href="/parent/reports" style={{ marginTop: 16, display: "inline-block", fontSize: 14, fontWeight: 600, color: "var(--terracotta)", borderBottom: "1.5px solid var(--terracotta)", paddingBottom: 2, textDecoration: "none" }}>
+                See full report
+              </Link>
+            </div>
+          );
+        })()}
       </div>
 
       {/* Link another student */}

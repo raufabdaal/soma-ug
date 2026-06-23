@@ -65,11 +65,11 @@ export default function LessonPage() {
 
       {/* Lesson content */}
       <div className="lesson-content">
-        <LessonPlayer lesson={lesson} onComplete={async (score) => {
+        <LessonPlayer lesson={lesson} onComplete={async (score, timeSpentSeconds) => {
           if (user && !saved) {
             setSaved(true);
             try {
-              await recordLessonCompletion(user, lesson.id, lesson.subjectId, score);
+              await recordLessonCompletion(user, lesson.id, lesson.subjectId, score, timeSpentSeconds);
             } catch (err) {
               console.error("Failed to save progress:", err);
             }

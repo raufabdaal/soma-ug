@@ -27,7 +27,8 @@ export async function recordLessonCompletion(
   user: User,
   lessonId: string,
   subjectId: string,
-  score: number
+  score: number,
+  timeSpentSeconds: number
 ) {
   const uid = user.uid;
   const progressRef = doc(db, "students", uid, "lessonProgress", lessonId);
@@ -42,6 +43,7 @@ export async function recordLessonCompletion(
     score,
     completed: true,
     attempts: prevAttempts + 1,
+    timeSpentSeconds,
     completedAt: serverTimestamp(),
   }, { merge: true });
 
@@ -51,11 +53,18 @@ export async function recordLessonCompletion(
   if (!wasCompleted) {
     await updateDoc(doc(db, "students", uid), {
       lessonsCompleted: increment(1),
+      totalStudySeconds: increment(timeSpentSeconds),
       lastActiveAt: serverTimestamp(),
     });
 
     // Update predicted grade for this subject based on average score
     await updatePredictedGrade(uid, subjectId);
+  } else {
+    // Already completed before, but still add the time spent
+    await updateDoc(doc(db, "students", uid), {
+      totalStudySeconds: increment(timeSpentSeconds),
+      lastActiveAt: serverTimestamp(),
+    });
   }
 }
 

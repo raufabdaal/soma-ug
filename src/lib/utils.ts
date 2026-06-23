@@ -22,6 +22,7 @@ export function generateStudyCode(): string {
 
 /** Format seconds into a readable study-time string like "3h 20m". */
 export function formatStudyTime(totalSeconds: number): string {
+  if (!totalSeconds || totalSeconds === 0) return "0m";
   const hours = Math.floor(totalSeconds / 3600);
   const minutes = Math.floor((totalSeconds % 3600) / 60);
   if (hours > 0) {

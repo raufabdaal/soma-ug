@@ -6,7 +6,7 @@ import type { Lesson, LessonBlock } from "@/types";
 
 interface LessonPlayerProps {
   lesson: Lesson;
-  onComplete?: (score: number) => void;
+  onComplete?: (score: number, timeSpentSeconds: number) => void;
 }
 
 export function LessonPlayer({ lesson, onComplete }: LessonPlayerProps) {
@@ -18,6 +18,9 @@ export function LessonPlayer({ lesson, onComplete }: LessonPlayerProps) {
   const [answers, setAnswers] = useState<Record<number, number>>({});
   const [revealed, setRevealed] = useState<Record<number, boolean>>({});
   const [completed, setCompleted] = useState(false);
+  const [startTime] = useState(() => Date.now());
+  const [isReading, setIsReading] = useState(false);
+  const [currentBlockIdx, setCurrentBlockIdx] = useState(0);
 
   const answeredCount = Object.keys(revealed).length;
   const correctCount = questionBlocks.filter((q) => {
@@ -40,7 +43,64 @@ export function LessonPlayer({ lesson, onComplete }: LessonPlayerProps) {
 
   function handleFinish() {
     setCompleted(true);
-    onComplete?.(score);
+    const timeSpentSeconds = Math.round((Date.now() - startTime) / 1000);
+    onComplete?.(score, timeSpentSeconds);
+  }
+
+  // ===== AUDIO NARRATION (Web Speech API, free, browser-native) =====
+  function getBlockText(block: LessonBlock): string {
+    switch (block.type) {
+      case "text":
+        return `${block.heading ? block.heading + ". " : ""}${block.content}`;
+      case "key_point":
+        return `Key point. ${block.title}. ${block.content}`;
+      case "worked_example":
+        return `Worked example. ${block.problem}. ${block.steps.join(". ")}. Answer: ${block.answer}`;
+      case "question":
+        return `Question. ${block.question}. Options: ${block.options.join(", ")}.`;
+      default:
+        return "";
+    }
+  }
+
+  function stopReading() {
+    if (typeof window !== "undefined" && "speechSynthesis" in window) {
+      window.speechSynthesis.cancel();
+    }
+    setIsReading(false);
+  }
+
+  function readFromBlock(index: number) {
+    if (typeof window === "undefined" || !("speechSynthesis" in window)) {
+      alert("Audio narration is not supported on this browser. Try Chrome or Safari.");
+      return;
+    }
+
+    window.speechSynthesis.cancel();
+    setIsReading(true);
+    setCurrentBlockIdx(index);
+
+    // Read this block, then auto-advance to the next
+    function readNext(i: number) {
+      if (i >= lesson.blocks.length) {
+        setIsReading(false);
+        return;
+      }
+
+      const text = getBlockText(lesson.blocks[i]);
+      if (!text) {
+        readNext(i + 1);
+        return;
+      }
+
+      setCurrentBlockIdx(i);
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.rate = 0.95;
+      utterance.onend = () => readNext(i + 1);
+      window.speechSynthesis.speak(utterance);
+    }
+
+    readNext(index);
   }
 
   if (completed) {
@@ -89,24 +149,58 @@ export function LessonPlayer({ lesson, onComplete }: LessonPlayerProps) {
 
   return (
     <div>
-      {/* Progress bar */}
-      {questionBlocks.length > 0 && (
-        <div style={{ marginBottom: 32 }}>
-          <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8, fontSize: 12, color: "var(--ink-muted)", fontWeight: 600 }}>
-            <span>{answeredCount} of {questionBlocks.length} answered</span>
-            <span>{Math.round((answeredCount / questionBlocks.length) * 100)}%</span>
+      {/* Progress bar + audio toggle */}
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24, gap: 12, flexWrap: "wrap" }}>
+        {questionBlocks.length > 0 ? (
+          <div style={{ flex: 1, minWidth: 150 }}>
+            <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8, fontSize: 12, color: "var(--ink-muted)", fontWeight: 600 }}>
+              <span>{answeredCount} of {questionBlocks.length} answered</span>
+              <span>{Math.round((answeredCount / questionBlocks.length) * 100)}%</span>
+            </div>
+            <div style={{ height: 5, background: "var(--cream-deep)", borderRadius: 999, overflow: "hidden" }}>
+              <div style={{
+                height: "100%",
+                width: `${(answeredCount / questionBlocks.length) * 100}%`,
+                background: "var(--terracotta)",
+                borderRadius: 999,
+                transition: "width 0.4s ease",
+              }} />
+            </div>
           </div>
-          <div style={{ height: 5, background: "var(--cream-deep)", borderRadius: 999, overflow: "hidden" }}>
-            <div style={{
-              height: "100%",
-              width: `${(answeredCount / questionBlocks.length) * 100}%`,
-              background: "var(--terracotta)",
-              borderRadius: 999,
-              transition: "width 0.4s ease",
-            }} />
-          </div>
-        </div>
-      )}
+        ) : <div style={{ flex: 1 }} />}
+
+        <button
+          onClick={() => isReading ? stopReading() : readFromBlock(0)}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 8,
+            padding: "8px 16px",
+            borderRadius: 999,
+            border: `1.5px solid ${isReading ? "var(--terracotta)" : "var(--hairline)"}`,
+            background: isReading ? "rgba(192,106,75,0.08)" : "transparent",
+            cursor: "pointer",
+            fontSize: 13,
+            fontWeight: 600,
+            color: isReading ? "var(--terracotta)" : "var(--ink-soft)",
+            fontFamily: "inherit",
+            transition: "all 0.15s ease",
+            whiteSpace: "nowrap",
+          }}
+        >
+          {isReading ? (
+            <>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="6" y="4" width="4" height="16" /><rect x="14" y="4" width="4" height="16" /></svg>
+              Stop
+            </>
+          ) : (
+            <>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 10v4M7 6l8 6-8 6V6zM18 8a5 5 0 0 1 0 8" /></svg>
+              Listen
+            </>
+          )}
+        </button>
+      </div>
 
       {/* Render each block */}
       {lesson.blocks.map((block, index) => (
