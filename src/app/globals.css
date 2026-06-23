@@ -286,35 +286,59 @@
 
 /* ============================================================
    RESPONSIVE NAVIGATION
-   Desktop: top bar. Mobile: bottom bar.
+   Desktop: left sidebar. Mobile: bottom bar.
    ============================================================ */
 
-/* Desktop top nav */
-.nav-desktop {
+/* App shell: sidebar + content */
+.app-shell {
+  display: flex;
+  min-height: 100vh;
+  background: var(--cream);
+}
+
+/* Desktop left sidebar */
+.sidebar {
+  width: 240px;
+  flex-shrink: 0;
   position: sticky;
   top: 0;
-  z-index: 50;
-  background: rgba(251, 248, 243, 0.88);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  height: 100vh;
+  background: var(--cream-deep);
+  border-right: 1px solid var(--hairline);
+  display: flex;
+  flex-direction: column;
+  padding: 24px 16px;
+}
+
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: var(--charcoal);
+  padding: 0 8px 24px;
   border-bottom: 1px solid var(--hairline);
+  margin-bottom: 20px;
 }
 
-.nav-desktop-inner {
-  max-width: 1160px;
-  margin: 0 auto;
-  padding: 14px 28px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 24px;
+.sidebar-brand span {
+  font-family: var(--font-fraunces), Georgia, serif;
+  font-weight: 600;
+  font-size: 21px;
 }
 
-.nav-desktop-link {
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.sidebar-link {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px 16px;
+  gap: 12px;
+  padding: 11px 14px;
   border-radius: var(--r-md);
   text-decoration: none;
   font-size: 14.5px;
@@ -324,31 +348,77 @@
   transition: all 0.15s ease;
 }
 
-.nav-desktop-link.active {
-  font-weight: 600;
+.sidebar-link:hover {
+  background: rgba(0,0,0,0.03);
   color: var(--charcoal);
-  background: var(--cream-deep);
 }
 
-.nav-logout-btn {
-  padding: 8px 16px;
+.sidebar-link.active {
+  font-weight: 600;
+  color: var(--terracotta);
+  background: rgba(192,106,75,0.1);
+}
+
+.sidebar-logout {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 14px;
   border-radius: var(--r-md);
-  border: 1px solid var(--hairline);
+  border: 1.5px solid var(--hairline);
   background: transparent;
   cursor: pointer;
-  font-size: 13.5px;
+  font-size: 14px;
   font-weight: 500;
   color: var(--ink-soft);
+  width: 100%;
+  text-decoration: none;
+  font-family: inherit;
+  transition: all 0.15s ease;
 }
 
-/* Mobile bottom nav */
+.sidebar-logout:hover {
+  background: var(--white);
+  color: var(--terracotta-dk);
+  border-color: var(--terracotta);
+}
+
+.sidebar-user {
+  margin-top: 16px;
+  padding: 12px 14px;
+  background: var(--white);
+  border-radius: var(--r-md);
+  border: 1px solid var(--hairline);
+}
+
+.sidebar-user .name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--charcoal);
+}
+
+.sidebar-user .role {
+  font-size: 12px;
+  color: var(--ink-muted);
+  margin-top: 2px;
+}
+
+/* Content area */
+.app-content {
+  flex: 1;
+  min-width: 0;
+  padding: 40px 32px 80px;
+  max-width: 1160px;
+  margin: 0 auto;
+}
+
+/* Mobile: hide sidebar, show bottom nav */
 .nav-mobile {
   display: none;
 }
 
-/* Responsive breakpoints */
 @media (max-width: 768px) {
-  .nav-desktop {
+  .sidebar {
     display: none;
   }
 
@@ -382,6 +452,7 @@
     color: var(--ink-muted);
     transition: color 0.15s ease;
     flex: 1;
+    font-family: inherit;
   }
 
   .nav-mobile-item.active {
@@ -389,8 +460,7 @@
     font-weight: 600;
   }
 
-  /* Add bottom padding so content isn't hidden behind the bottom nav */
-  .student-main {
-    padding-bottom: 100px !important;
+  .app-content {
+    padding: 24px 16px 100px;
   }
 }

@@ -6,12 +6,14 @@ import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
 import { getLessonById } from "@/lib/lessons";
 import { LessonPlayer } from "@/components/LessonPlayer";
+import { recordLessonCompletion } from "@/lib/progress";
 
 export default function LessonPage() {
   const router = useRouter();
   const params = useParams();
   const { user, loading } = useAuth();
   const [showTutor, setShowTutor] = useState(false);
+  const [saved, setSaved] = useState(false);
 
   const lessonId = params?.lessonId as string;
   const lesson = getLessonById(lessonId);
@@ -63,7 +65,16 @@ export default function LessonPage() {
 
       {/* Lesson content */}
       <div className="lesson-content">
-        <LessonPlayer lesson={lesson} />
+        <LessonPlayer lesson={lesson} onComplete={async (score) => {
+          if (user && !saved) {
+            setSaved(true);
+            try {
+              await recordLessonCompletion(user, lesson.id, lesson.subjectId, score);
+            } catch (err) {
+              console.error("Failed to save progress:", err);
+            }
+          }
+        }} />
       </div>
 
       {/* Tutor toggle */}

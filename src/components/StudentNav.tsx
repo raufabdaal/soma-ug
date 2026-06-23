@@ -11,7 +11,7 @@ const navItems = [
   { href: "/student/settings", label: "Profile", icon: SettingsIcon },
 ];
 
-export function StudentNav() {
+export function StudentNav({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
   const { user, profile, logout } = useAuth();
@@ -21,34 +21,44 @@ export function StudentNav() {
     router.push("/login");
   }
 
-  // Don't show on settings page desktop logout (it's in the page itself)
-  const displayName = profile?.displayName || user?.email?.split("@")[0] || "Student";
+  const displayName = profile?.displayName || user?.displayName || "Student";
 
   return (
-    <>
-      {/* ===== DESKTOP TOP NAV ===== */}
-      <nav className="nav-desktop">
-        <div className="nav-desktop-inner">
-          <div style={{ display: "flex", alignItems: "center", gap: 32 }}>
-            <Link href="/student" style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none", color: "var(--charcoal)" }}>
-              <BrandMark />
-              <span className="font-serif-display" style={{ fontWeight: 600, fontSize: 21 }}>Soma</span>
-            </Link>
-            <div style={{ display: "flex", gap: 4 }}>
-              {navItems.map((item) => {
-                const active = pathname === item.href;
-                return (
-                  <Link key={item.href} href={item.href} className={`nav-desktop-link ${active ? "active" : ""}`}>
-                    <item.icon />
-                    <span>{item.label}</span>
-                  </Link>
-                );
-              })}
-            </div>
-          </div>
-          <span style={{ fontSize: 14, color: "var(--ink-muted)" }}>{displayName}</span>
+    <div className="app-shell">
+      {/* ===== DESKTOP LEFT SIDEBAR ===== */}
+      <aside className="sidebar">
+        <Link href="/student" className="sidebar-brand">
+          <BrandMark />
+          <span>Soma</span>
+        </Link>
+
+        <nav className="sidebar-nav">
+          {navItems.map((item) => {
+            const active = pathname === item.href;
+            return (
+              <Link key={item.href} href={item.href} className={`sidebar-link ${active ? "active" : ""}`}>
+                <item.icon />
+                {item.label}
+              </Link>
+            );
+          })}
+        </nav>
+
+        <button onClick={handleLogout} className="sidebar-logout">
+          <LogoutIcon />
+          Sign out
+        </button>
+
+        <div className="sidebar-user">
+          <div className="name">{displayName}</div>
+          <div className="role">Student</div>
         </div>
-      </nav>
+      </aside>
+
+      {/* ===== CONTENT ===== */}
+      <div className="app-content">
+        {children}
+      </div>
 
       {/* ===== MOBILE BOTTOM NAV ===== */}
       <nav className="nav-mobile">
@@ -62,7 +72,7 @@ export function StudentNav() {
           );
         })}
       </nav>
-    </>
+    </div>
   );
 }
 
@@ -100,6 +110,13 @@ function SettingsIcon() {
   return (
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <circle cx="12" cy="8" r="4" /><path d="M6 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2" />
+    </svg>
+  );
+}
+function LogoutIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" /><path d="m16 17 5-5-5-5" /><path d="M21 12H9" />
     </svg>
   );
 }

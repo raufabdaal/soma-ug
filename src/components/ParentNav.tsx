@@ -5,46 +5,59 @@ import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 
 const navItems = [
-  { href: "/parent", label: "Home", icon: HomeIcon },
+  { href: "/parent", label: "Dashboard", icon: HomeIcon },
   { href: "/parent/reports", label: "Reports", icon: ReportIcon },
   { href: "/parent/settings", label: "Settings", icon: SettingsIcon },
 ];
 
-export function ParentNav() {
+export function ParentNav({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
-  const { logout } = useAuth();
+  const { user, profile, logout } = useAuth();
 
   async function handleLogout() {
     await logout();
     router.push("/login");
   }
 
+  const displayName = profile?.displayName || user?.displayName || "Parent";
+
   return (
-    <>
-      {/* ===== DESKTOP TOP NAV ===== */}
-      <nav className="nav-desktop">
-        <div className="nav-desktop-inner">
-          <div style={{ display: "flex", alignItems: "center", gap: 32 }}>
-            <Link href="/parent" style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none", color: "var(--charcoal)" }}>
-              <BrandMark />
-              <span className="font-serif-display" style={{ fontWeight: 600, fontSize: 21 }}>Soma</span>
-            </Link>
-            <div style={{ display: "flex", gap: 4 }}>
-              {navItems.map((item) => {
-                const active = pathname === item.href;
-                return (
-                  <Link key={item.href} href={item.href} className={`nav-desktop-link ${active ? "active" : ""}`}>
-                    <item.icon />
-                    <span>{item.label}</span>
-                  </Link>
-                );
-              })}
-            </div>
-          </div>
-          <button onClick={handleLogout} className="nav-logout-btn">Sign out</button>
+    <div className="app-shell">
+      {/* ===== DESKTOP LEFT SIDEBAR ===== */}
+      <aside className="sidebar">
+        <Link href="/parent" className="sidebar-brand">
+          <BrandMark />
+          <span>Soma</span>
+        </Link>
+
+        <nav className="sidebar-nav">
+          {navItems.map((item) => {
+            const active = pathname === item.href;
+            return (
+              <Link key={item.href} href={item.href} className={`sidebar-link ${active ? "active" : ""}`}>
+                <item.icon />
+                {item.label}
+              </Link>
+            );
+          })}
+        </nav>
+
+        <button onClick={handleLogout} className="sidebar-logout">
+          <LogoutIcon />
+          Sign out
+        </button>
+
+        <div className="sidebar-user">
+          <div className="name">{displayName}</div>
+          <div className="role">Parent</div>
         </div>
-      </nav>
+      </aside>
+
+      {/* ===== CONTENT ===== */}
+      <div className="app-content">
+        {children}
+      </div>
 
       {/* ===== MOBILE BOTTOM NAV ===== */}
       <nav className="nav-mobile">
@@ -57,12 +70,8 @@ export function ParentNav() {
             </Link>
           );
         })}
-        <button onClick={handleLogout} className="nav-mobile-item">
-          <LogoutIcon />
-          <span>Sign out</span>
-        </button>
       </nav>
-    </>
+    </div>
   );
 }
 
@@ -94,14 +103,14 @@ function ReportIcon() {
 function SettingsIcon() {
   return (
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+      <circle cx="12" cy="8" r="4" /><path d="M6 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2" />
     </svg>
   );
 }
 
 function LogoutIcon() {
   return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" /><path d="m16 17 5-5-5-5" /><path d="M21 12H9" />
     </svg>
   );

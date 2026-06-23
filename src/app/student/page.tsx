@@ -48,7 +48,9 @@ export default function StudentDashboard() {
   const firstName = user?.displayName?.split(" ")[0] || "there";
   const hour = new Date().getHours();
   const greeting = hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening";
-  const predictedMaths = studentData?.predictedGrades?.["mathematics"] || "C";
+  const predictedMaths = studentData?.predictedGrades?.["mathematics"] || "-";
+  const lessonsCompleted = studentData?.lessonsCompleted || 0;
+  const guaranteeProgress = studentData?.guaranteeProgress || 0;
 
   return (
     <div className="animate-fade">
@@ -61,6 +63,21 @@ export default function StudentDashboard() {
           ? "Here is where your grades stand right now."
           : "Take your diagnostic test to get your baseline grade."}
       </p>
+
+      {!studentData?.diagnosticCompleted && (
+        <Link href="/student/diagnostic" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 28, textDecoration: "none", borderLeft: "4px solid var(--terracotta)" }} className="card">
+          <div>
+            <div className="eyebrow" style={{ fontSize: 11, color: "var(--terracotta)" }}>First things first</div>
+            <h3 className="font-serif-display" style={{ fontWeight: 600, fontSize: 18, margin: "6px 0 4px" }}>
+              Take the diagnostic test
+            </h3>
+            <p style={{ color: "var(--ink-soft)", fontSize: 14 }}>5 questions to set your baseline. Takes 3 minutes.</p>
+          </div>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--terracotta)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+            <path d="M5 12h14M13 6l6 6-6 6" />
+          </svg>
+        </Link>
+      )}
 
       {/* Stats grid */}
       <div className="grid-collapse" style={{ display: "grid", gridTemplateColumns: "1.1fr 1.4fr", gap: 22 }}>
@@ -86,7 +103,7 @@ export default function StudentDashboard() {
           <div className="card">
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 14 }}>
               <span className="font-serif-display" style={{ fontWeight: 600, fontSize: 26 }}>
-                {studentData?.diagnosticCompleted ? "68%" : "0%"}
+                {guaranteeProgress}%
               </span>
               <span style={{ fontSize: 13, color: "var(--ink-muted)" }}>Target 80% - guarantee</span>
             </div>
@@ -94,7 +111,7 @@ export default function StudentDashboard() {
               <div
                 style={{
                   height: "100%",
-                  width: studentData?.diagnosticCompleted ? "68%" : "5%",
+                  width: `${Math.max(guaranteeProgress, 5)}%`,
                   background: "linear-gradient(90deg, var(--sage), var(--terracotta))",
                   borderRadius: 999,
                   transition: "width 0.6s ease",
@@ -156,7 +173,7 @@ export default function StudentDashboard() {
       <div className="grid-collapse-3" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16, marginTop: 32 }}>
         <QuickStat icon="streak" value="6 days" label="Current streak" color="var(--terracotta)" />
         <QuickStat icon="time" value="3h 20m" label="This week" color="var(--sage-dk)" />
-        <QuickStat icon="trophy" value="2" label="Gates passed" color="var(--blue-dk)" />
+        <QuickStat icon="trophy" value={String(lessonsCompleted)} label="Lessons done" color="var(--blue-dk)" />
       </div>
     </div>
   );

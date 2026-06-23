@@ -73,13 +73,17 @@ service cloud.firestore {
     }
 
     // Students
-    // NOTE: authenticated users can read students (needed for study code linking).
-    // TODO Phase 2: tighten with Cloud Functions.
     match /students/{studentId} {
       allow read: if request.auth != null;
       allow create: if request.auth != null && request.auth.uid == studentId;
       allow delete: if request.auth != null && request.auth.uid == studentId;
       allow update: if request.auth != null;
+
+      // Subcollection: lesson progress (students write their own)
+      match /lessonProgress/{lessonId} {
+        allow read: if request.auth != null;
+        allow write: if request.auth != null && request.auth.uid == studentId;
+      }
     }
 
     // Parents can read and write their own profile

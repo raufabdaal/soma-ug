@@ -23,6 +23,9 @@ export interface StudentProfile {
   diagnosticCompleted: boolean;
   diagnosticScores: Record<string, number>;
   predictedGrades: Record<string, string>;
+  lessonsCompleted?: number;
+  guaranteeProgress?: number;
+  lastActiveAt?: Timestamp | null;
 }
 
 export interface ParentProfile {

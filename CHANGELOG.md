@@ -2,27 +2,34 @@
 
 All notable changes to this project. Newest first.
 
+## [0.7.0] - 2026-06-23
+
+### Added
+- Left sidebar navigation for desktop (both student and parent). Bottom nav stays for mobile.
+- Diagnostic test (5 questions across Math, Biology, Chemistry) that sets the student's baseline grade.
+- Progress tracking wired to Firestore: lesson completions are saved, predicted grades update automatically based on average scores.
+- Student dashboard reads real data: lessons completed, guarantee progress, predicted grades.
+- Parent dashboard reads real student data: lessons completed, maths grade, guarantee progress.
+- 2 more Mathematics lessons: "Linear equations" and "Factorising expressions" (4 total now).
+- Diagnostic banner on student dashboard (shows until completed).
+- Results screen after diagnostic showing baseline grades per subject.
+
+### Changed
+- Navigation architecture rebuilt: app shell with sidebar + content area.
+- Student dashboard quick stats now show real lesson count.
+- Parent dashboard stats now show real student data.
+- Updated Firestore rules (MT-002) to allow lesson progress subcollection writes.
+
 ## [0.6.0] - 2026-06-23
 
 ### Added
-- Parent bottom navigation (Dashboard, Reports, Settings) with desktop top bar.
-- Parent reports page: beautiful weekly report card with study time, predicted grades per subject, guarantee status, needs-attention alerts, download (print) and share buttons.
-- Parent settings page: profile info, linked students list, link-another-student shortcut, sign out.
-- Student profile/settings page: profile info, study code with copy-to-clipboard, sign out.
-- Student dashboard: quick stats row (streak, weekly time, gates passed).
-
-### Changed
-- Student nav: removed signout button, replaced with Profile tab. Cleaner nav with more room on home.
-- Study code moved from student dashboard to student settings page.
-- Parent nav: removed inline user info, moved to settings.
-- Parent layout uses new ParentNav component.
+- Parent bottom nav, reports page, settings page.
+- Student profile/settings page.
 
 ## [0.5.0] - 2026-06-22
 
 ### Added
-- Lesson player with interactive blocks, AI marking, AI tutor, mastery gate.
-- 2 Mathematics lessons.
-- Mobile bottom nav for students.
+- Lesson player, AI marking, AI tutor, mastery gate, mobile bottom nav.
 
 ## [0.4.0] - 2026-06-22
 

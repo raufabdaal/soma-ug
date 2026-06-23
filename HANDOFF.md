@@ -4,27 +4,34 @@
 
 ## Where we are
 
-Both student and parent experiences have full navigation (bottom nav on mobile, top bar on desktop), settings pages, and a beautiful weekly report card for parents. The lesson player works with 2 Mathematics lessons. The app is live at https://soma-ug.vercel.app.
+The full learning loop now works end to end: student takes diagnostic (sets baseline), completes lessons (saves progress to Firestore, updates predicted grade), and parent sees real data on their dashboard. Navigation is a left sidebar on desktop and bottom bar on mobile.
 
 ## What changed this session
 
-- Added parent bottom nav (Dashboard, Reports, Settings).
-- Added parent reports page (weekly report card with download/share).
-- Added parent settings page (profile, linked students, signout).
-- Added student profile/settings page (study code with copy, signout).
-- Cleaned student dashboard (moved study code to settings, added quick stats).
-- Updated student nav (Profile tab instead of signout button).
+- Rebuilt navigation: left sidebar (desktop) + bottom bar (mobile) for both student and parent.
+- Built diagnostic test (5 questions, sets baseline grade, saves to Firestore).
+- Wired lesson completion to Firestore (progress persists, predicted grades auto-update).
+- Student dashboard now shows real data (lessons completed, guarantee progress, predicted grade).
+- Parent dashboard now shows real student data.
+- Added 2 more Mathematics lessons (4 total: linear equations, expanding, factorising, simultaneous).
+- Updated Firestore rules for lesson progress subcollection.
 
 ## What the founder needs to do
 
-1. Download workspace, replace `src/` + root `.md` files on their machine.
-2. Push to GitHub so Vercel deploys.
-3. Test on mobile (nav at bottom, reports page, settings).
+1. **Update Firestore rules (MT-002)**: the new rules include the lessonProgress subcollection. Paste the updated rules from MANUAL_TASKS.md.
+2. Download workspace, replace `src/` + root `.md` files.
+3. Push to GitHub.
+
+## How to test after pushing
+
+1. Sign in as student. Take the diagnostic test. See your baseline grades.
+2. Complete a lesson. Check that your predicted grade updates.
+3. Sign in as parent (different account). Link the student's code.
+4. Check the parent dashboard shows real data (lessons done, maths grade, guarantee %).
 
 ## Immediate next steps
 
-1. Add more Mathematics lessons (factorisation, linear equations, inequalities).
-2. Build diagnostic test (sets baseline grade).
-3. Wire lesson completion to Firestore (persist progress so parent sees real data).
-4. Add Biology and Chemistry content.
-5. Connect parent reports + dashboard to real student data.
+1. Add Biology and Chemistry lessons.
+2. Connect parent reports to real data (currently uses sample data for the report card).
+3. Add more Mathematics topics.
+4. Build the landing page for public launch.

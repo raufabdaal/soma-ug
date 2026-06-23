@@ -1,7 +1,7 @@
 import type { Lesson } from "@/types";
 
 /**
- * Sample lesson content for Mathematics.
+ * Lesson content for Mathematics.
  *
  * This is embedded directly in the code so the lesson player works
  * immediately without any database seeding. Later we can move this
@@ -12,77 +12,76 @@ import type { Lesson } from "@/types";
 
 export const sampleLessons: Lesson[] = [
   {
-    id: "math-algebra-simultaneous-1",
+    id: "math-algebra-linear-1",
     topicId: "algebra",
     subjectId: "mathematics",
-    title: "Solving simultaneous equations",
+    title: "Linear equations",
     order: 1,
-    estimatedMinutes: 15,
+    estimatedMinutes: 13,
     passingScore: 70,
     isActive: true,
     blocks: [
       {
         type: "text",
-        heading: "What are simultaneous equations?",
+        heading: "What is a linear equation?",
         content:
-          "Simultaneous equations are two equations with two unknowns (usually x and y) that are both true at the same time. Your job is to find the values of x and y that satisfy both equations. UNEB awards method marks for showing your working clearly, even if your final answer is wrong.",
+          "A linear equation has one unknown (usually x) and no powers higher than 1. Solving it means finding the value of x that makes the equation true. The rule is simple: whatever you do to one side, do to the other.",
       },
       {
         type: "key_point",
-        title: "The two methods",
+        title: "The balance method",
         content:
-          "There are two ways to solve simultaneous equations: ELIMINATION (make the coefficients of one variable equal, then add or subtract to cancel it out) and SUBSTITUTION (rearrange one equation to express one variable in terms of the other, then substitute). Elimination is usually faster for UNEB exam questions.",
+          "Think of an equation like a balance scale. To keep it balanced, whatever you do to one side you must do to the other. Add, subtract, multiply, or divide. The goal is to get x by itself on one side.",
       },
       {
         type: "worked_example",
-        problem: "Solve: 2x + 3y = 16 and 3x - 2y = 5",
+        problem: "Solve: 3x + 7 = 22",
         steps: [
-          "Label the equations: (1) 2x + 3y = 16, (2) 3x - 2y = 5",
-          "To eliminate x, make the coefficients equal. Multiply equation (1) by 3 and equation (2) by 2. You get: 6x + 9y = 48 and 6x - 4y = 10",
-          "Subtract the second from the first: (6x + 9y) - (6x - 4y) = 48 - 10. This gives 13y = 38, so y = 38/13. Wait, that doesn't look clean. Let's eliminate y instead.",
-          "Alternative: to eliminate y, multiply (1) by 2 and (2) by 3. You get: 4x + 6y = 32 and 9x - 6y = 15",
-          "Add them: 13x = 47. Hmm, still not clean. This example has non-integer answers. For UNEB, answers are usually whole numbers.",
+          "Subtract 7 from both sides: 3x = 22 - 7 = 15",
+          "Divide both sides by 3: x = 15 / 3 = 5",
+          "Answer: x = 5",
+          "Check: 3(5) + 7 = 15 + 7 = 22. Correct!",
         ],
-        answer: "For a cleaner example, see the next block. The method is always the same: equalise coefficients, then add or subtract to eliminate.",
+        answer: "x = 5",
       },
       {
         type: "worked_example",
-        problem: "Solve: 3x + 2y = 12 and 2x + 3y = 13",
+        problem: "Solve: 2(x - 3) = 10",
         steps: [
-          "Label: (1) 3x + 2y = 12, (2) 2x + 3y = 13",
-          "Eliminate y: multiply (1) by 3 and (2) by 2. You get 9x + 6y = 36 and 4x + 6y = 26",
-          "Subtract: (9x + 6y) - (4x + 6y) = 36 - 26. This gives 5x = 10, so x = 2",
-          "Substitute x = 2 into equation (1): 3(2) + 2y = 12, so 6 + 2y = 12, so 2y = 6, so y = 3",
-          "Answer: x = 2, y = 3. Always check by substituting into equation (2): 2(2) + 3(3) = 4 + 9 = 13. Correct!",
+          "First expand the bracket: 2x - 6 = 10",
+          "Add 6 to both sides: 2x = 16",
+          "Divide both sides by 2: x = 8",
+          "Check: 2(8 - 3) = 2(5) = 10. Correct!",
         ],
-        answer: "x = 2, y = 3",
+        answer: "x = 8",
       },
       {
         type: "question",
-        question: "When using elimination, what is the first step?",
-        options: [
-          "Make the coefficients of one variable equal in both equations",
-          "Add the two equations together as they are",
-          "Solve for the final unknown immediately",
-          "Substitute one value back into the other equation",
-        ],
-        correctIndex: 0,
-        explanation:
-          "Correct. You must equalise the coefficients of one variable first, so that when you add or subtract, that variable cancels out entirely.",
+        question: "Solve for x: x + 9 = 15",
+        options: ["x = 4", "x = 5", "x = 6", "x = 7"],
+        correctIndex: 2,
+        explanation: "Subtract 9 from both sides: x = 15 - 9 = 6.",
       },
       {
         type: "question",
-        question: "Given 3x + 2y = 12 and 2x + 3y = 13, if you find x = 2, what is y?",
-        options: ["y = 2", "y = 3", "y = 4", "y = 5"],
+        question: "Solve for x: 4x = 24",
+        options: ["x = 4", "x = 6", "x = 8", "x = 12"],
         correctIndex: 1,
-        explanation:
-          "Substitute x = 2 into 3x + 2y = 12: 3(2) + 2y = 12, so 6 + 2y = 12, so 2y = 6, so y = 3.",
+        explanation: "Divide both sides by 4: x = 24 / 4 = 6.",
       },
       {
-        type: "key_point",
-        title: "Exam tip",
-        content:
-          "UNEB awards method marks for each correct step. Even if your final answer is wrong, you can earn up to 3 out of 4 marks by showing the elimination and substitution steps clearly. Always label your equations (1) and (2), and always check your answer by substituting back.",
+        type: "question",
+        question: "Solve for x: 2x + 3 = 11",
+        options: ["x = 3", "x = 4", "x = 5", "x = 7"],
+        correctIndex: 1,
+        explanation: "Subtract 3: 2x = 8. Divide by 2: x = 4.",
+      },
+      {
+        type: "question",
+        question: "Solve for x: 3(x + 2) = 18",
+        options: ["x = 2", "x = 3", "x = 4", "x = 6"],
+        correctIndex: 2,
+        explanation: "Expand: 3x + 6 = 18. Subtract 6: 3x = 12. Divide by 3: x = 4.",
       },
     ],
   },
@@ -135,6 +134,144 @@ export const sampleLessons: Lesson[] = [
         options: ["6x - 4", "6x - 12", "5x - 12", "6x + 12"],
         correctIndex: 1,
         explanation: "3 times 2x is 6x. 3 times -4 is -12. So the answer is 6x - 12.",
+      },
+    ],
+  },
+  {
+    id: "math-algebra-factorising-1",
+    topicId: "algebra",
+    subjectId: "mathematics",
+    title: "Factorising expressions",
+    order: 3,
+    estimatedMinutes: 14,
+    passingScore: 70,
+    isActive: true,
+    blocks: [
+      {
+        type: "text",
+        heading: "What is factorising?",
+        content:
+          "Factorising is the reverse of expanding brackets. You take an expression like 6x + 12 and rewrite it as 6(x + 2). The goal is to find the highest common factor (HCF) of all the terms and pull it outside the bracket.",
+      },
+      {
+        type: "key_point",
+        title: "How to find the HCF",
+        content:
+          "Look at the numbers and the letters separately. For 6x + 12: the HCF of 6 and 12 is 6. There is only one x, so the HCF is 6. Pull out 6: 6(x + 2). Always check by expanding back: 6 times x is 6x, 6 times 2 is 12. Correct.",
+      },
+      {
+        type: "worked_example",
+        problem: "Factorise: 4x + 8",
+        steps: [
+          "Find the HCF of 4 and 8: it is 4",
+          "Write 4 outside the bracket: 4(? + ?)",
+          "Divide each term by 4: 4x / 4 = x, 8 / 4 = 2",
+          "Result: 4(x + 2)",
+          "Check by expanding: 4 times x = 4x, 4 times 2 = 8. Correct!",
+        ],
+        answer: "4(x + 2)",
+      },
+      {
+        type: "worked_example",
+        problem: "Factorise: 3x^2 + 6x",
+        steps: [
+          "Find the HCF of 3, x^2, and 6x. Numbers: HCF of 3 and 6 is 3. Letters: both have at least one x.",
+          "The HCF is 3x",
+          "Divide each term by 3x: 3x^2 / 3x = x, 6x / 3x = 2",
+          "Result: 3x(x + 2)",
+          "Check: 3x times x = 3x^2, 3x times 2 = 6x. Correct!",
+        ],
+        answer: "3x(x + 2)",
+      },
+      {
+        type: "question",
+        question: "Factorise: 5x + 15",
+        options: ["5(x + 3)", "5(x + 15)", "x(5 + 15)", "5(x + 10)"],
+        correctIndex: 0,
+        explanation: "The HCF of 5x and 15 is 5. Divide each term by 5: 5x / 5 = x, 15 / 5 = 3. So 5(x + 3).",
+      },
+      {
+        type: "question",
+        question: "Factorise: 2x^2 + 4x",
+        options: ["2(x^2 + 2x)", "2x(x + 2)", "x(2x + 4)", "2x(x + 4)"],
+        correctIndex: 1,
+        explanation: "The HCF is 2x. Divide each term: 2x^2 / 2x = x, 4x / 2x = 2. So 2x(x + 2).",
+      },
+      {
+        type: "question",
+        question: "Factorise: 6a + 9",
+        options: ["3(2a + 3)", "2(3a + 4)", "6(a + 9)", "3(2a + 9)"],
+        correctIndex: 0,
+        explanation: "The HCF of 6 and 9 is 3. Divide each: 6a / 3 = 2a, 9 / 3 = 3. So 3(2a + 3).",
+      },
+      {
+        type: "key_point",
+        title: "Exam tip",
+        content:
+          "Factorising is worth easy marks in UNEB papers. Always look for the highest common factor first. A common mistake is pulling out a factor that is not the highest (like pulling 2 out of 4x + 8 instead of 4). Always check your answer by expanding back.",
+      },
+    ],
+  },
+  {
+    id: "math-algebra-simultaneous-1",
+    topicId: "algebra",
+    subjectId: "mathematics",
+    title: "Solving simultaneous equations",
+    order: 4,
+    estimatedMinutes: 15,
+    passingScore: 70,
+    isActive: true,
+    blocks: [
+      {
+        type: "text",
+        heading: "What are simultaneous equations?",
+        content:
+          "Simultaneous equations are two equations with two unknowns (usually x and y) that are both true at the same time. Your job is to find the values of x and y that satisfy both equations. UNEB awards method marks for showing your working clearly, even if your final answer is wrong.",
+      },
+      {
+        type: "key_point",
+        title: "The two methods",
+        content:
+          "There are two ways to solve simultaneous equations: ELIMINATION (make the coefficients of one variable equal, then add or subtract to cancel it out) and SUBSTITUTION (rearrange one equation to express one variable in terms of the other, then substitute). Elimination is usually faster for UNEB exam questions.",
+      },
+      {
+        type: "worked_example",
+        problem: "Solve: 3x + 2y = 12 and 2x + 3y = 13",
+        steps: [
+          "Label: (1) 3x + 2y = 12, (2) 2x + 3y = 13",
+          "Eliminate y: multiply (1) by 3 and (2) by 2. You get 9x + 6y = 36 and 4x + 6y = 26",
+          "Subtract: (9x + 6y) - (4x + 6y) = 36 - 26. This gives 5x = 10, so x = 2",
+          "Substitute x = 2 into equation (1): 3(2) + 2y = 12, so 6 + 2y = 12, so 2y = 6, so y = 3",
+          "Answer: x = 2, y = 3. Always check by substituting into equation (2): 2(2) + 3(3) = 4 + 9 = 13. Correct!",
+        ],
+        answer: "x = 2, y = 3",
+      },
+      {
+        type: "question",
+        question: "When using elimination, what is the first step?",
+        options: [
+          "Make the coefficients of one variable equal in both equations",
+          "Add the two equations together as they are",
+          "Solve for the final unknown immediately",
+          "Substitute one value back into the other equation",
+        ],
+        correctIndex: 0,
+        explanation:
+          "Correct. You must equalise the coefficients of one variable first, so that when you add or subtract, that variable cancels out entirely.",
+      },
+      {
+        type: "question",
+        question: "Given 3x + 2y = 12 and 2x + 3y = 13, if you find x = 2, what is y?",
+        options: ["y = 2", "y = 3", "y = 4", "y = 5"],
+        correctIndex: 1,
+        explanation:
+          "Substitute x = 2 into 3x + 2y = 12: 3(2) + 2y = 12, so 6 + 2y = 12, so 2y = 6, so y = 3.",
+      },
+      {
+        type: "key_point",
+        title: "Exam tip",
+        content:
+          "UNEB awards method marks for each correct step. Even if your final answer is wrong, you can earn up to 3 out of 4 marks by showing the elimination and substitution steps clearly. Always label your equations (1) and (2), and always check your answer by substituting back.",
       },
     ],
   },

@@ -173,9 +173,9 @@ export default function ParentDashboard() {
           </p>
 
           <div className="stat-row-mobile" style={{ display: "flex", gap: 28, marginTop: 26, paddingTop: 22, borderTop: "1px solid var(--hairline)" }}>
-            <StatItem num="8" label="Lessons completed" />
-            <StatItem num="B" label="Predicted - Maths" />
-            <StatItem num="6" label="Day streak" />
+            <StatItem num={String(students[0]?.lessonsCompleted || 0)} label="Lessons done" />
+            <StatItem num={students[0]?.predictedGrades?.["mathematics"] || "-"} label="Maths grade" />
+            <StatItem num={String(students[0]?.guaranteeProgress || 0) + "%"} label="Guarantee" />
           </div>
 
           <div style={{ marginTop: 22, display: "flex", alignItems: "center", gap: 12, background: "rgba(126,142,99,0.12)", borderRadius: 12, padding: "14px 18px", color: "var(--sage-dk)", fontWeight: 600, fontSize: "14.5px" }}>
