@@ -10,17 +10,16 @@ interface LessonPlayerProps {
 }
 
 export function LessonPlayer({ lesson, onComplete }: LessonPlayerProps) {
-  // Find all question blocks to track answers
   const questionBlocks = lesson.blocks
     .map((b, i) => ({ block: b, index: i }))
     .filter((x) => x.block.type === "question");
 
   const [answers, setAnswers] = useState<Record<number, number>>({});
   const [revealed, setRevealed] = useState<Record<number, boolean>>({});
+  const [activityRevealed, setActivityRevealed] = useState<Record<number, boolean>>({});
   const [completed, setCompleted] = useState(false);
   const [startTime] = useState(() => Date.now());
   const [isReading, setIsReading] = useState(false);
-  const [currentBlockIdx, setCurrentBlockIdx] = useState(0);
 
   const answeredCount = Object.keys(revealed).length;
   const correctCount = questionBlocks.filter((q) => {
@@ -35,71 +34,55 @@ export function LessonPlayer({ lesson, onComplete }: LessonPlayerProps) {
     if (revealed[blockIndex]) return;
     setAnswers((prev) => ({ ...prev, [blockIndex]: optionIndex }));
   }
-
   function handleReveal(blockIndex: number) {
     if (answers[blockIndex] === undefined) return;
     setRevealed((prev) => ({ ...prev, [blockIndex]: true }));
   }
-
+  function toggleActivity(blockIndex: number) {
+    setActivityRevealed((prev) => ({ ...prev, [blockIndex]: !prev[blockIndex] }));
+  }
   function handleFinish() {
     setCompleted(true);
     const timeSpentSeconds = Math.round((Date.now() - startTime) / 1000);
     onComplete?.(score, timeSpentSeconds);
   }
 
-  // ===== AUDIO NARRATION (Web Speech API, free, browser-native) =====
+  // Audio narration
   function getBlockText(block: LessonBlock): string {
     switch (block.type) {
-      case "text":
-        return `${block.heading ? block.heading + ". " : ""}${block.content}`;
-      case "key_point":
-        return `Key point. ${block.title}. ${block.content}`;
-      case "worked_example":
-        return `Worked example. ${block.problem}. ${block.steps.join(". ")}. Answer: ${block.answer}`;
-      case "question":
-        return `Question. ${block.question}. Options: ${block.options.join(", ")}.`;
-      default:
-        return "";
+      case "competency": return `Competency. ${block.text}`;
+      case "outcome": return `Learning outcome. ${block.text}`;
+      case "context": return `${block.heading}. ${block.content}`;
+      case "text": return `${block.heading ? block.heading + ". " : ""}${block.content}`;
+      case "key_point": return `Key point. ${block.title}. ${block.content}`;
+      case "worked_example": return `Worked example. ${block.problem}. ${block.steps.join(". ")}. Answer: ${block.answer}. ${block.reasoning || ""}`;
+      case "exam_style": return `Exam style question. ${block.scenario}. ${block.question}. This question is worth ${block.marks} marks.`;
+      case "marking_guide": return `Marking guide. Total marks: ${block.totalMarks}. ${block.criteria.map(c => c.criterion + ", " + c.marks + " marks for " + c.type).join(". ")}.`;
+      case "question": return `Question. ${block.question}. Options: ${block.options.join(", ")}.`;
+      case "activity_of_integration": return `Activity of integration. ${block.title}. ${block.scenario}. ${block.task}`;
+      default: return "";
     }
   }
-
   function stopReading() {
-    if (typeof window !== "undefined" && "speechSynthesis" in window) {
-      window.speechSynthesis.cancel();
-    }
+    if (typeof window !== "undefined" && "speechSynthesis" in window) window.speechSynthesis.cancel();
     setIsReading(false);
   }
-
   function readFromBlock(index: number) {
     if (typeof window === "undefined" || !("speechSynthesis" in window)) {
       alert("Audio narration is not supported on this browser. Try Chrome or Safari.");
       return;
     }
-
     window.speechSynthesis.cancel();
     setIsReading(true);
-    setCurrentBlockIdx(index);
-
-    // Read this block, then auto-advance to the next
     function readNext(i: number) {
-      if (i >= lesson.blocks.length) {
-        setIsReading(false);
-        return;
-      }
-
+      if (i >= lesson.blocks.length) { setIsReading(false); return; }
       const text = getBlockText(lesson.blocks[i]);
-      if (!text) {
-        readNext(i + 1);
-        return;
-      }
-
-      setCurrentBlockIdx(i);
+      if (!text) { readNext(i + 1); return; }
       const utterance = new SpeechSynthesisUtterance(text);
       utterance.rate = 0.95;
       utterance.onend = () => readNext(i + 1);
       window.speechSynthesis.speak(utterance);
     }
-
     readNext(index);
   }
 
@@ -113,13 +96,9 @@ export function LessonPlayer({ lesson, onComplete }: LessonPlayerProps) {
           display: "flex", alignItems: "center", justifyContent: "center",
         }}>
           {passed ? (
-            <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="var(--sage-dk)" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M20 6 9 17l-5-5" />
-            </svg>
+            <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="var(--sage-dk)" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6 9 17l-5-5" /></svg>
           ) : (
-            <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="var(--terracotta)" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
-              <circle cx="12" cy="12" r="10" /><path d="M12 16v-4M12 8h.01" />
-            </svg>
+            <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="var(--terracotta)" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><path d="M12 16v-4M12 8h.01" /></svg>
           )}
         </div>
         <h2 className="font-serif-display" style={{ fontSize: 28, fontWeight: 500, marginBottom: 8 }}>
@@ -130,18 +109,14 @@ export function LessonPlayer({ lesson, onComplete }: LessonPlayerProps) {
         </p>
         <p style={{ color: "var(--ink-muted)", fontSize: 14, marginBottom: 28 }}>
           {passed
-            ? `You passed the mastery gate (${lesson.passingScore}% required). Your predicted grade just ticked up.`
+            ? `You passed the mastery gate (${lesson.passingScore}% required). Your predicted grade has been updated.`
             : `You need ${lesson.passingScore}% to pass. Review the lesson and try again.`}
         </p>
         <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
           {!passed && (
-            <button onClick={() => { setCompleted(false); setRevealed({}); setAnswers({}); }} className="btn btn-primary">
-              Try again
-            </button>
+            <button onClick={() => { setCompleted(false); setRevealed({}); setAnswers({}); }} className="btn btn-primary">Try again</button>
           )}
-          <Link href="/student/learn" className="btn btn-ghost">
-            Back to lessons
-          </Link>
+          <Link href="/student/learn" className="btn btn-ghost">Back to lessons</Link>
         </div>
       </div>
     );
@@ -149,7 +124,7 @@ export function LessonPlayer({ lesson, onComplete }: LessonPlayerProps) {
 
   return (
     <div>
-      {/* Progress bar + audio toggle */}
+      {/* Progress + audio */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24, gap: 12, flexWrap: "wrap" }}>
         {questionBlocks.length > 0 ? (
           <div style={{ flex: 1, minWidth: 150 }}>
@@ -158,51 +133,45 @@ export function LessonPlayer({ lesson, onComplete }: LessonPlayerProps) {
               <span>{Math.round((answeredCount / questionBlocks.length) * 100)}%</span>
             </div>
             <div style={{ height: 5, background: "var(--cream-deep)", borderRadius: 999, overflow: "hidden" }}>
-              <div style={{
-                height: "100%",
-                width: `${(answeredCount / questionBlocks.length) * 100}%`,
-                background: "var(--terracotta)",
-                borderRadius: 999,
-                transition: "width 0.4s ease",
-              }} />
+              <div style={{ height: "100%", width: `${(answeredCount / questionBlocks.length) * 100}%`, background: "var(--terracotta)", borderRadius: 999, transition: "width 0.4s ease" }} />
             </div>
           </div>
         ) : <div style={{ flex: 1 }} />}
-
         <button
           onClick={() => isReading ? stopReading() : readFromBlock(0)}
           style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 8,
-            padding: "8px 16px",
-            borderRadius: 999,
+            display: "flex", alignItems: "center", gap: 8, padding: "8px 16px", borderRadius: 999,
             border: `1.5px solid ${isReading ? "var(--terracotta)" : "var(--hairline)"}`,
             background: isReading ? "rgba(192,106,75,0.08)" : "transparent",
-            cursor: "pointer",
-            fontSize: 13,
-            fontWeight: 600,
+            cursor: "pointer", fontSize: 13, fontWeight: 600,
             color: isReading ? "var(--terracotta)" : "var(--ink-soft)",
-            fontFamily: "inherit",
-            transition: "all 0.15s ease",
-            whiteSpace: "nowrap",
+            fontFamily: "inherit", whiteSpace: "nowrap",
           }}
         >
           {isReading ? (
-            <>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="6" y="4" width="4" height="16" /><rect x="14" y="4" width="4" height="16" /></svg>
-              Stop
-            </>
+            <><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><rect x="6" y="4" width="4" height="16" /><rect x="14" y="4" width="4" height="16" /></svg>Stop</>
           ) : (
-            <>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 10v4M7 6l8 6-8 6V6zM18 8a5 5 0 0 1 0 8" /></svg>
-              Listen
-            </>
+            <><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 10v4M7 6l8 6-8 6V6zM18 8a5 5 0 0 1 0 8" /></svg>Listen</>
           )}
         </button>
       </div>
 
-      {/* Render each block */}
+      {/* Curriculum mapping banner */}
+      {lesson.curriculum && (
+        <div style={{ marginBottom: 28, padding: "14px 18px", background: "var(--cream-deep)", borderRadius: "var(--r-sm)", borderLeft: "3px solid var(--charcoal)" }}>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 12, fontSize: 12, color: "var(--ink-muted)", fontWeight: 600 }}>
+            <span>{lesson.curriculum.subject} · {lesson.curriculum.level}</span>
+            <span style={{ opacity: 0.5 }}>|</span>
+            <span>{lesson.curriculum.term}</span>
+            <span style={{ opacity: 0.5 }}>|</span>
+            <span>Topic {lesson.curriculum.topicNumber}: {lesson.curriculum.topicName}</span>
+            <span style={{ opacity: 0.5 }}>|</span>
+            <span>{lesson.curriculum.theme}</span>
+          </div>
+        </div>
+      )}
+
+      {/* Render blocks */}
       {lesson.blocks.map((block, index) => (
         <BlockRenderer
           key={index}
@@ -210,8 +179,10 @@ export function LessonPlayer({ lesson, onComplete }: LessonPlayerProps) {
           index={index}
           selectedAnswer={answers[index]}
           revealed={revealed[index] || false}
+          activityRevealed={activityRevealed[index] || false}
           onAnswer={handleAnswer}
           onReveal={handleReveal}
+          onToggleActivity={toggleActivity}
         />
       ))}
 
@@ -226,209 +197,208 @@ export function LessonPlayer({ lesson, onComplete }: LessonPlayerProps) {
 }
 
 /* ============================================================
-   BLOCK RENDERER
+   BLOCK RENDERER - renders each competency-based block type
    ============================================================ */
 function BlockRenderer({
-  block, index, selectedAnswer, revealed, onAnswer, onReveal,
+  block, index, selectedAnswer, revealed, activityRevealed, onAnswer, onReveal, onToggleActivity,
 }: {
   block: LessonBlock;
   index: number;
   selectedAnswer?: number;
   revealed: boolean;
+  activityRevealed: boolean;
   onAnswer: (blockIndex: number, optionIndex: number) => void;
   onReveal: (blockIndex: number) => void;
+  onToggleActivity: (blockIndex: number) => void;
 }) {
   switch (block.type) {
+    // ===== COMPETENCY STATEMENT =====
+    case "competency":
+      return (
+        <div style={{ marginBottom: 28, padding: "20px 24px", background: "var(--white)", border: "1px solid var(--hairline)", borderRadius: "var(--r-md)", position: "relative" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--terracotta)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2 15.09 8.26 22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14l-5-4.87 6.91-1.01z" /></svg>
+            <span className="eyebrow" style={{ fontSize: 11, color: "var(--terracotta)" }}>Competency</span>
+          </div>
+          <p className="font-serif-display" style={{ fontSize: 18, fontWeight: 500, lineHeight: 1.5, color: "var(--charcoal)" }}>
+            {block.text}
+          </p>
+          <p style={{ fontSize: 12, color: "var(--ink-muted)", marginTop: 8 }}>Source: NCDC Mathematics Syllabus, S1</p>
+        </div>
+      );
+
+    // ===== LEARNING OUTCOME =====
+    case "outcome":
+      return (
+        <div style={{ marginBottom: 20, display: "flex", alignItems: "flex-start", gap: 10, padding: "12px 16px", background: "rgba(192,106,75,0.04)", borderRadius: "var(--r-sm)" }}>
+          <span style={{ flexShrink: 0, padding: "2px 8px", borderRadius: 4, background: "var(--terracotta)", color: "white", fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em", marginTop: 3 }}>
+            {block.tag}
+          </span>
+          <p style={{ fontSize: 14.5, color: "var(--ink-soft)", lineHeight: 1.5, fontStyle: "italic" }}>
+            {block.text}
+          </p>
+        </div>
+      );
+
+    // ===== REAL-WORLD CONTEXT =====
+    case "context":
+      return (
+        <div style={{ marginBottom: 28 }}>
+          {block.heading && <h3 className="font-serif-display" style={{ fontSize: 22, fontWeight: 600, marginBottom: 12 }}>{block.heading}</h3>}
+          <p style={{ color: "var(--ink-soft)", fontSize: 17, lineHeight: 1.75 }}>{block.content}</p>
+        </div>
+      );
+
+    // ===== TEXT =====
     case "text":
       return (
         <div style={{ marginBottom: 28 }}>
-          {block.heading && (
-            <h3 className="font-serif-display" style={{ fontSize: 22, fontWeight: 600, marginBottom: 12 }}>
-              {block.heading}
-            </h3>
-          )}
-          <p style={{ color: "var(--ink-soft)", fontSize: 17, lineHeight: 1.75 }}>
-            {block.content}
-          </p>
+          {block.heading && <h3 className="font-serif-display" style={{ fontSize: 22, fontWeight: 600, marginBottom: 12 }}>{block.heading}</h3>}
+          <p style={{ color: "var(--ink-soft)", fontSize: 17, lineHeight: 1.75 }}>{block.content}</p>
         </div>
       );
 
+    // ===== KEY POINT =====
     case "key_point":
       return (
-        <div className="key-point-box" style={{
-          background: "var(--cream-deep)",
-          border: "1px solid var(--hairline)",
-          borderLeft: "4px solid var(--terracotta)",
-          borderRadius: "var(--r-sm)",
-          padding: "20px 24px",
-          marginBottom: 28,
-        }}>
-          <div className="eyebrow" style={{ color: "var(--terracotta)", fontSize: 11, marginBottom: 8 }}>
-            Key point
-          </div>
-          <h4 className="font-serif-display" style={{ fontWeight: 600, fontSize: 18, marginBottom: 8 }}>
-            {block.title}
-          </h4>
-          <p style={{ color: "var(--ink-soft)", fontSize: 15.5, lineHeight: 1.6 }}>
-            {block.content}
-          </p>
+        <div style={{ background: "var(--cream-deep)", border: "1px solid var(--hairline)", borderLeft: "4px solid var(--terracotta)", borderRadius: "var(--r-sm)", padding: "20px 24px", marginBottom: 28 }}>
+          <div className="eyebrow" style={{ color: "var(--terracotta)", fontSize: 11, marginBottom: 8 }}>Key point</div>
+          <h4 className="font-serif-display" style={{ fontWeight: 600, fontSize: 18, marginBottom: 8 }}>{block.title}</h4>
+          <p style={{ color: "var(--ink-soft)", fontSize: 15.5, lineHeight: 1.6 }}>{block.content}</p>
         </div>
       );
 
+    // ===== WORKED EXAMPLE (with reasoning) =====
     case "worked_example":
       return (
-        <div style={{
-          background: "var(--white)",
-          border: "1px solid var(--hairline)",
-          borderLeft: "4px solid var(--sage)",
-          borderRadius: "var(--r-sm)",
-          padding: "20px 24px",
-          marginBottom: 28,
-        }}>
-          <div className="eyebrow" style={{ color: "var(--sage-dk)", fontSize: 11, marginBottom: 8 }}>
-            Worked example
-          </div>
-          <p className="font-serif-display" style={{ fontSize: 19, fontWeight: 500, marginBottom: 16 }}>
-            {block.problem}
-          </p>
+        <div style={{ background: "var(--white)", border: "1px solid var(--hairline)", borderLeft: "4px solid var(--sage)", borderRadius: "var(--r-sm)", padding: "20px 24px", marginBottom: 28 }}>
+          <div className="eyebrow" style={{ color: "var(--sage-dk)", fontSize: 11, marginBottom: 8 }}>Worked example</div>
+          <p className="font-serif-display" style={{ fontSize: 19, fontWeight: 500, marginBottom: 16 }}>{block.problem}</p>
           {block.steps.map((step, i) => (
             <div key={i} style={{ display: "flex", gap: 14, padding: "10px 0", borderTop: i > 0 ? "1px dashed var(--hairline)" : "none" }}>
-              <span className="font-serif-display" style={{ fontWeight: 600, color: "var(--sage-dk)", fontSize: 17, minWidth: 24 }}>
-                {i + 1}
-              </span>
-              <span style={{ fontSize: 15.5, color: "var(--charcoal)", lineHeight: 1.55 }}>
-                {step}
-              </span>
+              <span className="font-serif-display" style={{ fontWeight: 600, color: "var(--sage-dk)", fontSize: 17, minWidth: 24 }}>{i + 1}</span>
+              <span style={{ fontSize: 15.5, color: "var(--charcoal)", lineHeight: 1.55 }}>{step}</span>
             </div>
           ))}
-          <div style={{ marginTop: 12, padding: "10px 14px", background: "rgba(126,142,99,0.1)", borderRadius: "var(--r-sm)", fontSize: 15, fontWeight: 600, color: "var(--sage-dk)" }}>
-            Answer: {block.answer}
+          <div style={{ marginTop: 12, padding: "10px 14px", background: "rgba(126,142,99,0.1)", borderRadius: "var(--r-sm)", fontSize: 15, fontWeight: 600, color: "var(--sage-dk)" }}>Answer: {block.answer}</div>
+          {block.reasoning && (
+            <div style={{ marginTop: 10, padding: "12px 14px", background: "rgba(110,138,166,0.08)", borderRadius: "var(--r-sm)", fontSize: 14, color: "var(--blue-dk)", lineHeight: 1.55, fontStyle: "italic" }}>
+              <strong style={{ fontStyle: "normal" }}>Why this works: </strong>{block.reasoning}
+            </div>
+          )}
+        </div>
+      );
+
+    // ===== EXAM STYLE QUESTION =====
+    case "exam_style":
+      return (
+        <div style={{ background: "var(--white)", border: "1px solid var(--hairline)", borderRadius: "var(--r-md)", padding: "20px 24px", marginBottom: 28 }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
+            <div className="eyebrow" style={{ color: "var(--blue-dk)", fontSize: 11 }}>How UNEB asks this</div>
+            <span style={{ fontSize: 11, fontWeight: 600, color: "var(--blue-dk)", background: "rgba(110,138,166,0.12)", padding: "3px 10px", borderRadius: 999 }}>{block.marks} marks</span>
+          </div>
+          <p style={{ fontSize: 15, color: "var(--ink-soft)", lineHeight: 1.6, marginBottom: 12, fontStyle: "italic" }}>{block.scenario}</p>
+          <p className="font-serif-display" style={{ fontSize: 18, fontWeight: 500, color: "var(--charcoal)" }}>{block.question}</p>
+          <p style={{ fontSize: 13, color: "var(--ink-muted)", marginTop: 12 }}>This is the style of question you will see in your end-of-cycle exam. Try to solve it on paper, then check the marking guide below.</p>
+        </div>
+      );
+
+    // ===== MARKING GUIDE =====
+    case "marking_guide":
+      return (
+        <div style={{ background: "var(--cream-deep)", border: "1px solid var(--hairline)", borderRadius: "var(--r-md)", padding: "20px 24px", marginBottom: 28 }}>
+          <div className="eyebrow" style={{ color: "var(--terracotta)", fontSize: 11, marginBottom: 12 }}>Marking guide · What earns marks</div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+            {block.criteria.map((c, i) => (
+              <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: 12, padding: "10px 14px", background: "var(--white)", borderRadius: "var(--r-sm)" }}>
+                <span style={{ flexShrink: 0, width: 28, height: 28, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 700, fontFamily: "var(--font-fraunces), serif", color: "white", background: c.type === "method" ? "var(--sage)" : c.type === "accuracy" ? "var(--terracotta)" : "var(--blue)" }}>
+                  {c.marks}
+                </span>
+                <div style={{ flex: 1 }}>
+                  <p style={{ fontSize: 14.5, color: "var(--charcoal)", lineHeight: 1.5 }}>{c.criterion}</p>
+                  <span style={{ fontSize: 11, color: "var(--ink-muted)", textTransform: "uppercase", letterSpacing: "0.05em", fontWeight: 600 }}>{c.type} mark{c.marks > 1 ? "s" : ""}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div style={{ marginTop: 14, padding: "10px 14px", background: "rgba(192,106,75,0.08)", borderRadius: "var(--r-sm)", fontSize: 13, color: "var(--terracotta-dk)", lineHeight: 1.5 }}>
+            <strong>Key insight:</strong> Method marks are awarded even if your final answer is wrong. Always show every step of your working.
           </div>
         </div>
       );
 
+    // ===== ACTIVITY OF INTEGRATION =====
+    case "activity_of_integration":
+      return (
+        <div style={{ background: "var(--white)", border: "2px solid var(--terracotta)", borderRadius: "var(--r-md)", padding: "24px", marginBottom: 28, position: "relative" }}>
+          <span style={{ position: "absolute", top: -10, left: 20, background: "var(--terracotta)", color: "white", fontSize: 11, fontWeight: 600, letterSpacing: "0.05em", textTransform: "uppercase", padding: "4px 12px", borderRadius: 999 }}>Activity of integration</span>
+          <div style={{ marginTop: 8 }}>
+            <h4 className="font-serif-display" style={{ fontWeight: 600, fontSize: 19, marginBottom: 12 }}>{block.title}</h4>
+            <p style={{ fontSize: 15, color: "var(--ink-soft)", lineHeight: 1.6, marginBottom: 12 }}>{block.scenario}</p>
+            <div style={{ padding: "14px 18px", background: "var(--cream-deep)", borderRadius: "var(--r-sm)", marginBottom: 16 }}>
+              <p className="font-serif-display" style={{ fontSize: 17, fontWeight: 500, color: "var(--charcoal)" }}>{block.task}</p>
+            </div>
+            <p style={{ fontSize: 13, color: "var(--blue-dk)", fontStyle: "italic", marginBottom: 12 }}>💡 Hint: {block.hint}</p>
+            <button onClick={() => onToggleActivity(index)} style={{ background: "transparent", border: "none", color: "var(--terracotta)", fontSize: 14, fontWeight: 600, cursor: "pointer", padding: 0, fontFamily: "inherit", borderBottom: "1.5px solid var(--terracotta)", paddingBottom: 2 }}>
+              {activityRevealed ? "Hide solution" : "Reveal solution"}
+            </button>
+            {activityRevealed && (
+              <div style={{ marginTop: 16, padding: "16px 18px", background: "rgba(126,142,99,0.08)", borderRadius: "var(--r-sm)", animation: "soma-fade 0.3s ease" }}>
+                <div className="eyebrow" style={{ color: "var(--sage-dk)", fontSize: 11, marginBottom: 8 }}>Solution</div>
+                <p style={{ fontSize: 15, color: "var(--charcoal)", lineHeight: 1.6 }}>{block.answer}</p>
+              </div>
+            )}
+          </div>
+        </div>
+      );
+
+    // ===== MULTIPLE CHOICE QUESTION =====
     case "question":
       return (
         <div style={{ marginBottom: 32 }}>
-          <div className="eyebrow" style={{ fontSize: 11, color: "var(--ink-muted)", marginBottom: 8 }}>
-            Check your understanding
-          </div>
-          <p className="font-serif-display" style={{ fontSize: 19, fontWeight: 500, lineHeight: 1.4, marginBottom: 18 }}>
-            {block.question}
-          </p>
+          <div className="eyebrow" style={{ fontSize: 11, color: "var(--ink-muted)", marginBottom: 8 }}>Check your understanding</div>
+          <p className="font-serif-display" style={{ fontSize: 19, fontWeight: 500, lineHeight: 1.4, marginBottom: 18 }}>{block.question}</p>
           <div style={{ display: "flex", flexDirection: "column" }}>
             {block.options.map((option, optIndex) => {
               const isSelected = selectedAnswer === optIndex;
               const isCorrect = optIndex === block.correctIndex;
               const showResult = revealed;
-
-              let bg = "transparent";
-              let borderColor = "var(--hairline)";
-              let textColor = "var(--ink-soft)";
-
+              let bg = "transparent", borderColor = "var(--hairline)", textColor = "var(--ink-soft)";
               if (showResult) {
-                if (isCorrect) {
-                  bg = "rgba(126,142,99,0.12)";
-                  borderColor = "var(--sage)";
-                  textColor = "var(--sage-dk)";
-                } else if (isSelected) {
-                  bg = "rgba(192,106,75,0.1)";
-                  borderColor = "var(--terracotta)";
-                  textColor = "var(--terracotta-dk)";
-                }
-              } else if (isSelected) {
-                borderColor = "var(--terracotta)";
-                textColor = "var(--charcoal)";
-              }
-
+                if (isCorrect) { bg = "rgba(126,142,99,0.12)"; borderColor = "var(--sage)"; textColor = "var(--sage-dk)"; }
+                else if (isSelected) { bg = "rgba(192,106,75,0.1)"; borderColor = "var(--terracotta)"; textColor = "var(--terracotta-dk)"; }
+              } else if (isSelected) { borderColor = "var(--terracotta)"; textColor = "var(--charcoal)"; }
               return (
-                <button
-                  key={optIndex}
-                  onClick={() => onAnswer(index, optIndex)}
-                  disabled={revealed}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 14,
-                    padding: "14px 16px",
-                    borderRadius: "var(--r-sm)",
-                    border: `1.5px solid ${borderColor}`,
-                    background: bg,
-                    cursor: revealed ? "default" : "pointer",
-                    fontSize: 15.5,
-                    color: textColor,
-                    fontWeight: isSelected || (showResult && isCorrect) ? 600 : 400,
-                    textAlign: "left",
-                    marginBottom: 8,
-                    transition: "all 0.15s ease",
-                    width: "100%",
-                  }}
-                >
-                  <span style={{
-                    width: 22, height: 22, borderRadius: "50%",
-                    border: `2px solid ${showResult && isCorrect ? "var(--sage)" : isSelected ? "var(--terracotta)" : "var(--hairline)"}`,
-                    background: showResult && isCorrect ? "var(--sage)" : "transparent",
-                    display: "flex", alignItems: "center", justifyContent: "center",
-                    flexShrink: 0,
-                  }}>
-                    {showResult && isCorrect && (
-                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M20 6 9 17l-5-5" />
-                      </svg>
-                    )}
-                    {showResult && !isCorrect && isSelected && (
-                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--terracotta)" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M18 6 6 18M6 6l12 12" />
-                      </svg>
-                    )}
+                <button key={optIndex} onClick={() => onAnswer(index, optIndex)} disabled={revealed}
+                  style={{ display: "flex", alignItems: "center", gap: 14, padding: "14px 16px", borderRadius: "var(--r-sm)", border: `1.5px solid ${borderColor}`, background: bg, cursor: revealed ? "default" : "pointer", fontSize: 15.5, color: textColor, fontWeight: isSelected || (showResult && isCorrect) ? 600 : 400, textAlign: "left", marginBottom: 8, transition: "all 0.15s ease", width: "100%", fontFamily: "inherit" }}>
+                  <span style={{ width: 22, height: 22, borderRadius: "50%", border: `2px solid ${showResult && isCorrect ? "var(--sage)" : isSelected ? "var(--terracotta)" : "var(--hairline)"}`, background: showResult && isCorrect ? "var(--sage)" : "transparent", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                    {showResult && isCorrect && <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6 9 17l-5-5" /></svg>}
+                    {showResult && !isCorrect && isSelected && <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--terracotta)" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18M6 6l12 12" /></svg>}
                   </span>
                   {option}
                 </button>
               );
             })}
           </div>
-
-          {/* Reveal button */}
           {!revealed && selectedAnswer !== undefined && (
-            <button
-              onClick={() => onReveal(index)}
-              className="btn btn-ghost"
-              style={{ marginTop: 4, fontSize: 14, padding: "10px 20px" }}
-            >
-              Check answer
-            </button>
+            <button onClick={() => onReveal(index)} className="btn btn-ghost" style={{ marginTop: 4, fontSize: 14, padding: "10px 20px" }}>Check answer</button>
           )}
-
-          {/* Explanation after reveal */}
           {revealed && (
-            <div style={{
-              marginTop: 12,
-              padding: "14px 18px",
-              borderRadius: "var(--r-sm)",
-              background: selectedAnswer === block.correctIndex
-                ? "rgba(126,142,99,0.1)"
-                : "rgba(192,106,75,0.08)",
-              borderLeft: `3px solid ${selectedAnswer === block.correctIndex ? "var(--sage)" : "var(--terracotta)"}`,
-              fontSize: 14.5,
-              color: "var(--ink-soft)",
-              lineHeight: 1.55,
-            }}>
-              <strong style={{ color: selectedAnswer === block.correctIndex ? "var(--sage-dk)" : "var(--terracotta-dk)" }}>
-                {selectedAnswer === block.correctIndex ? "Correct! " : "Not quite. "}
-              </strong>
+            <div style={{ marginTop: 12, padding: "14px 18px", borderRadius: "var(--r-sm)", background: selectedAnswer === block.correctIndex ? "rgba(126,142,99,0.1)" : "rgba(192,106,75,0.08)", borderLeft: `3px solid ${selectedAnswer === block.correctIndex ? "var(--sage)" : "var(--terracotta)"}`, fontSize: 14.5, color: "var(--ink-soft)", lineHeight: 1.55 }}>
+              <strong style={{ color: selectedAnswer === block.correctIndex ? "var(--sage-dk)" : "var(--terracotta-dk)" }}>{selectedAnswer === block.correctIndex ? "Correct! " : "Not quite. "}</strong>
               {block.explanation}
             </div>
           )}
         </div>
       );
 
+    // ===== IMAGE =====
     case "image":
       return (
         <div style={{ marginBottom: 28 }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={block.url} alt={block.caption} style={{ width: "100%", borderRadius: "var(--r-md)" }} />
-          <p style={{ fontSize: 13, color: "var(--ink-muted)", marginTop: 8, textAlign: "center" }}>
-            {block.caption}
-          </p>
+          <p style={{ fontSize: 13, color: "var(--ink-muted)", marginTop: 8, textAlign: "center" }}>{block.caption}</p>
         </div>
       );
 

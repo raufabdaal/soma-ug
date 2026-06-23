@@ -2,49 +2,35 @@
 
 ## Current phase
 
-**Phase 2: Real curriculum content for S1. The content IS the product.**
+**Phase 2: Real curriculum content built. Testing + expanding.**
 
-## What is done (code + features)
+## What is done
 
-### Navigation
-- [x] Left sidebar (desktop), bottom bar (mobile) for both student and parent
+### S1 Mathematics (COMPLETE - all 14 topics from NCDC syllabus)
+- [x] Term 1: Number Bases, Integers, Fractions/Percentages/Decimals, Cartesian Coordinates
+- [x] Term 2: Geometric Construction, Sequences & Patterns, Bearings, Angle Properties, Data Collection
+- [x] Term 3: Reflection, Equations of Lines, Algebra 1, Business Arithmetic, Time & Timetables
 
-### Student experience
-- [x] Dashboard with REAL data (study time, lessons done, guarantee %)
-- [x] Diagnostic test (sets baseline, saves to Firestore)
-- [x] Lesson player with audio narration (Listen button, Web Speech API)
-- [x] Study time tracking (timer records actual time spent per lesson)
-- [x] AI tutor chat
-- [x] 4 Mathematics lessons (sample, not yet curriculum-mapped)
-
-### Parent experience
-- [x] Dashboard with REAL student data (no more fake numbers)
-- [x] Data-driven status card (shows weakest subject, or "diagnostic not taken")
-- [x] Reports page
-- [x] Settings page
-
-### All metrics are now real
-- Study time: tracked via lesson timer, stored in Firestore
-- Lessons completed: counted from Firestore
-- Predicted grade: calculated from actual scores
-- Guarantee progress: real percentage
-- No more placeholder numbers anywhere
-
-## What is next (content + features)
-
-### Content (the big focus)
-1. Build S1 Mathematics lessons from the actual NCDC syllabus (14 topics)
-2. Start with Term 1: Number Bases, Integers, Fractions, Coordinates
-3. Expand to other subjects (Biology, Chemistry, English, etc.)
-4. Build the curriculum feed
+### Each lesson includes
+- [x] NCDC competency statement
+- [x] Learning outcomes mapped with k/u/s tags
+- [x] Real-world Ugandan contexts
+- [x] Worked examples with reasoning (why each step works)
+- [x] Exam-style questions with mark values
+- [x] Full marking guides (method/accuracy/communication marks)
+- [x] Activities of integration (actual NCDC sample questions)
+- [x] Practice MCQs with explanations
+- [x] Audio narration (Listen button)
 
 ### Features
-1. Practice mode (past papers with AI marking)
-2. Curriculum feed (updates on NCDC changes)
-3. Streak tracking (real daily login tracking)
+- [x] Left sidebar (desktop), bottom bar (mobile)
+- [x] Diagnostic test, progress tracking, real metrics
+- [x] Parent dashboard with real student data, reports, settings
 
-## The content strategy
+## What is next
 
-See `docs/spec/content-strategy.md` for the full plan.
-
-The key: NCDC syllabi are free and downloadable. We extract the topic structure, draft lessons mapped to learning outcomes, review for accuracy, and publish with curriculum traceability.
+1. Push and test the full curriculum on the live site.
+2. Build the Practice/Sandbox mode (deeper AI-marked practice).
+3. Pull Biology, Chemistry, English syllabi from NCDC and build content.
+4. Build the curriculum feed (updates on NCDC changes).
+5. Landing page for public launch.

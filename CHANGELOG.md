@@ -2,29 +2,35 @@
 
 All notable changes to this project. Newest first.
 
+## [0.8.0] - 2026-06-23
+
+### Added
+- COMPLETE S1 Mathematics curriculum: all 14 topics across 3 terms, built from the NCDC syllabus.
+- New competency-based lesson block types: competency statement, learning outcomes (with k/u/s tags), real-world context, exam-style questions, marking guides (method/accuracy/communication marks), and activities of integration (NCDC assessment format).
+- Every lesson now teaches to the competency, not just the knowledge:
+  - States the NCDC competency statement
+  - Maps to specific learning outcomes
+  - Uses real Ugandan contexts
+  - Shows worked examples WITH reasoning (why each step works)
+  - Demonstrates exam-style questions with full marking guides
+  - Includes activities of integration (actual NCDC sample questions)
+- Learn page organized by term, with theme colors per term.
+- Curriculum mapping banner on each lesson showing subject, level, term, topic number, theme.
+
+### Changed
+- Lesson block types expanded from 5 to 11 (added competency, outcome, context, exam_style, marking_guide, activity_of_integration).
+- Worked examples now include "Why this works" reasoning sections.
+- Activities of integration are actual NCDC sample assessment questions from the syllabus.
+
 ## [0.7.0] - 2026-06-23
 
 ### Added
-- Left sidebar navigation for desktop (both student and parent). Bottom nav stays for mobile.
-- Diagnostic test (5 questions across Math, Biology, Chemistry) that sets the student's baseline grade.
-- Progress tracking wired to Firestore: lesson completions are saved, predicted grades update automatically based on average scores.
-- Student dashboard reads real data: lessons completed, guarantee progress, predicted grades.
-- Parent dashboard reads real student data: lessons completed, maths grade, guarantee progress.
-- 2 more Mathematics lessons: "Linear equations" and "Factorising expressions" (4 total now).
-- Diagnostic banner on student dashboard (shows until completed).
-- Results screen after diagnostic showing baseline grades per subject.
-
-### Changed
-- Navigation architecture rebuilt: app shell with sidebar + content area.
-- Student dashboard quick stats now show real lesson count.
-- Parent dashboard stats now show real student data.
-- Updated Firestore rules (MT-002) to allow lesson progress subcollection writes.
+- Left sidebar navigation, diagnostic test, progress tracking to Firestore, audio narration, real metrics.
 
 ## [0.6.0] - 2026-06-23
 
 ### Added
-- Parent bottom nav, reports page, settings page.
-- Student profile/settings page.
+- Parent reports, settings pages, student settings.
 
 ## [0.5.0] - 2026-06-22
 

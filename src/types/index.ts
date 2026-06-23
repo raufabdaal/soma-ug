@@ -55,11 +55,33 @@ export interface Topic {
   isActive: boolean;
 }
 
+/**
+ * Enhanced lesson blocks for competency-based teaching.
+ *
+ * Each block type serves a specific pedagogical purpose:
+ * - competency: the NCDC competency statement for the topic
+ * - outcome: the specific learning outcome being covered
+ * - context: real-world relevance (why this matters)
+ * - text: explanatory content
+ * - key_point: a critical takeaway
+ * - worked_example: step-by-step solution WITH reasoning
+ * - exam_style: how UNEB frames this type of question
+ * - marking_guide: what earns marks (method vs accuracy)
+ * - question: multiple choice practice
+ * - activity_of_integration: a real NCDC-style contextual problem
+ * - image: visual aid
+ */
 export type LessonBlock =
+  | { type: "competency"; text: string }
+  | { type: "outcome"; text: string; tag: string }
+  | { type: "context"; heading: string; content: string }
   | { type: "text"; heading?: string; content: string }
   | { type: "key_point"; title: string; content: string }
-  | { type: "worked_example"; problem: string; steps: string[]; answer: string }
+  | { type: "worked_example"; problem: string; steps: string[]; answer: string; reasoning?: string }
+  | { type: "exam_style"; scenario: string; question: string; marks: number }
+  | { type: "marking_guide"; totalMarks: number; criteria: { criterion: string; marks: number; type: "method" | "accuracy" | "communication" }[] }
   | { type: "question"; question: string; options: string[]; correctIndex: number; explanation: string }
+  | { type: "activity_of_integration"; title: string; scenario: string; task: string; hint: string; answer: string }
   | { type: "image"; url: string; caption: string };
 
 export interface Lesson {
@@ -72,6 +94,16 @@ export interface Lesson {
   passingScore: number;
   blocks: LessonBlock[];
   isActive: boolean;
+  /** NCDC curriculum mapping */
+  curriculum?: {
+    subject: string;
+    level: string;
+    term: string;
+    theme: string;
+    topicNumber: number;
+    topicName: string;
+    competency: string;
+  };
 }
 
 export interface LessonProgress {
