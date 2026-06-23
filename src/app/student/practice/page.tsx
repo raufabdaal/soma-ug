@@ -94,62 +94,49 @@ export default function PracticePage() {
         Pick a topic. Answer questions, earn XP, build your streak. Every answer sharpens your predicted grade.
       </p>
 
-      {/* Topic grid */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: 16 }}>
-        {topics.map((topic) => {
-          const stats = practiceStats[topic.id] || { attempted: 0, correct: 0, accuracy: 0 };
-          const mastery = getMasteryLevel(stats.accuracy);
-          return (
-            <button
-              key={topic.id}
-              onClick={() => setActiveTopic(topic.id)}
-              style={{
-                textAlign: "left",
-                cursor: "pointer",
-                background: "var(--white)",
-                border: "1px solid var(--hairline)",
-                borderRadius: "var(--r-md)",
-                padding: 24,
-                transition: "transform 0.15s ease, box-shadow 0.2s ease",
-                fontFamily: "inherit",
-              }}
-              onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "var(--shadow-soft)"; }}
-              onMouseLeave={(e) => { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = ""; }}
-            >
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 12 }}>
-                <span style={{ fontSize: 11, fontWeight: 600, color: mastery.color, textTransform: "uppercase", letterSpacing: "0.05em" }}>
-                  {mastery.level}
-                </span>
-                {stats.attempted > 0 && (
-                  <span style={{ fontSize: 12, fontWeight: 600, color: "var(--sage-dk)" }}>+{stats.attempted} XP</span>
-                )}
-              </div>
-              <h3 className="font-serif-display" style={{ fontWeight: 600, fontSize: 17, marginBottom: 4, lineHeight: 1.3 }}>
-                {topic.name}
-              </h3>
-              <p style={{ fontSize: 12, color: "var(--ink-muted)", marginBottom: 16 }}>{topic.theme}</p>
-
-              {/* Accuracy bar */}
-              {stats.attempted > 0 ? (
-                <>
-                  <div style={{ height: 5, background: "var(--cream-deep)", borderRadius: 999, overflow: "hidden", marginBottom: 6 }}>
-                    <div style={{ height: "100%", width: `${stats.accuracy}%`, background: mastery.color, borderRadius: 999 }} />
-                  </div>
-                  <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11, color: "var(--ink-muted)" }}>
-                    <span>{stats.accuracy}% accuracy</span>
-                    <span>{stats.attempted} done</span>
-                  </div>
-                </>
-              ) : (
-                <div style={{ fontSize: 13, color: "var(--terracotta)", fontWeight: 600, display: "flex", alignItems: "center", gap: 6 }}>
-                  Start practicing
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
-                </div>
-              )}
-            </button>
-          );
-        })}
-      </div>
+      {/* Topic grid grouped by subject */}
+      {(() => {
+        const subjectGroups: Record<string, typeof topics> = {};
+        for (const t of topics) {
+          if (!subjectGroups[t.subject]) subjectGroups[t.subject] = [];
+          subjectGroups[t.subject].push(t);
+        }
+        return Object.entries(subjectGroups).map(([subject, subTopics]) => (
+          <div key={subject} style={{ marginBottom: 32 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 14 }}>
+              <span style={{ width: 6, height: 20, borderRadius: 3, background: subTopics[0].color }} />
+              <h3 className="font-serif-display" style={{ fontWeight: 600, fontSize: 16, color: "var(--charcoal)" }}>{subject}</h3>
+            </div>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))", gap: 14 }}>
+              {subTopics.map((topic) => {
+                const stats = practiceStats[topic.id] || { attempted: 0, correct: 0, accuracy: 0 };
+                const mastery = getMasteryLevel(stats.accuracy);
+                return (
+                  <button key={topic.id} onClick={() => setActiveTopic(topic.id)} style={{ textAlign: "left", cursor: "pointer", background: "var(--white)", border: "1px solid var(--hairline)", borderRadius: "var(--r-md)", padding: 20, transition: "transform 0.15s ease", fontFamily: "inherit" }} onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-2px)"; }} onMouseLeave={(e) => { e.currentTarget.style.transform = ""; }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8 }}>
+                      <span style={{ fontSize: 10, fontWeight: 600, color: mastery.color, textTransform: "uppercase", letterSpacing: "0.05em" }}>{mastery.level}</span>
+                    </div>
+                    <h4 className="font-serif-display" style={{ fontWeight: 600, fontSize: 15, marginBottom: 4 }}>{topic.name}</h4>
+                    <p style={{ fontSize: 11, color: "var(--ink-muted)", marginBottom: 10 }}>{topic.questionCount} questions</p>
+                    {stats.attempted > 0 ? (
+                      <>
+                        <div style={{ height: 4, background: "var(--cream-deep)", borderRadius: 999, overflow: "hidden", marginBottom: 4 }}>
+                          <div style={{ height: "100%", width: `${stats.accuracy}%`, background: mastery.color, borderRadius: 999 }} />
+                        </div>
+                        <div style={{ display: "flex", justifyContent: "space-between", fontSize: 10, color: "var(--ink-muted)" }}>
+                          <span>{stats.accuracy}%</span><span>{stats.attempted} done</span>
+                        </div>
+                      </>
+                    ) : (
+                      <div style={{ fontSize: 12, color: topic.color, fontWeight: 600 }}>Start</div>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        ));
+      })()}
     </div>
   );
 }

@@ -7,6 +7,7 @@ import { useAuth } from "@/context/AuthContext";
 import { doc, getDoc, collection, getDocs } from "firebase/firestore";
 import { db } from "@/lib/firebase/config";
 import { sampleLessons, getLessonById } from "@/lib/lessons";
+import { subjects } from "@/lib/curriculum";
 import type { StudentProfile } from "@/types";
 import { formatStudyTime } from "@/lib/utils";
 
@@ -197,14 +198,27 @@ export default function StudentDashboard() {
         </div>
       </div>
 
-      {/* Subjects - real progress based on completed lessons */}
+      {/* Subjects - real progress for all available subjects */}
       <h2 className="font-serif-display" style={{ fontWeight: 600, fontSize: 20, margin: "48px 0 20px" }}>
         Your subjects
       </h2>
-      <div className="grid-collapse-3" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 22 }}>
-        <SubjectTile name="Mathematics" topics={`${mathLessonsTotal} lessons`} color="var(--terracotta)" progress={mathProgress} href="/student/learn" />
-        <SubjectTile name="Biology" topics="Coming soon" color="var(--sage-dk)" progress={0} href="/student/learn" />
-        <SubjectTile name="Chemistry" topics="Coming soon" color="var(--blue-dk)" progress={0} href="/student/learn" />
+      <div className="grid-collapse-3" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))", gap: 16 }}>
+        {subjects.map((s) => {
+          const subjectLessons = sampleLessons.filter((l) => l.subjectId === s.id);
+          const done = subjectLessons.filter((l) => completedLessons[l.id]?.completed).length;
+          const total = subjectLessons.length;
+          const progress = total > 0 ? Math.round((done / total) * 100) : 0;
+          return (
+            <SubjectTile
+              key={s.id}
+              name={s.name}
+              topics={total > 0 ? `${done} of ${total} done` : "Coming soon"}
+              color={s.accentColor}
+              progress={progress}
+              href="/student/learn"
+            />
+          );
+        })}
       </div>
 
       {/* Quick stats row - all real data */}
