@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
@@ -158,9 +158,10 @@ export default function PracticePage() {
    PRACTICE SESSION - the question flow
    ============================================================ */
 function PracticeSession({ topicId, user, onExit }: { topicId: string; user: any; onExit: () => void }) {
-  const topics = getPracticeTopics();
-  const topic = topics.find((t) => t.id === topicId)!;
-  const bankQuestions = getQuestionsByTopic(topicId);
+  // useMemo keeps these stable across renders so they don't trigger useEffect loops
+  const topics = useMemo(() => getPracticeTopics(), []);
+  const topic = topics.find((t) => t.id === topicId);
+  const bankQuestions = useMemo(() => getQuestionsByTopic(topicId), [topicId]);
 
   const [questionQueue, setQuestionQueue] = useState<PracticeQuestion[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -173,11 +174,18 @@ function PracticeSession({ topicId, user, onExit }: { topicId: string; user: any
   const [streak, setStreak] = useState(0);
   const [loadingNext, setLoadingNext] = useState(false);
 
-  // Shuffle and set up initial questions
+  // Shuffle and set up initial questions ONLY when topicId changes
   useEffect(() => {
     const shuffled = [...bankQuestions].sort(() => Math.random() - 0.5);
     setQuestionQueue(shuffled);
-  }, [bankQuestions]);
+    setCurrentIndex(0);
+    setSelectedAnswer(null);
+    setShortAnswer("");
+    setRevealed(false);
+    setAiMarking(null);
+    setSessionStats({ correct: 0, total: 0, xp: 0 });
+    setStreak(0);
+  }, [topicId, bankQuestions]);
 
   const currentQuestion = questionQueue[currentIndex];
 
