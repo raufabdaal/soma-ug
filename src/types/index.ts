@@ -85,7 +85,7 @@ export type LessonBlock =
   | { type: "exam_style"; scenario: string; question: string; marks: number }
   | { type: "marking_guide"; totalMarks: number; criteria: { criterion: string; marks: number; type: "method" | "accuracy" | "communication" }[] }
   | { type: "question"; question: string; options: string[]; correctIndex: number; explanation: string }
-  | { type: "activity_of_integration"; title: string; scenario: string; task: string; hint?: string; answer: string }
+  | { type: "activity_of_integration"; title: string; scenario: string; task?: string; hint?: string; answer: string }
   | { type: "image"; url: string; caption: string };
 
 export interface Lesson {

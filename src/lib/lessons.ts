@@ -2,14 +2,13 @@ import type { Lesson } from "@/types";
 import { biologyLessons } from "@/lib/lessons-biology";
 import { chemistryLessons } from "@/lib/lessons-chemistry";
 import { physicsLessons } from "@/lib/lessons-physics";
+import { s2MathLessons } from "@/lib/lessons-s2-math";
+import { s2BiologyLessons, s2ChemistryLessons, s2PhysicsLessons, s3MathLessons, s4MathLessons } from "@/lib/lessons-s2-sciences";
 
 /**
- * SOMA CURRICULUM CONTENT - S1 All Subjects
+ * SOMA CURRICULUM CONTENT - All Levels
  *
  * Built from official NCDC Lower Secondary syllabi.
- * Source: ncdc.go.ug/resource/
- *
- * Each lesson teaches to the competency, not just the knowledge.
  */
 
 export const curriculumMeta = {
@@ -252,6 +251,12 @@ export const sampleLessons: Lesson[] = [
   ...biologyLessons,
   ...chemistryLessons,
   ...physicsLessons,
+  ...s2MathLessons,
+  ...s2BiologyLessons,
+  ...s2ChemistryLessons,
+  ...s2PhysicsLessons,
+  ...s3MathLessons,
+  ...s4MathLessons,
 ];
 
 export function getLessonById(id: string): Lesson | undefined {
