@@ -100,6 +100,43 @@ export const practiceBank: PracticeQuestion[] = [
   { id: "pm-mcq-2", topicId: "phys-measurements", subjectId: "physics", type: "mcq", difficulty: "easy", question: "SI unit of length?", options: ["Centimetre", "Metre", "Kilometre", "Foot"], correctIndex: 1, explanation: "Metre (m)." },
   { id: "pm-mcq-3", topicId: "phys-measurements", subjectId: "physics", type: "mcq", difficulty: "medium", question: "Density of object: mass 240g, volume 80cm3?", options: ["2 g/cm3", "3 g/cm3", "4 g/cm3", "0.33 g/cm3"], correctIndex: 1, explanation: "240/80 = 3 g/cm3." },
   { id: "pm-mcq-4", topicId: "phys-measurements", subjectId: "physics", type: "mcq", difficulty: "hard", question: "Object density 0.8 g/cm3 in water (1.0). It will?", options: ["Sink", "Float", "Dissolve", "Float middle"], correctIndex: 1, explanation: "0.8 < 1.0 so it floats." },
+
+  // ===== BIOLOGY: INSECTS =====
+  { id: "ins-mcq-1", topicId: "bio-insects", subjectId: "biology", type: "mcq", difficulty: "easy", question: "How many legs does an insect have?", options: ["4", "6", "8", "10"], correctIndex: 1, explanation: "Insects have six legs (three pairs)." },
+  { id: "ins-mcq-2", topicId: "bio-insects", subjectId: "biology", type: "mcq", difficulty: "easy", question: "How many body parts does an insect have?", options: ["1", "2", "3", "4"], correctIndex: 2, explanation: "Head, thorax, abdomen." },
+  { id: "ins-mcq-3", topicId: "bio-insects", subjectId: "biology", type: "mcq", difficulty: "medium", question: "A spider is NOT an insect because it has?", options: ["Wings", "Eight legs and two body parts", "No eyes", "No legs"], correctIndex: 1, explanation: "Spiders have eight legs and two body parts." },
+  { id: "ins-mcq-4", topicId: "bio-insects", subjectId: "biology", type: "mcq", difficulty: "medium", question: "Which insect spreads malaria?", options: ["Bee", "Mosquito", "Butterfly", "Ladybird"], correctIndex: 1, explanation: "Female Anopheles mosquitoes spread malaria." },
+  { id: "ins-mcq-5", topicId: "bio-insects", subjectId: "biology", type: "mcq", difficulty: "hard", question: "Bees are beneficial because they?", options: ["Spread disease", "Pollinate crops and produce honey", "Destroy buildings", "Eat crops"], correctIndex: 1, explanation: "Bees pollinate flowers and produce honey." },
+
+  // ===== BIOLOGY: FLOWERING PLANTS =====
+  { id: "fp-mcq-1", topicId: "bio-flowering-plants", subjectId: "biology", type: "mcq", difficulty: "easy", question: "Which part absorbs water from soil?", options: ["Leaves", "Stem", "Roots", "Flowers"], correctIndex: 2, explanation: "Roots absorb water and minerals." },
+  { id: "fp-mcq-2", topicId: "bio-flowering-plants", subjectId: "biology", type: "mcq", difficulty: "easy", question: "Where does photosynthesis mainly occur?", options: ["Roots", "Stem", "Leaves", "Flowers"], correctIndex: 2, explanation: "Leaves contain chlorophyll." },
+  { id: "fp-mcq-3", topicId: "bio-flowering-plants", subjectId: "biology", type: "mcq", difficulty: "medium", question: "Which part produces pollen?", options: ["Stigma", "Anther", "Petal", "Sepal"], correctIndex: 1, explanation: "The anther produces pollen." },
+  { id: "fp-mcq-4", topicId: "bio-flowering-plants", subjectId: "biology", type: "mcq", difficulty: "hard", question: "The function of petals is to?", options: ["Absorb water", "Attract pollinators", "Produce seeds", "Support the plant"], correctIndex: 1, explanation: "Petals attract insects and birds." },
+
+  // ===== CHEMISTRY: ATOMS AND MOLECULES =====
+  { id: "at-mcq-1", topicId: "chem-atoms-molecules", subjectId: "chemistry", type: "mcq", difficulty: "easy", question: "What is the smallest particle of an element?", options: ["Molecule", "Atom", "Compound", "Mixture"], correctIndex: 1, explanation: "An atom is the smallest particle of an element." },
+  { id: "at-mcq-2", topicId: "chem-atoms-molecules", subjectId: "chemistry", type: "mcq", difficulty: "easy", question: "How many atoms are in H2O?", options: ["1", "2", "3", "4"], correctIndex: 2, explanation: "2 hydrogen + 1 oxygen = 3." },
+  { id: "at-mcq-3", topicId: "chem-atoms-molecules", subjectId: "chemistry", type: "mcq", difficulty: "medium", question: "What is the symbol for oxygen?", options: ["O", "Ox", "Og", "Ou"], correctIndex: 0, explanation: "Oxygen is O." },
+  { id: "at-mcq-4", topicId: "chem-atoms-molecules", subjectId: "chemistry", type: "mcq", difficulty: "hard", question: "Fe is the symbol for?", options: ["Fluorine", "Iron", "Francium", "Phosphorus"], correctIndex: 1, explanation: "Fe = iron (from Latin ferrum)." },
+
+  // ===== CHEMISTRY: PHYSICAL AND CHEMICAL CHANGES =====
+  { id: "pc-mcq-1", topicId: "chem-physical-chemical", subjectId: "chemistry", type: "mcq", difficulty: "easy", question: "Burning wood is a ___ change?", options: ["Physical", "Chemical", "Reversible", "Nuclear"], correctIndex: 1, explanation: "New substances formed = chemical." },
+  { id: "pc-mcq-2", topicId: "chem-physical-chemical", subjectId: "chemistry", type: "mcq", difficulty: "easy", question: "Dissolving sugar in tea is a ___ change?", options: ["Physical", "Chemical", "Irreversible", "Permanent"], correctIndex: 0, explanation: "No new substance. Reversible." },
+  { id: "pc-mcq-3", topicId: "chem-physical-chemical", subjectId: "chemistry", type: "mcq", difficulty: "medium", question: "Which is a sign of a chemical change?", options: ["Change of shape", "Colour change and gas produced", "Change of state", "Dissolving"], correctIndex: 1, explanation: "New substances, colour change, gas = chemical." },
+  { id: "pc-mcq-4", topicId: "chem-physical-chemical", subjectId: "chemistry", type: "mcq", difficulty: "hard", question: "Rusting is a ___ change?", options: ["Physical", "Chemical", "Reversible", "Temporary"], correctIndex: 1, explanation: "Rust is a new substance (iron oxide)." },
+
+  // ===== PHYSICS: FORCES =====
+  { id: "fo-mcq-1", topicId: "phys-forces", subjectId: "physics", type: "mcq", difficulty: "easy", question: "The SI unit of force is?", options: ["Kilogram", "Newton", "Joule", "Watt"], correctIndex: 1, explanation: "Force is in Newtons (N)." },
+  { id: "fo-mcq-2", topicId: "phys-forces", subjectId: "physics", type: "mcq", difficulty: "easy", question: "Mass is measured in?", options: ["Newtons", "Kilograms", "Metres", "Seconds"], correctIndex: 1, explanation: "Mass = kilograms." },
+  { id: "fo-mcq-3", topicId: "phys-forces", subjectId: "physics", type: "mcq", difficulty: "medium", question: "Calculate weight: mass 30 kg, g = 10 N/kg.", options: ["3 N", "30 N", "300 N", "3000 N"], correctIndex: 2, explanation: "W = 30 x 10 = 300 N." },
+  { id: "fo-mcq-4", topicId: "phys-forces", subjectId: "physics", type: "mcq", difficulty: "hard", question: "Friction always opposes?", options: ["Gravity", "Motion", "Weight", "Mass"], correctIndex: 1, explanation: "Friction opposes motion." },
+
+  // ===== PHYSICS: LIGHT AND REFLECTION =====
+  { id: "li-mcq-1", topicId: "phys-light-reflection", subjectId: "physics", type: "mcq", difficulty: "easy", question: "Light travels in?", options: ["Curves", "Straight lines", "Circles", "Random paths"], correctIndex: 1, explanation: "Light travels in straight lines." },
+  { id: "li-mcq-2", topicId: "phys-light-reflection", subjectId: "physics", type: "mcq", difficulty: "easy", question: "The angle of incidence equals the?", options: ["Angle of mirror", "Angle of reflection", "Angle of refraction", "Angle of normal"], correctIndex: 1, explanation: "Law of reflection: i = r." },
+  { id: "li-mcq-3", topicId: "phys-light-reflection", subjectId: "physics", type: "mcq", difficulty: "medium", question: "The normal is at ___ to the mirror.", options: ["45 degrees", "60 degrees", "90 degrees", "180 degrees"], correctIndex: 2, explanation: "Perpendicular = 90 degrees." },
+  { id: "li-mcq-4", topicId: "phys-light-reflection", subjectId: "physics", type: "mcq", difficulty: "hard", question: "If angle of incidence is 30 degrees, angle of reflection is?", options: ["15", "30", "60", "90"], correctIndex: 1, explanation: "i = r = 30 degrees." },
 ];
 
 /** Get all questions for a topic. */
@@ -123,6 +160,12 @@ export function getPracticeTopics() {
     "chem-separating-mixtures": { name: "Separating Mixtures", subject: "Chemistry", color: "#6E8AA6" },
     "phys-introduction": { name: "Introduction to Physics", subject: "Physics", color: "#9B7BB8" },
     "phys-measurements": { name: "Measurements", subject: "Physics", color: "#9B7BB8" },
+    "phys-forces": { name: "Effects of Forces", subject: "Physics", color: "#9B7BB8" },
+    "phys-light-reflection": { name: "Light and Reflection", subject: "Physics", color: "#9B7BB8" },
+    "bio-insects": { name: "Insects", subject: "Biology", color: "#7E8E63" },
+    "bio-flowering-plants": { name: "Flowering Plants", subject: "Biology", color: "#7E8E63" },
+    "chem-atoms-molecules": { name: "Atoms and Molecules", subject: "Chemistry", color: "#6E8AA6" },
+    "chem-physical-chemical": { name: "Physical and Chemical Changes", subject: "Chemistry", color: "#6E8AA6" },
   };
 
   const topicIds = Array.from(new Set(practiceBank.map((q) => q.topicId)));

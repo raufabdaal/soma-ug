@@ -11,7 +11,7 @@ export interface SubjectInfo {
   accentColor: string;
   accentColorDk: string;
   softBg: string;
-  icon: string; // single letter for the icon circle
+  icon: string;
   totalLessons: number;
   status: "available" | "coming-soon";
 }
@@ -34,7 +34,7 @@ export const subjects: SubjectInfo[] = [
     accentColorDk: "#5F6C46",
     softBg: "rgba(126,142,99,0.16)",
     icon: "B",
-    totalLessons: 3,
+    totalLessons: 5,
     status: "available",
   },
   {
@@ -44,7 +44,7 @@ export const subjects: SubjectInfo[] = [
     accentColorDk: "#536E89",
     softBg: "rgba(110,138,166,0.16)",
     icon: "C",
-    totalLessons: 3,
+    totalLessons: 5,
     status: "available",
   },
   {
@@ -54,7 +54,7 @@ export const subjects: SubjectInfo[] = [
     accentColorDk: "#7A5E94",
     softBg: "rgba(155,123,184,0.16)",
     icon: "P",
-    totalLessons: 2,
+    totalLessons: 4,
     status: "available",
   },
   {

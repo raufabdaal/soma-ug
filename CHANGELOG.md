@@ -2,22 +2,27 @@
 
 All notable changes. Newest first.
 
-## [0.9.0] - 2026-06-23
+## [1.0.0] - 2026-06-24
+
+### S1 Curriculum Complete: 4 subjects, 28 lessons, 60+ practice questions
 
 ### Added
-- **Lesson stepper**: paginated one-block-at-a-time navigation with progress bar, step dots, and Next/Back buttons. Kills the PDF scroll feel. Questions must be answered before advancing.
-- **Practice engine**: dedicated practice mode with topic grid, pre-written question banks (MCQ + AI-marked short answers), endless AI question generation when bank is exhausted, XP tracking, streak tracking, per-topic accuracy, and mastery levels.
-- **XP system**: 10 XP (easy), 15 XP (medium), 20 XP (hard) per correct answer. Tracked in Firestore.
-- **Practice streaks**: daily consecutive practice tracking with streak display.
-- **Mastery levels**: Not Started, Beginner, Developing, Proficient, Mastered based on practice accuracy.
-- **AI practice generator** (`/api/ai/practice`): generates fresh practice questions per topic when the pre-written bank is exhausted.
-- **Grade prediction from practice**: `predictGradeFromPractice()` calculates weighted accuracy across all practiced topics. This replaces lesson-completion-based prediction and is more robust for the guarantee.
-- Practice question banks for 5 topics (Number Bases, Integers, Fractions, Algebra 1, Business Arithmetic).
+- **Biology**: 2 new lessons (Insects, Flowering Plants). 5 total.
+- **Chemistry**: 2 new lessons (Atoms and Molecules, Physical and Chemical Changes). 5 total.
+- **Physics**: 2 new lessons (Effects of Forces, Light and Reflection). 4 total.
+- Practice questions for all new topics (Insects, Flowering Plants, Atoms, Physical/Chemical Changes, Forces, Light).
+- Practice topics metadata updated for all 20 topics across 4 subjects.
+- Curriculum subject counts updated.
 
-### Changed
-- LessonPlayer completely rewritten as a stepper (was a long scroll).
-- Practice page completely rebuilt (was a placeholder).
-- StudentProfile type extended with totalXP, questionsAnswered, practiceStreak.
+### S1 totals
+- Mathematics: 14 lessons, 22 practice questions
+- Biology: 5 lessons, 15 practice questions
+- Chemistry: 5 lessons, 14 practice questions
+- Physics: 4 lessons, 12 practice questions
+- **Total: 28 lessons, 63 practice questions**
+
+## [0.9.0] - 2026-06-23
+- Lesson stepper, practice engine, XP, streaks, mastery levels, AI question generation.
 
 ## [0.8.0] - 2026-06-23
 - Complete S1 Mathematics curriculum (14 topics). Competency-based lesson blocks.

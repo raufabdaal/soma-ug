@@ -21,30 +21,16 @@ export const biologyLessons: Lesson[] = [
     blocks: [
       { type: "competency", text: "The learner should understand that biology is the study of life and that all living organisms experience common life processes." },
       { type: "outcome", text: "Appreciate that biology is the study of life.", tag: "k" },
-      { type: "outcome", text: "Understand that life processes are common to all living things but manifested differently in different organisms.", tag: "u" },
-
-      { type: "context", heading: "What is Biology?", content: "Biology is the study of living things. The word comes from Greek: 'bios' meaning life, and 'logos' meaning study. Everything around you that is alive, from the grass outside your classroom to the person sitting next to you, is studied in biology. Understanding biology helps us make decisions about health, farming, and the environment." },
-
-      { type: "key_point", title: "The seven characteristics of life (MRS GREN)", content: "All living organisms share seven characteristics, remembered by MRS GREN: Movement, Respiration, Sensitivity, Growth, Reproduction, Excretion, Nutrition. If something has all seven, it is living. If it lacks even one, it is not alive." },
-
-      { type: "worked_example", problem: "Is a car a living organism? Use MRS GREN to decide.", steps: ["Movement: Yes, a car moves.", "Respiration: No, a car does not respire (release energy from food).", "Sensitivity: Partially, but not true biological response.", "Growth: No, a car does not grow.", "Reproduction: No.", "Excretion: No.", "Nutrition: It uses fuel, but not biological nutrition.", "Conclusion: A car is NOT living because it lacks respiration, growth, reproduction, excretion, and true nutrition."], answer: "A car is not living", reasoning: "Movement alone does not make something alive. All seven characteristics must be present. This is why MRS GREN is a complete test, not a single-feature test." },
-
-      { type: "exam_style", scenario: "UNEB often asks you to explain the difference between living and non-living things.", question: "Explain why a growing plant is considered living but a stone is not. Use at least four characteristics of living things.", marks: 4 },
-
-      { type: "marking_guide", totalMarks: 4, criteria: [
-        { criterion: "Identifies at least 4 correct characteristics of living things", marks: 2, type: "method" },
-        { criterion: "Explains how the plant shows each characteristic", marks: 1, type: "method" },
-        { criterion: "States that the stone lacks these characteristics", marks: 1, type: "communication" },
-      ] },
-
-      { type: "key_point", title: "Branches of Biology", content: "Biology has several branches: Botany (study of plants), Zoology (study of animals), Microbiology (study of microorganisms), Ecology (study of organisms and their environment), Genetics (study of heredity), Anatomy (study of internal structure), and Physiology (study of how bodies work)." },
-
-      { type: "question", question: "What does the 'M' in MRS GREN stand for?", options: ["Movement", "Metabolism", "Memory", "Multiplication"], correctIndex: 0, explanation: "M stands for Movement - the ability to change position." },
-      { type: "question", question: "Which of the following is NOT a characteristic of living things?", options: ["Respiration", "Photosynthesis", "Growth", "Excretion"], correctIndex: 1, explanation: "Photosynthesis is a process some organisms do, but it is not one of the seven universal characteristics of life." },
-      { type: "question", question: "The study of plants is called...?", options: ["Zoology", "Botany", "Ecology", "Genetics"], correctIndex: 1, explanation: "Botany is the study of plants. Zoology is animals." },
-      { type: "question", question: "Excretion refers to...?", options: ["Taking in food", "Removing waste", "Growing bigger", "Responding to light"], correctIndex: 1, explanation: "Excretion is the removal of waste products from the body." },
-
-      { type: "activity_of_integration", title: "Is fire alive?", scenario: "Fire moves, grows, reproduces (spreads), and uses fuel (nutrition). Some people argue fire is alive.", task: "Use MRS GREN to determine whether fire is a living organism. Justify your answer.", hint: "Check all seven characteristics, not just some.", answer: "Fire shows movement, growth, and uses fuel. But it does not respire (no chemical release of energy from food), does not show sensitivity (true biological response), does not excrete waste products, and does not reproduce in the biological sense. Therefore fire is NOT living. It lacks the key characteristics of respiration and excretion." },
+      { type: "outcome", text: "Understand that life processes are common to all living things but manifested differently.", tag: "u" },
+      { type: "context", heading: "What is Biology?", content: "Biology is the study of living things. From 'bios' (life) and 'logos' (study). Everything alive, from grass to your own body, is studied in biology. Understanding it helps us make decisions about health, farming, and the environment." },
+      { type: "key_point", title: "MRS GREN", content: "All living organisms share seven characteristics: Movement, Respiration, Sensitivity, Growth, Reproduction, Excretion, Nutrition. If something has all seven, it is living." },
+      { type: "worked_example", problem: "Is a car living? Use MRS GREN.", steps: ["Movement: Yes.", "Respiration: No (no chemical energy release from food).", "Growth: No.", "Reproduction: No.", "Conclusion: Not living."], answer: "A car is not living", reasoning: "Movement alone does not make something alive. All seven characteristics must be present." },
+      { type: "key_point", title: "Branches of Biology", content: "Botany (plants), Zoology (animals), Microbiology (microorganisms), Ecology (organisms and environment), Genetics (heredity), Anatomy (structure), Physiology (function)." },
+      { type: "question", question: "What does M in MRS GREN stand for?", options: ["Movement", "Metabolism", "Memory", "Multiplication"], correctIndex: 0, explanation: "M = Movement." },
+      { type: "question", question: "Which is NOT a characteristic of living things?", options: ["Respiration", "Photosynthesis", "Growth", "Excretion"], correctIndex: 1, explanation: "Photosynthesis is a process, not one of the seven universal characteristics." },
+      { type: "question", question: "The study of plants is called?", options: ["Zoology", "Botany", "Ecology", "Genetics"], correctIndex: 1, explanation: "Botany = plants." },
+      { type: "question", question: "Excretion refers to?", options: ["Taking in food", "Removing waste", "Growing", "Responding to light"], correctIndex: 1, explanation: "Excretion = removal of waste products." },
+      { type: "activity_of_integration", title: "Is fire alive?", scenario: "Fire moves, grows, spreads, and uses fuel. Some argue it is alive.", task: "Use MRS GREN to determine whether fire is living.", hint: "Check all seven, not just some.", answer: "Fire lacks respiration, excretion, and true biological reproduction. It is NOT living." },
     ],
   },
 
@@ -59,37 +45,20 @@ export const biologyLessons: Lesson[] = [
     passingScore: 70,
     isActive: true,
     curriculum: S1("Term 1", "Diversity of Living Things", 2, "Cells",
-      "The learner appreciates the cell as the basic unit of living organisms and how cell structures relate to their functions."),
+      "The learner appreciates the cell as the basic unit of living organisms."),
     blocks: [
-      { type: "competency", text: "The learner should appreciate that a cell is the basic unit of living organisms, and how the structures of different specialised cells are related to their functions." },
-      { type: "outcome", text: "Know that the basic unit of living organisms is a cell.", tag: "k" },
-      { type: "outcome", text: "Know and understand the structure and functions of a typical animal cell and plant cell.", tag: "k,u,s" },
+      { type: "competency", text: "The learner should appreciate that a cell is the basic unit of living organisms, and how cell structures relate to their functions." },
+      { type: "outcome", text: "Know the structure and functions of animal and plant cells.", tag: "k,u,s" },
       { type: "outcome", text: "Understand levels of organisation in organisms.", tag: "u" },
-
-      { type: "context", heading: "Everything alive is made of cells", content: "Your body is made of billions of cells. A leaf is made of cells. Even the smallest bacterium is a single cell. The cell is the basic unit of life, just like a brick is the basic unit of a wall. Understanding cells is the foundation of all biology." },
-
-      { type: "key_point", title: "Plant cells vs Animal cells", content: "Both have: nucleus (controls the cell), cytoplasm (jelly where reactions happen), cell membrane (controls what enters and leaves). PLANT cells also have: cell wall (rigid support, made of cellulose), chloroplasts (for photosynthesis), large vacuole (stores water and nutrients). Animal cells have: small or no vacuoles, no cell wall, no chloroplasts." },
-
-      { type: "worked_example", problem: "Label and describe the function of three parts found in a plant cell but not in an animal cell.", steps: ["Cell wall: made of cellulose, provides rigidity and support. Gives plant cells their rectangular shape.", "Chloroplasts: contain chlorophyll, the site of photosynthesis where plants make food.", "Large vacuole: stores water, nutrients, and waste. Helps maintain the cell's shape through turgor pressure."], answer: "Cell wall, chloroplasts, large vacuole", reasoning: "These three structures are what make plant cells unique. They reflect the differences in how plants and animals survive: plants need rigid support (no skeleton), make their own food (photosynthesis), and store water (cannot move to find it)." },
-
-      { type: "key_point", title: "Levels of organisation", content: "Cells are the smallest unit. Cells form tissues (groups of similar cells doing the same job). Tissues form organs (structures made of different tissues working together, like the heart or a leaf). Organs form systems (like the digestive system). Systems form the whole organism." },
-
-      { type: "exam_style", scenario: "UNEB frequently tests your ability to identify cell parts and their functions.", question: "State three structural differences between a plant cell and an animal cell. For each, explain why the plant cell needs it.", marks: 6 },
-
-      { type: "marking_guide", totalMarks: 6, criteria: [
-        { criterion: "Identifies cell wall, chloroplasts, large vacuole as plant-only structures", marks: 3, type: "method" },
-        { criterion: "Cell wall: for support/rigidity", marks: 1, type: "method" },
-        { criterion: "Chloroplasts: for photosynthesis/making food", marks: 1, type: "accuracy" },
-        { criterion: "Vacuole: for storage of water and maintaining shape", marks: 1, type: "accuracy" },
-      ] },
-
-      { type: "question", question: "Which part controls what enters and leaves the cell?", options: ["Nucleus", "Cell membrane", "Cytoplasm", "Vacuole"], correctIndex: 1, explanation: "The cell membrane is selectively permeable. It controls what substances enter and leave the cell." },
-      { type: "question", question: "Which structure is found in plant cells but NOT in animal cells?", options: ["Nucleus", "Cytoplasm", "Cell wall", "Cell membrane"], correctIndex: 2, explanation: "The cell wall is made of cellulose and is found only in plant cells. It provides rigid support." },
-      { type: "question", question: "Where does photosynthesis take place in a plant cell?", options: ["Nucleus", "Chloroplasts", "Vacuole", "Cell wall"], correctIndex: 1, explanation: "Chloroplasts contain chlorophyll which captures sunlight for photosynthesis." },
-      { type: "question", question: "Which sequence shows the correct order of organisation?", options: ["Organ, tissue, cell, system", "Cell, tissue, organ, system", "Tissue, cell, organ, system", "Cell, organ, tissue, system"], correctIndex: 1, explanation: "Cells form tissues, tissues form organs, organs form systems. Correct order: cell, tissue, organ, system." },
-      { type: "question", question: "What is the function of the nucleus?", options: ["Stores water", "Controls cell activities", "Makes food", "Provides support"], correctIndex: 1, explanation: "The nucleus contains genetic material (DNA) and controls all activities of the cell." },
-
-      { type: "activity_of_integration", title: "Specialised cells", scenario: "Not all cells look the same. A red blood cell is different from a nerve cell, which is different from a root hair cell.", task: "Explain why a root hair cell has a long, thin extension. How does its structure relate to its function?", hint: "Think about what root hair cells do - they absorb water and minerals from the soil.", answer: "The root hair cell has a long, thin extension that greatly increases its surface area. This allows it to absorb more water and mineral ions from the soil. This is an example of structure matching function, a key principle in biology. Specialised cells have shapes that are adapted to do their specific job efficiently." },
+      { type: "context", heading: "Everything alive is made of cells", content: "Your body has billions of cells. A leaf is made of cells. Even bacteria are single cells. The cell is the basic unit of life, like a brick is the basic unit of a wall." },
+      { type: "key_point", title: "Plant vs Animal cells", content: "Both have: nucleus, cytoplasm, cell membrane. PLANT cells also have: cell wall (cellulose, support), chloroplasts (photosynthesis), large vacuole (stores water)." },
+      { type: "worked_example", problem: "Name three structures in a plant cell not found in an animal cell.", steps: ["Cell wall: rigid support made of cellulose.", "Chloroplasts: contain chlorophyll for photosynthesis.", "Large vacuole: stores water and maintains turgor pressure."], answer: "Cell wall, chloroplasts, large vacuole", reasoning: "These reflect plant survival needs: rigid support (no skeleton), self-feeding (photosynthesis), water storage (cannot move to find it)." },
+      { type: "key_point", title: "Levels of organisation", content: "Cell forms tissue (similar cells). Tissue forms organ (different tissues). Organ forms system. System forms organism." },
+      { type: "question", question: "Which part controls what enters and leaves the cell?", options: ["Nucleus", "Cell membrane", "Cytoplasm", "Vacuole"], correctIndex: 1, explanation: "Cell membrane is selectively permeable." },
+      { type: "question", question: "Which structure is in plant cells but NOT animal cells?", options: ["Nucleus", "Cytoplasm", "Cell wall", "Cell membrane"], correctIndex: 2, explanation: "Cell wall = cellulose, plants only." },
+      { type: "question", question: "Where does photosynthesis happen?", options: ["Nucleus", "Chloroplasts", "Vacuole", "Cell wall"], correctIndex: 1, explanation: "Chloroplasts contain chlorophyll." },
+      { type: "question", question: "Correct order of organisation?", options: ["Organ, tissue, cell", "Cell, tissue, organ", "Tissue, cell, organ", "Cell, organ, tissue"], correctIndex: 1, explanation: "Cells form tissues, tissues form organs." },
+      { type: "activity_of_integration", title: "Specialised cells", scenario: "A root hair cell has a long thin extension.", task: "Explain why its shape relates to its function.", hint: "Think about surface area and absorption.", answer: "The long extension increases surface area for absorbing water and minerals from soil. Structure matches function." },
     ],
   },
 
@@ -104,36 +73,87 @@ export const biologyLessons: Lesson[] = [
     passingScore: 70,
     isActive: true,
     curriculum: S1("Term 1", "Diversity of Living Things", 3, "Classification",
-      "The learner understands that classification is the sorting out of living things based on their similarities and differences."),
+      "The learner understands classification as sorting living things by similarities."),
     blocks: [
       { type: "competency", text: "The learner should understand that classification is the sorting out of living things based on their similarities and differences." },
-      { type: "outcome", text: "Understand why living things are classified.", tag: "u" },
       { type: "outcome", text: "Know the five kingdoms of living organisms.", tag: "k" },
       { type: "outcome", text: "Classify organisms into their correct kingdoms.", tag: "u,s" },
+      { type: "context", heading: "Why classify?", content: "Imagine a library with no system. You could never find anything. Classification organises living things into groups based on similarities, making them easier to study and identify." },
+      { type: "key_point", title: "The five kingdoms", content: "1. Animals (Animalia): multicellular, no cell walls, eat others. 2. Plants (Plantae): cell walls, chlorophyll, make own food. 3. Fungi: cell walls, feed on dead matter (mushrooms). 4. Protoctista: simple, mostly unicellular (amoeba). 5. Prokaryotes (Bacteria): no true nucleus." },
+      { type: "key_point", title: "Vertebrate groups", content: "Fish (gills, scales, cold-blooded), Amphibians (moist skin, frog), Reptiles (dry scales, lizard), Birds (feathers, beak, warm-blooded), Mammals (hair, milk, warm-blooded)." },
+      { type: "worked_example", problem: "Classify: mushroom, mango tree, housefly, amoeba, bacterium.", steps: ["Mushroom: feeds on dead matter = Fungi.", "Mango tree: has chlorophyll = Plantae.", "Housefly: multicellular, eats others = Animalia.", "Amoeba: unicellular with nucleus = Protoctista.", "Bacterium: no nucleus = Prokaryotes."], answer: "Fungi, Plantae, Animalia, Protoctista, Prokaryotes", reasoning: "Start with obvious features: cell walls? Makes own food? Unicellular? Has nucleus?" },
+      { type: "question", question: "Which kingdom do mushrooms belong to?", options: ["Plantae", "Animalia", "Fungi", "Protoctista"], correctIndex: 2, explanation: "Mushrooms are fungi." },
+      { type: "question", question: "Which feature distinguishes mammals?", options: ["Lay eggs", "Have scales", "Produce milk", "Cold-blooded"], correctIndex: 2, explanation: "Mammals produce milk." },
+      { type: "question", question: "A frog belongs to which group?", options: ["Reptile", "Amphibian", "Fish", "Bird"], correctIndex: 1, explanation: "Frogs are amphibians." },
+      { type: "question", question: "Which kingdom has no true nucleus?", options: ["Plantae", "Prokaryotes", "Fungi", "Protoctista"], correctIndex: 1, explanation: "Prokaryotes (bacteria)." },
+      { type: "activity_of_integration", title: "Classification key", scenario: "Five animals: cat, snake, tilapia, eagle, frog.", task: "Create a yes/no key to identify each.", hint: "Broad questions first.", answer: "Has feathers? Yes=Eagle. No. Has legs? No=Tilapia. Yes. Dry scaly skin? Yes=Snake. No. Moist skin near water? Yes=Frog. No=Cat." },
+    ],
+  },
 
-      { type: "context", heading: "Why do we classify?", content: "Imagine a library with thousands of books and no system. You could never find anything. Classification is how biologists organise living things into groups based on similarities. It makes it easier to study, identify, and understand the relationships between organisms. When you know an animal is a mammal, you immediately know it has hair, gives birth to live young, and produces milk." },
-
-      { type: "key_point", title: "The five kingdoms", content: "All living things are classified into five kingdoms: 1. Animals (Animalia) - multicellular, no cell walls, eat other organisms. 2. Plants (Plantae) - multicellular, have cell walls and chlorophyll, make their own food. 3. Fungi - have cell walls (not cellulose), feed on dead matter, example: mushrooms. 4. Protoctista - simple, mostly unicellular, example: amoeba. 5. Prokaryotes (Bacteria) - unicellular, no true nucleus." },
-
-      { type: "worked_example", problem: "Classify the following into their kingdoms: mushroom, mango tree, housefly, amoeba, bacterium.", steps: ["Mushroom: feeds on dead matter, has cell walls but no chlorophyll. Kingdom: Fungi.", "Mango tree: multicellular, has cell walls and chlorophyll, makes own food. Kingdom: Plantae (Plants).", "Housefly: multicellular, no cell wall, eats other organisms. Kingdom: Animalia (Animals).", "Amoeba: unicellular, has a nucleus. Kingdom: Protoctista.", "Bacterium: unicellular, no true nucleus. Kingdom: Prokaryotes."], answer: "Fungi, Plantae, Animalia, Protoctista, Prokaryotes", reasoning: "Classification starts with the most obvious features: does it have cell walls? Does it make its own food? Is it unicellular or multicellular? These questions sort organisms into their kingdoms." },
-
-      { type: "key_point", title: "The vertebrate groups", content: "Within the animal kingdom, vertebrates (animals with backbones) are divided into five groups: Fish (gills, scales, cold-blooded), Amphibians (moist skin, lay eggs in water, example: frog), Reptiles (dry scaly skin, cold-blooded, example: lizard), Birds (feathers, beak, warm-blooded, lay eggs), Mammals (hair, produce milk, warm-blooded, live birth)." },
-
-      { type: "exam_style", scenario: "UNEB tests classification by asking you to sort organisms and justify your choices.", question: "A student finds an organism with feathers, a beak, and it lays eggs. To which vertebrate group does it belong? Give two reasons for your answer.", marks: 3 },
-
-      { type: "marking_guide", totalMarks: 3, criteria: [
-        { criterion: "Correctly identifies the group as Birds (Aves)", marks: 1, type: "accuracy" },
-        { criterion: "Reason 1: has feathers (characteristic of birds)", marks: 1, type: "method" },
-        { criterion: "Reason 2: has a beak (birds have beaks, not teeth)", marks: 1, type: "method" },
+  // ===== TOPIC 4: INSECTS =====
+  {
+    id: "s1-bio-insects",
+    topicId: "bio-insects",
+    subjectId: "biology",
+    title: "Insects",
+    order: 4,
+    estimatedMinutes: 16,
+    passingScore: 70,
+    isActive: true,
+    curriculum: S1("Term 3", "Diversity of Living Things", 4, "Insects",
+      "The learner understands the characteristics of insects and their importance in ecosystems."),
+    blocks: [
+      { type: "competency", text: "The learner should understand the characteristics of insects and their economic importance." },
+      { type: "outcome", text: "Describe the general characteristics of insects.", tag: "k" },
+      { type: "outcome", text: "Identify the body parts of an insect.", tag: "k,u" },
+      { type: "outcome", text: "Explain the beneficial and harmful effects of insects.", tag: "u,v/a" },
+      { type: "context", heading: "Insects are everywhere", content: "Insects are the most numerous animals on Earth. In Uganda, insects like mosquitoes, bees, butterflies, and termites affect our daily lives. Some spread diseases like malaria. Others pollinate our crops. Understanding insects is essential for health and agriculture." },
+      { type: "key_point", title: "Characteristics of insects", content: "Insects have: three body parts (head, thorax, abdomen), six legs (three pairs), one pair of antennae, and usually one or two pairs of wings. They are arthropods, meaning they have a hard exoskeleton and jointed legs." },
+      { type: "worked_example", problem: "Is a spider an insect? Give two reasons.", steps: ["An insect has three body parts and six legs.", "A spider has two body parts (cephalothorax and abdomen) and eight legs.", "A spider has no antennae.", "Conclusion: A spider is NOT an insect. It is an arachnid."], answer: "No, a spider is not an insect", reasoning: "The number of legs and body parts is the key distinguishing feature. Six legs and three body parts = insect. Eight legs and two body parts = arachnid." },
+      { type: "key_point", title: "Beneficial and harmful insects", content: "BENEFICIAL: bees (pollinate crops, make honey), butterflies (pollination), ladybirds (eat pests). HARMFUL: mosquitoes (spread malaria), tsetse fly (sleeping sickness), locusts (destroy crops), termites (damage buildings). Some are both: flies can pollinate but also spread disease." },
+      { type: "exam_style", scenario: "UNEB tests knowledge of insect body structure and its relation to function.", question: "Describe the body of a grasshopper. State three ways insects are important to humans.", marks: 5 },
+      { type: "marking_guide", totalMarks: 5, criteria: [
+        { criterion: "Three body parts: head, thorax, abdomen", marks: 1, type: "method" },
+        { criterion: "Six legs, two pairs of wings, antennae", marks: 1, type: "method" },
+        { criterion: "Importance 1: pollination (bees, butterflies)", marks: 1, type: "accuracy" },
+        { criterion: "Importance 2: honey production", marks: 1, type: "accuracy" },
+        { criterion: "Importance 3: pest control or disease vector", marks: 1, type: "communication" },
       ] },
+      { type: "question", question: "How many legs does an insect have?", options: ["4", "6", "8", "10"], correctIndex: 1, explanation: "Insects have six legs (three pairs)." },
+      { type: "question", question: "How many body parts does an insect have?", options: ["1", "2", "3", "4"], correctIndex: 2, explanation: "Head, thorax, abdomen." },
+      { type: "question", question: "A spider is NOT an insect because it has?", options: ["Wings", "Eight legs and two body parts", "No eyes", "No legs"], correctIndex: 1, explanation: "Spiders have eight legs and two body parts. Insects have six legs and three body parts." },
+      { type: "question", question: "Which insect spreads malaria?", options: ["Bee", "Mosquito", "Butterfly", "Ladybird"], correctIndex: 1, explanation: "Female Anopheles mosquitoes spread malaria." },
+      { type: "question", question: "Bees are beneficial because they?", options: ["Spread disease", "Pollinate crops and produce honey", "Destroy buildings", "Eat crops"], correctIndex: 1, explanation: "Bees pollinate flowers (essential for fruit) and produce honey." },
+      { type: "activity_of_integration", title: "Malaria prevention", scenario: "Malaria is one of the biggest health challenges in Uganda. The Anopheles mosquito spreads it.", task: "Using your knowledge of insects, suggest three ways to reduce malaria in your community.", hint: "Think about the mosquito life cycle and habits.", answer: "1. Drain stagnant water where mosquitoes breed. 2. Use insecticide-treated mosquito nets at night. 3. Wear long sleeves in the evening when mosquitoes are active. 4. Use mosquito repellent. 5. Spray indoor walls with insecticide. Understanding the insect biology (breeds in water, bites at night) directly informs prevention strategies." },
+    ],
+  },
 
-      { type: "question", question: "Which kingdom do mushrooms belong to?", options: ["Plantae", "Animalia", "Fungi", "Protoctista"], correctIndex: 2, explanation: "Mushrooms are fungi. They have cell walls but no chlorophyll, and feed on dead matter." },
-      { type: "question", question: "Which feature distinguishes mammals from other vertebrates?", options: ["Lay eggs", "Have scales", "Produce milk", "Cold-blooded"], correctIndex: 2, explanation: "Mammals produce milk to feed their young. They also have hair and are warm-blooded." },
-      { type: "question", question: "A frog belongs to which vertebrate group?", options: ["Reptile", "Amphibian", "Fish", "Bird"], correctIndex: 1, explanation: "Frogs are amphibians. They have moist skin, lay eggs in water, and live on both land and water." },
-      { type: "question", question: "Which kingdom consists of organisms with no true nucleus?", options: ["Plantae", "Animalia", "Prokaryotes", "Fungi"], correctIndex: 2, explanation: "Prokaryotes (bacteria) have no true nucleus. Their genetic material floats freely in the cell." },
-      { type: "question", question: "Bacteria belong to which kingdom?", options: ["Protoctista", "Prokaryotes", "Fungi", "Plantae"], correctIndex: 1, explanation: "Bacteria are prokaryotes - unicellular organisms with no true nucleus." },
-
-      { type: "activity_of_integration", title: "Design a classification key", scenario: "You are given five animals: a cat, a snake, a tilapia fish, a eagle, and a frog.", task: "Create a simple classification key (using yes/no questions) that would allow someone to identify each animal. Start with a broad question.", hint: "Think about the most obvious differences first: has legs or not? Has feathers or not? Lives in water or on land?", answer: "A possible key: 1. Has feathers? Yes = Eagle. No = go to 2. 2. Has legs? No = Tilapia (fish). Yes = go to 3. 3. Has dry scaly skin? Yes = Snake (reptile). No = go to 4. 4. Has moist skin and lives near water? Yes = Frog (amphibian). No = Cat (mammal). This is a dichotomous key - the tool biologists use to identify organisms." },
+  // ===== TOPIC 5: FLOWERING PLANTS =====
+  {
+    id: "s1-bio-flowering-plants",
+    topicId: "bio-flowering-plants",
+    subjectId: "biology",
+    title: "Flowering plants",
+    order: 5,
+    estimatedMinutes: 16,
+    passingScore: 70,
+    isActive: true,
+    curriculum: S1("Term 3", "Diversity of Living Things", 5, "Flowering Plants",
+      "The learner understands the structure and function of flowering plants."),
+    blocks: [
+      { type: "competency", text: "The learner should understand the external structure of flowering plants and the functions of each part." },
+      { type: "outcome", text: "Identify the parts of a flowering plant.", tag: "k" },
+      { type: "outcome", text: "State the functions of roots, stems, and leaves.", tag: "u" },
+      { type: "outcome", text: "Identify the parts of a flower.", tag: "k,u" },
+      { type: "context", heading: "Plants sustain life", content: "Plants produce the oxygen we breathe and the food we eat. In Uganda, crops like maize, beans, bananas, and coffee are flowering plants. Understanding their structure helps us grow more food and protect our environment." },
+      { type: "key_point", title: "The main parts of a plant", content: "ROOTS: anchor the plant, absorb water and minerals. STEM: supports the plant, transports water up and food down. LEAVES: site of photosynthesis (making food) and transpiration (water loss). FLOWERS: reproductive organs. FRUIT: contains and protects seeds." },
+      { type: "worked_example", problem: "Describe how water moves from the soil to the leaves of a plant.", steps: ["Root hairs absorb water from the soil by osmosis.", "Water moves up through the xylem vessels in the stem.", "Transpiration (water evaporating from leaves) pulls more water up.", "Water reaches the leaf cells where it is used for photosynthesis."], answer: "Roots absorb water, xylem transports it up, transpiration pulls it to leaves", reasoning: "This is like a straw. Evaporation at the top (transpiration) creates a pull that draws water up from the roots through the xylem tubes. The cohesion of water molecules keeps the column intact." },
+      { type: "key_point", title: "Parts of a flower", content: "SEPAL: protects the flower bud. PETAL: attracts insects with colour and scent. STAMEN (male): made of anther (produces pollen) and filament. CARPEL/PISTIL (female): made of stigma (catches pollen), style, and ovary (contains eggs)." },
+      { type: "question", question: "Which part of the plant absorbs water from the soil?", options: ["Leaves", "Stem", "Roots", "Flowers"], correctIndex: 2, explanation: "Roots (especially root hairs) absorb water and minerals." },
+      { type: "question", question: "Where does photosynthesis mainly occur?", options: ["Roots", "Stem", "Leaves", "Flowers"], correctIndex: 2, explanation: "Leaves contain chlorophyll and are the main site of photosynthesis." },
+      { type: "question", question: "Which part of the flower produces pollen?", options: ["Stigma", "Anther", "Petal", "Sepal"], correctIndex: 1, explanation: "The anther produces pollen grains (male sex cells)." },
+      { type: "question", question: "The function of petals is to?", options: ["Absorb water", "Attract pollinators", "Produce seeds", "Support the plant"], correctIndex: 1, explanation: "Petals are colourful and scented to attract insects and birds for pollination." },
+      { type: "activity_of_integration", title: "Why leaves are important", scenario: "A farmer removes too many leaves from his tomato plants hoping the fruits will grow bigger.", task: "Explain why removing leaves could actually harm the plant and reduce the harvest.", hint: "What do leaves do for the plant?", answer: "Leaves make food through photosynthesis. Removing them reduces the plant's ability to produce glucose, which the fruits need to grow. Fewer leaves means less food, smaller fruits, and a weaker plant. The farmer should keep healthy leaves on the plant. This shows how understanding plant biology directly affects farming practice." },
     ],
   },
 ];
